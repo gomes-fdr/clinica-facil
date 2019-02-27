@@ -1,8 +1,11 @@
 <script>
 import Navegacao from './components/navegacao'
+import RodaPe from './components/roda-pe'
+
 export default {
   components: {
-    Navegacao
+    Navegacao,
+    RodaPe
   }
 }
 </script>
@@ -18,18 +21,15 @@ export default {
         </p>
       </div>
     </div>
+    <roda-pe/>
   </section>
-  <footer class="footer">
-    <div class="content has-text-centered">
-      <p>
-        <strong>Clinica Fácil</strong> por <a href="https://gomes-fdr.github.io">Fabiano Gomes</a>
-      </p>
-    </div>
-  </footer>
 </div>
 </template>
 <style>
-  .hero-body {
+  .hero-body, .hero-foot {
     background-color: #3F51B5;
+  }
+  .hero-foot {
+    background-color: white;
   }
 </style>
