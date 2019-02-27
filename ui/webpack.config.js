@@ -56,11 +56,11 @@ module.exports = {
     hints: false
   },
   devtool: '#eval-source-map',
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: 'index.html',
-    })
-  ]
+  // plugins: [
+  //   new HtmlWebpackPlugin({
+  //     template: 'index.html',
+  //   })
+  // ]
 }
 
 if (process.env.NODE_ENV === 'production') {
