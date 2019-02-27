@@ -26,7 +26,7 @@ export default {
 </div>
 </template>
 <style>
-  .hero-body, .hero-foot {
+  .hero-body {
     background-color: #3F51B5;
   }
   .hero-foot {
