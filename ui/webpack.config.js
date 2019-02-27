@@ -4,7 +4,11 @@ var webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: {
+    main: './src/main.js',
+    login: './src/login.js',
+
+  },
   output: {
     path: path.resolve(__dirname, '../app/static/dist'),
     publicPath: '/dist/',
