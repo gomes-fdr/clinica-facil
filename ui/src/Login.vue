@@ -3,7 +3,7 @@
     <div class="hero-body">
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
-          <h3 class="title has-text-grey">Login</h3>
+          <h3 class="title has-text-grey">Clinica Darmas</h3>
           <p class="subtitle has-text-grey">Por favor, identifique-se para entrar.</p>
           <div class="box">
             <figure class="avatar">
@@ -12,13 +12,13 @@
             <form>
               <div class="field">
                 <div class="control">
-                  <input class="input is-large" type="email" placeholder="Your Email" autofocus>
+                  <input class="input is-large" type="email" placeholder="Seu Email" autofocus>
                 </div>
               </div>
 
               <div class="field">
                 <div class="control">
-                  <input class="input is-large" type="password" placeholder="Your Password">
+                  <input class="input is-large" type="password" placeholder="Sua Senha">
                 </div>
               </div>
               <button class="button is-block is-info is-large is-fullwidth">Login</button>
@@ -33,7 +33,7 @@
 <style>
   html,
   body {
-    font-family: "Open Sans", serif;
+    /* font-family: "Open Sans", serif; */
     font-size: 14px;
     font-weight: 300;
   }
