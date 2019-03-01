@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import Buefy from 'buefy'
-import Vuelidate from 'vuelidate'
 import 'buefy/dist/buefy.css'
+import SimpleVueValidation from 'simple-vue-validator';
 
 import Paciente from './Paciente.vue'
 
+const Validator = SimpleVueValidation.Validator;
+
+Vue.use(SimpleVueValidation);
 Vue.use(Buefy)
-Vue.use(Vuelidate)
 
 new Vue({
   el: '#app',

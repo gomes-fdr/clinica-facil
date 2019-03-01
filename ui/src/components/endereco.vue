@@ -6,24 +6,27 @@
       </div>
       <div class="field-body">
         <div class="field" >
-          <b-field :type="{'is-danger': v.$error }">
+          <b-field>
             <b-autocomplete
               id="cep"
               name="cep"
-              placeholder="CEP"
-              v-model="cep">
+              placeholder="CEP">
             </b-autocomplete>
           </b-field>
         </div>
         <div class="field">
-          <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Rua" name="rua">
-          </p>
+            <input
+             name="rua"
+             class="input"
+             type="text"
+             placeholder="Rua">
         </div>
         <div class="field">
-          <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Número">
-          </p>
+            <input
+            name="numero"
+             class="input"
+             type="text"
+             placeholder="Número">
         </div>
       </div>
     </div>
@@ -34,53 +37,27 @@
       </div>
       <div class="field-body">
         <div class="field">
-          <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Complemento" :class="{ hasError: v.$error }">
-          </p>
+            <input
+             name="complemento"
+             class="input"
+             type="text"
+             placeholder="Complemento">
         </div>
         <div class="field">
-          <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Cidade" name="cidade">
-          </p>
+            <input
+             name="cidade"
+             class="input"
+             type="text"
+             placeholder="Cidade">
         </div>
         <div class="field">
-          <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Estado" name="estado">
-          </p>
+            <input
+             name="estado"
+             class="input"
+             type="text"
+             placeholder="Estado">
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  props: {
-    value: {
-      type: String,
-      default: ""
-    },
-    v: {
-      type: Object,
-      required: true
-    }
-  },
-  computed: {
-    cep: {
-      get() {
-        return this.value;
-      },
-      set(value) {
-        this.v.$touch();
-        this.$emit("input", value);
-      }
-    }
-  }
-};
-</script>
-
-<style>
-    .hasError  {
-    color: red;
-    }
-</style>

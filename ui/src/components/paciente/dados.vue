@@ -1,5 +1,5 @@
 <template>
-  <form action="#" @submit.prevent="submit">
+  <form>
     <div class="field is-horizontal">
       <div class="field-label is-normal">
         <label class="label">Identificação</label>
@@ -7,12 +7,20 @@
       <div class="field-body">
         <div class="field">
           <b-field>
-            <b-input type="text" name="nome" placeholder="Nome"></b-input>
+            <b-input
+             name="nome"
+             type="text"
+             placeholder="Nome">
+            </b-input>
           </b-field>
         </div>
         <div class="field">
           <b-field>
-            <b-input type="email" name="email" placeholder="Email"></b-input>
+            <b-input
+             name="email"
+             type="email"
+             placeholder="Email">
+            </b-input>
           </b-field>
         </div>
       </div>
@@ -24,17 +32,26 @@
       <div class="field-body">
         <div class="field">
           <b-field>
-            <b-input placeholder="Data Nascimento" name="dt_nascimento"></b-input>
+            <b-input
+             name="dt_nascimento"
+             placeholder="Data Nascimento">
+             </b-input>
           </b-field>
         </div>
         <div class="field">
           <b-field>
-            <b-input placeholder="Identidade" name="rg"></b-input>
+            <b-input
+             name="rg"
+             placeholder="Identidade">
+            </b-input>
           </b-field>
         </div>
         <div class="field">
           <b-field>
-            <b-input placeholder="CPF" name="cpf"></b-input>
+            <b-input
+             name="cpf"
+             placeholder="CPF">
+            </b-input>
           </b-field>
         </div>
       </div>
@@ -46,18 +63,27 @@
       </div>
       <div class="field-body">
         <div class="field">
-          <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Filiação">
-          </p>
+            <input
+             name="filiacao"
+             class="input"
+             type="text"
+             placeholder="Filiação">
         </div>
         <div class="field">
           <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Profissão">
+            <input
+             name="profissao"
+             class="input"
+             type="text"
+             placeholder="Profissão">
           </p>
         </div>
         <div class="field">
           <b-field>
-            <b-input placeholder="Responsável" name="responsavel"></b-input>
+            <b-input
+             name="responsavel"
+             placeholder="Responsável">
+             </b-input>
           </b-field>
         </div>
       </div>
@@ -69,24 +95,33 @@
       </div>
       <div class="field-body">
         <div class="field">
-          <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Celular">
-          </p>
+            <input
+             name="celular"
+             class="input"
+             type="text"
+             placeholder="Celular">
         </div>
         <div class="field">
           <p class="control is-expanded">
-            <input class="input" type="text" placeholder="Fixo">
+            <input
+            name="fixo"
+            class="input"
+            type="text"
+            placeholder="Fixo">
           </p>
         </div>
         <div class="field">
           <b-field>
-            <b-input placeholder="Telefone Responsável" name="tel_resp"></b-input>
+            <b-input 
+             name="tel_resp"
+             placeholder="Telefone Responsável">
+            </b-input>
           </b-field>
         </div>
       </div>
     </div>
 
-    <endereco v-model="form.cep" :v="$v.form.cep" />
+    <endereco/>
     <br>
 
     <div class="field is-grouped is-grouped-right">
@@ -104,7 +139,7 @@
         <a class="button">Novo</a>
       </p>
       <p class="control">
-        <button class="button">Atualizar</button>
+        <button class="button" @click.prevent="submit">Atualizar</button>
       </p>
     </div>
   </form>
@@ -112,7 +147,8 @@
 
 <script>
 import Endereco from "../endereco";
-import { required } from "vuelidate/lib/validators";
+
+
 export default {
   components: {
     Endereco
@@ -120,23 +156,30 @@ export default {
   data() {
     return {
         form: {
-            cep:""
+            nome: '',
+            email: '',
+            dt_nascimento: '',
+            rg: '',
+            cpf: '',
+            filiacao: '',
+            profissao: '',
+            responsavel: '',
+            t_celular: '',
+            t_fixo: '',
+            t_reponsavel: '',
+            cep: '',
+            rua: '',
+            numero: '',
+            complemento: '',
+            cidade: '',
+            estado: ''
         }
     };
   },
-  validations: {
-    form: {
-      cep: { required },
-    }
-  },
+  
   methods: {
     submit() {
-        this.$v.form.$touch();
-        if (this.$v.form.$pending || this.$v.form.$error){
-            console.log('ERROS');
-            return;
-        } 
-        alert("Form submitted");
+        console.log('oi');
     }
   }
 };
