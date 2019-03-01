@@ -8,3 +8,7 @@ def login():
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
+
+@bp.route('/paciente', methods=['GET', 'POST'])
+def paciente():
+    return render_template('paciente.html')
