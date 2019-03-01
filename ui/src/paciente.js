@@ -5,7 +5,7 @@ import SimpleVueValidation from 'simple-vue-validator';
 
 import Paciente from './Paciente.vue'
 
-const Validator = SimpleVueValidation.Validator;
+
 
 Vue.use(SimpleVueValidation);
 Vue.use(Buefy)

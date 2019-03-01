@@ -5,24 +5,26 @@
         <label class="label">Identificação</label>
       </div>
       <div class="field-body">
-        <div class="field">
-          <b-field>
+          <b-field 
+          :type="{'is-danger': validation.hasError('nome') }"
+          :message="[validation.firstError('nome')]">
             <b-input
              name="nome"
              type="text"
-             placeholder="Nome">
+             placeholder="Nome"
+             v-model="nome">
             </b-input>
           </b-field>
-        </div>
-        <div class="field">
-          <b-field>
+          <b-field
+          :type="{'is-danger': validation.hasError('email') }"
+          :message="[validation.firstError('email')]">
             <b-input
              name="email"
              type="email"
-             placeholder="Email">
+             placeholder="Email"
+             v-model="email">
             </b-input>
           </b-field>
-        </div>
       </div>
     </div>
     <div class="field is-horizontal">
@@ -30,30 +32,31 @@
         <label class="label">Documentos</label>
       </div>
       <div class="field-body">
-        <div class="field">
-          <b-field>
+          <b-field
+          :type="{'is-danger': validation.hasError('dt_nascimento') }"
+          :message="[validation.firstError('dt_nascimento')]">
             <b-input
              name="dt_nascimento"
-             placeholder="Data Nascimento">
+             placeholder="Data Nascimento"
+             v-model="dt_nascimento">
              </b-input>
           </b-field>
-        </div>
-        <div class="field">
           <b-field>
             <b-input
              name="rg"
-             placeholder="Identidade">
+             placeholder="Identidade"
+             v-model="rg">
             </b-input>
           </b-field>
-        </div>
-        <div class="field">
-          <b-field>
+          <b-field
+          :type="{'is-danger': validation.hasError('cpf') }"
+          :message="[validation.firstError('cpf')]">
             <b-input
              name="cpf"
-             placeholder="CPF">
+             placeholder="CPF"
+             v-model="cpf">
             </b-input>
           </b-field>
-        </div>
       </div>
     </div>
 
@@ -62,30 +65,33 @@
         <label class="label">Contatos</label>
       </div>
       <div class="field-body">
-        <div class="field">
-            <input
-             name="filiacao"
-             class="input"
-             type="text"
-             placeholder="Filiação">
-        </div>
-        <div class="field">
-          <p class="control is-expanded">
-            <input
-             name="profissao"
-             class="input"
-             type="text"
-             placeholder="Profissão">
-          </p>
-        </div>
-        <div class="field">
-          <b-field>
+        <b-field
+        :type="{'is-danger': validation.hasError('filiacao') }"
+        :message="[validation.firstError('filiacao')]">
+          <b-input
+            name="filiacao"
+            type="text"
+            placeholder="Filiação"
+            v-model="filiacao">
+            </b-input>
+        </b-field>
+        <b-field>
             <b-input
-             name="responsavel"
-             placeholder="Responsável">
+             name="profissao"
+             type="text"
+             placeholder="Profissão"
+             v-model="profissao">
              </b-input>
-          </b-field>
-        </div>
+        </b-field>
+        <b-field
+          :type="{'is-danger': validation.hasError('responsavel') }"
+          :message="[validation.firstError('responsavel')]">
+          <b-input
+            name="responsavel"
+            placeholder="Responsável"
+            v-model="responsavel">
+          </b-input>
+        </b-field>
       </div>
     </div>
 
@@ -94,30 +100,29 @@
         <label class="label">Telefones</label>
       </div>
       <div class="field-body">
-        <div class="field">
-            <input
-             name="celular"
-             class="input"
-             type="text"
-             placeholder="Celular">
-        </div>
-        <div class="field">
-          <p class="control is-expanded">
-            <input
-            name="fixo"
-            class="input"
+        <b-field>
+          <b-input
+            name="celular"
             type="text"
-            placeholder="Fixo">
-          </p>
-        </div>
-        <div class="field">
-          <b-field>
-            <b-input 
-             name="tel_resp"
-             placeholder="Telefone Responsável">
-            </b-input>
-          </b-field>
-        </div>
+            placeholder="Celular"
+            v-model="t_celular">
+          </b-input>
+        </b-field>
+        <b-field>
+          <b-input
+          name="fixo"
+          type="text"
+          placeholder="Fixo"
+          v-model="t_fixo">
+          </b-input>
+        </b-field>
+        <b-field>
+          <b-input 
+            name="tel_resp"
+            placeholder="Telefone Responsável"
+            v-model="t_reponsavel">
+          </b-input>
+        </b-field>
       </div>
     </div>
 
@@ -146,8 +151,15 @@
 </template>
 
 <script>
+import SimpleVueValidation from 'simple-vue-validator';
 import Endereco from "../endereco";
 
+const Validator = SimpleVueValidation.Validator.create({
+  templates: {
+    required: 'Campo obrigatório',
+    email: 'Formato de e-mail inválido'
+  }
+});
 
 export default {
   components: {
@@ -155,31 +167,70 @@ export default {
   },
   data() {
     return {
-        form: {
-            nome: '',
-            email: '',
-            dt_nascimento: '',
-            rg: '',
-            cpf: '',
-            filiacao: '',
-            profissao: '',
-            responsavel: '',
-            t_celular: '',
-            t_fixo: '',
-            t_reponsavel: '',
-            cep: '',
-            rua: '',
-            numero: '',
-            complemento: '',
-            cidade: '',
-            estado: ''
-        }
+      nome: '',
+      email: '',
+      dt_nascimento: '',
+      rg: '',
+      cpf: '',
+      filiacao: '',
+      profissao: '',
+      responsavel: '',
+      t_celular: '',
+      t_fixo: '',
+      t_reponsavel: '',
+      cep: '',
+      rua: '',
+      numero: '',
+      complemento: '',
+      cidade: '',
+      estado: '',
+      envio_sms: true,
+      adulto_inapto: false
     };
   },
-  
+  validators: {
+    nome: function(value) {
+      return Validator.value(value).required();
+    },
+    email: function(value) {
+      return Validator.value(value).email();
+    },
+    dt_nascimento: function(value) {
+      return Validator.value(value).required();
+    },
+    cpf: function(value) {
+      return Validator.value(value).required();
+    },
+    filiacao: function(value) {
+      return Validator.value(value).required();
+    },
+    responsavel: function(value) {
+      return Validator.value(value).required();
+    },
+    cep: function(value) {
+      return Validator.value(value).required();
+    },
+    rua: function(value) {
+      return Validator.value(value).required();
+    },
+    numero: function(value) {
+      return Validator.value(value).required();
+    },
+    cidade: function(value) {
+      return Validator.value(value).required();
+    },
+    estado: function(value) {
+      return Validator.value(value).required();
+    },
+  },
   methods: {
     submit() {
-        console.log('oi');
+         this.$validate()
+          .then(function (success) {
+            if (success) {
+              alert('Validation succeeded!');
+            }
+          });
     }
   }
 };
