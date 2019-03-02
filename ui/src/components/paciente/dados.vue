@@ -185,7 +185,8 @@ export default {
       cidade: '',
       estado: '',
       envio_sms: true,
-      adulto_inapto: false
+      adulto_inapto: false,
+      v: true
     };
   },
   validators: {
@@ -225,12 +226,13 @@ export default {
   },
   methods: {
     submit() {
-         this.$validate()
-          .then(function (success) {
-            if (success) {
-              alert('Validation succeeded!');
-            }
-          });
+      this.$bus.$emit('submit');
+      this.$validate()
+      .then(function (success) {
+        if (success) {
+          alert('Validation succeeded!');
+        }
+      });
     }
   }
 };

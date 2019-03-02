@@ -4,11 +4,11 @@ import 'buefy/dist/buefy.css'
 import SimpleVueValidation from 'simple-vue-validator';
 
 import Paciente from './Paciente.vue'
-
-
+import EventBus from './plugins/event-bus'
 
 Vue.use(SimpleVueValidation);
 Vue.use(Buefy)
+Vue.use(EventBus)
 
 new Vue({
   el: '#app',
