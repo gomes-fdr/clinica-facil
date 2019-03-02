@@ -6,30 +6,30 @@
       </div>
       <div class="field-body">
           <b-field
-          :type="{'is-danger': validation.hasError('cep') }"
-          :message="[validation.firstError('cep')]">
+          :type="{'is-danger': validation.hasError('form.cep') }"
+          :message="[validation.firstError('form.cep')]">
             <b-autocomplete
               name="cep"
               placeholder="CEP"
-              v-model="cep">
+              v-model="form.cep">
             </b-autocomplete>
           </b-field>
           <b-field
-          :type="{'is-danger': validation.hasError('rua') }"
-          :message="[validation.firstError('rua')]">
+          :type="{'is-danger': validation.hasError('form.rua') }"
+          :message="[validation.firstError('form.rua')]">
             <b-input
              name="rua"
              placeholder="Rua"
-             v-model="rua">
+             v-model="form.rua">
             </b-input>
           </b-field>
           <b-field
-          :type="{'is-danger': validation.hasError('numero') }"
-          :message="[validation.firstError('numero')]">
+          :type="{'is-danger': validation.hasError('form.numero') }"
+          :message="[validation.firstError('form.numero')]">
             <b-input
             name="numero"
             placeholder="Número"
-            v-model="numero">
+            v-model="form.numero">
             </b-input>
           </b-field>
       </div>
@@ -44,25 +44,25 @@
             <b-input
              name="complemento"
              placeholder="Complemento"
-             v-model="complemento">
+             v-model="form.complemento">
             </b-input>
           </b-field>
           <b-field
-          :type="{'is-danger': validation.hasError('cidade') }"
-          :message="[validation.firstError('cidade')]">
+          :type="{'is-danger': validation.hasError('form.cidade') }"
+          :message="[validation.firstError('form.cidade')]">
             <b-input
              name="cidade"
              placeholder="Cidade"
-             v-model="cidade">
+             v-model="form.cidade">
             </b-input>
           </b-field>
           <b-field
-          :type="{'is-danger': validation.hasError('estado') }"
-          :message="[validation.firstError('estado')]">
+          :type="{'is-danger': validation.hasError('form.estado') }"
+          :message="[validation.firstError('form.estado')]">
             <b-input
              name="estado"
              placeholder="Estado"
-             v-model="estado">
+             v-model="form.estado">
             </b-input>
           </b-field>
       </div>
@@ -87,28 +87,30 @@ export default {
   },
   data() {
     return {
-      cep: '',
-      rua: '',
-      numero: '',
-      complemento: '',
-      cidade: '',
-      estado: '',
+      form: {
+        cep: '',
+        rua: '',
+        numero: '',
+        complemento: '',
+        cidade: '',
+        estado: '',
+      }
     }
   },
   validators: {
-    cep: function(value) {
+    'form.cep': function(value) {
       return Validator.value(value).required();
     },
-    rua: function(value) {
+    'form.rua': function(value) {
       return Validator.value(value).required();
     },
-    numero: function(value) {
+    'form.numero': function(value) {
       return Validator.value(value).required();
     },
-    cidade: function(value) {
+    'form.cidade': function(value) {
       return Validator.value(value).required();
     },
-    estado: function(value) {
+    'form.estado': function(value) {
       return Validator.value(value).required();
     },
   },

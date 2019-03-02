@@ -6,23 +6,23 @@
       </div>
       <div class="field-body">
           <b-field 
-          :type="{'is-danger': validation.hasError('nome') }"
-          :message="[validation.firstError('nome')]">
+          :type="{'is-danger': validation.hasError('form.nome') }"
+          :message="[validation.firstError('form.nome')]">
             <b-input
              name="nome"
              type="text"
              placeholder="Nome"
-             v-model="nome">
+             v-model="form.nome">
             </b-input>
           </b-field>
           <b-field
-          :type="{'is-danger': validation.hasError('email') }"
-          :message="[validation.firstError('email')]">
+          :type="{'is-danger': validation.hasError('form.email') }"
+          :message="[validation.firstError('form.email')]">
             <b-input
              name="email"
              type="email"
              placeholder="Email"
-             v-model="email">
+             v-model="form.email">
             </b-input>
           </b-field>
       </div>
@@ -33,28 +33,28 @@
       </div>
       <div class="field-body">
           <b-field
-          :type="{'is-danger': validation.hasError('dt_nascimento') }"
-          :message="[validation.firstError('dt_nascimento')]">
+          :type="{'is-danger': validation.hasError('form.dt_nascimento') }"
+          :message="[validation.firstError('form.dt_nascimento')]">
             <b-input
              name="dt_nascimento"
              placeholder="Data Nascimento"
-             v-model="dt_nascimento">
+             v-model="form.dt_nascimento">
              </b-input>
           </b-field>
           <b-field>
             <b-input
              name="rg"
              placeholder="Identidade"
-             v-model="rg">
+             v-model="form.rg">
             </b-input>
           </b-field>
           <b-field
-          :type="{'is-danger': validation.hasError('cpf') }"
-          :message="[validation.firstError('cpf')]">
+          :type="{'is-danger': validation.hasError('form.cpf') }"
+          :message="[validation.firstError('form.cpf')]">
             <b-input
              name="cpf"
              placeholder="CPF"
-             v-model="cpf">
+             v-model="form.cpf">
             </b-input>
           </b-field>
       </div>
@@ -66,13 +66,13 @@
       </div>
       <div class="field-body">
         <b-field
-        :type="{'is-danger': validation.hasError('filiacao') }"
-        :message="[validation.firstError('filiacao')]">
+        :type="{'is-danger': validation.hasError('form.filiacao') }"
+        :message="[validation.firstError('form.filiacao')]">
           <b-input
             name="filiacao"
             type="text"
             placeholder="Filiação"
-            v-model="filiacao">
+            v-model="form.filiacao">
             </b-input>
         </b-field>
         <b-field>
@@ -80,16 +80,16 @@
              name="profissao"
              type="text"
              placeholder="Profissão"
-             v-model="profissao">
+             v-model="form.profissao">
              </b-input>
         </b-field>
         <b-field
-          :type="{'is-danger': validation.hasError('responsavel') }"
-          :message="[validation.firstError('responsavel')]">
+          :type="{'is-danger': validation.hasError('form.responsavel') }"
+          :message="[validation.firstError('form.responsavel')]">
           <b-input
             name="responsavel"
             placeholder="Responsável"
-            v-model="responsavel">
+            v-model="form.responsavel">
           </b-input>
         </b-field>
       </div>
@@ -105,7 +105,7 @@
             name="celular"
             type="text"
             placeholder="Celular"
-            v-model="t_celular">
+            v-model="form.t_celular">
           </b-input>
         </b-field>
         <b-field>
@@ -113,14 +113,14 @@
           name="fixo"
           type="text"
           placeholder="Fixo"
-          v-model="t_fixo">
+          v-model="form.t_fixo">
           </b-input>
         </b-field>
         <b-field>
           <b-input 
             name="tel_resp"
             placeholder="Telefone Responsável"
-            v-model="t_reponsavel">
+            v-model="form.t_reponsavel">
           </b-input>
         </b-field>
       </div>
@@ -167,60 +167,61 @@ export default {
   },
   data() {
     return {
-      nome: '',
-      email: '',
-      dt_nascimento: '',
-      rg: '',
-      cpf: '',
-      filiacao: '',
-      profissao: '',
-      responsavel: '',
-      t_celular: '',
-      t_fixo: '',
-      t_reponsavel: '',
-      cep: '',
-      rua: '',
-      numero: '',
-      complemento: '',
-      cidade: '',
-      estado: '',
-      envio_sms: true,
-      adulto_inapto: false,
-      v: true
+      form: {
+        nome: '',
+        email: '',
+        dt_nascimento: '',
+        rg: '',
+        cpf: '',
+        filiacao: '',
+        profissao: '',
+        responsavel: '',
+        t_celular: '',
+        t_fixo: '',
+        t_reponsavel: '',
+        cep: '',
+        rua: '',
+        numero: '',
+        complemento: '',
+        cidade: '',
+        estado: '',
+        envio_sms: true,
+        adulto_inapto: false,
+      },
     };
   },
   validators: {
-    nome: function(value) {
+    'form.nome': function(value) {
       return Validator.value(value).required();
     },
-    email: function(value) {
+    'form.email': function(value) {
       return Validator.value(value).email();
     },
-    dt_nascimento: function(value) {
+    'form.dt_nascimento': function(value) {
       return Validator.value(value).required();
     },
-    cpf: function(value) {
+    'form.cpf': function(value) {
       return Validator.value(value).required();
     },
-    filiacao: function(value) {
+    'form.filiacao': function(value) {
       return Validator.value(value).required();
     },
-    responsavel: function(value) {
+    'form.responsavel': function(value) {
       return Validator.value(value).required();
     },
-    cep: function(value) {
+    'form.cep': function(value) {
       return Validator.value(value).required();
     },
-    rua: function(value) {
+    'form.rua': function(value) {
       return Validator.value(value).required();
     },
-    numero: function(value) {
+    'form.numero': function(value) {
       return Validator.value(value).required();
     },
-    cidade: function(value) {
+    'form.cidade': function(value) {
       return Validator.value(value).required();
     },
-    estado: function(value) {
+    'form.estado': function(value) {
       return Validator.value(value).required();
     },
   },
