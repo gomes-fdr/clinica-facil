@@ -37,25 +37,34 @@
           :message="[validation.firstError('form.dt_nascimento')]">
             <b-input
              name="dt_nascimento"
+             v-mask="'##/##/####'"
              placeholder="Data Nascimento"
              v-model="form.dt_nascimento">
-             </b-input>
+            </b-input>
           </b-field>
-          <b-field>
-            <b-input
+          <b-field
+          :type="{'is-danger': validation.hasError('form.rg') }"
+          :message="[validation.firstError('form.rg')]">
+            <the-mask
              name="rg"
              placeholder="Identidade"
+             class="input"
+            :class="{'input is-danger': validation.hasError('form.rg') }"
+             mask="##########"
              v-model="form.rg">
-            </b-input>
+            </the-mask>
           </b-field>
           <b-field
           :type="{'is-danger': validation.hasError('form.cpf') }"
           :message="[validation.firstError('form.cpf')]">
-            <b-input
+            <the-mask
              name="cpf"
+             class="input"
+            :class="{'input is-danger': validation.hasError('form.cpf') }"
+             mask="###.###.###-##"
              placeholder="CPF"
              v-model="form.cpf">
-            </b-input>
+            </the-mask>
           </b-field>
       </div>
     </div>
@@ -101,27 +110,33 @@
       </div>
       <div class="field-body">
         <b-field>
-          <b-input
+          <the-mask
             name="celular"
             type="text"
+            class="input"
+            :mask="['(##) ####-####', '(##) #####-####']" 
             placeholder="Celular"
             v-model="form.t_celular">
-          </b-input>
+          </the-mask>
         </b-field>
         <b-field>
-          <b-input
+          <the-mask
           name="fixo"
           type="text"
+          class="input"
+          :mask="['(##) ####-####', '(##) #####-####']" 
           placeholder="Fixo"
           v-model="form.t_fixo">
-          </b-input>
+          </the-mask>
         </b-field>
         <b-field>
-          <b-input 
+          <the-mask 
             name="tel_resp"
+            class="input"
+            :mask="['(##) ####-####', '(##) #####-####']" 
             placeholder="Telefone Responsável"
             v-model="form.t_reponsavel">
-          </b-input>
+          </the-mask>
         </b-field>
       </div>
     </div>
@@ -157,7 +172,8 @@ import Endereco from "../endereco";
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
     required: 'Campo obrigatório',
-    email: 'Formato de e-mail inválido'
+    email: 'Formato de e-mail inválido',
+    length: 'Tamanho do campo inválido'
   }
 });
 
@@ -208,8 +224,11 @@ export default {
     'form.dt_nascimento': function(value) {
       return Validator.value(value).required();
     },
+    'form.rg': function(value) {
+      return Validator.value(value).length(10);
+    },
     'form.cpf': function(value) {
-      return Validator.value(value).required();
+      return Validator.value(value).required().length(11);
     },
     'form.filiacao': function(value) {
       return Validator.value(value).required();
@@ -220,11 +239,13 @@ export default {
   },
   methods: {
     submit() {
+      var vm = this;
       this.$bus.$emit('submit');
       this.$validate()
       .then(function (success) {
         if (success) {
           console.log('Validou, enviando...');
+          console.log(JSON.stringify(vm.form));
         }
       });
     },

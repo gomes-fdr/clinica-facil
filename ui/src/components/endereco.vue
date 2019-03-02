@@ -8,11 +8,14 @@
           <b-field
           :type="{'is-danger': validation.hasError('form.cep') }"
           :message="[validation.firstError('form.cep')]">
-            <b-autocomplete
+            <the-mask
               name="cep"
+              class="input"
+              :class="{'input is-danger': validation.hasError('form.cep') }"
+              mask="##.###-###"
               placeholder="CEP"
               v-model="form.cep">
-            </b-autocomplete>
+            </the-mask>
           </b-field>
           <b-field
           :type="{'is-danger': validation.hasError('form.rua') }"
@@ -26,11 +29,14 @@
           <b-field
           :type="{'is-danger': validation.hasError('form.numero') }"
           :message="[validation.firstError('form.numero')]">
-            <b-input
+            <the-mask
             name="numero"
+            class="input"
+            :class="{'input is-danger': validation.hasError('form.numero') }"
+            mask="#####"
             placeholder="Número"
             v-model="form.numero">
-            </b-input>
+            </the-mask>
           </b-field>
       </div>
     </div>
