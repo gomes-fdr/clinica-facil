@@ -126,7 +126,7 @@ export default {
       this.$validate()
       .then(function (success) {
         if (success) {
-          console.log('Validação no endereço OK!');
+          // console.log('Validação no endereço OK!');
           vm.$bus.$emit('submitEndereco', vm.form);
         }
       });

@@ -244,15 +244,27 @@ export default {
       this.$validate()
       .then(function (success) {
         if (success) {
-          console.log('Validou, enviando...');
-          console.log(JSON.stringify(vm.form));
+          // console.log('Validou, enviando...');
+          // console.log(JSON.stringify(vm.form));
+          vm.$toast.open({
+              message: 'Formulário preenchido com sucesso!',
+              type: 'is-success',
+              position: 'is-bottom'
+          })
+          return;
+        } else {
+          vm.$toast.open({
+              message: 'Formulário inválido! Verifique o preenchimento dos campos',
+              type: 'is-danger',
+              position: 'is-bottom'
+          })
         }
       });
     },
     copyEndereco(endereco) {
-      console.log('Copiando endereco...');
+      // console.log('Copiando endereco...');
       this.form.endereco = endereco;
-      console.log(JSON.stringify(this.form.endereco));
+      // console.log(JSON.stringify(this.form.endereco));
     }
   }
 };
