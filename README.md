@@ -13,8 +13,8 @@ Grupo de tecnologias utilizadas no desenvolvimento deste sistema.
 * Webpack [webpack](https://webpack.js.org/)
 * Componentes web com [buefy](https://buefy.github.io)
 * Componente de calendário(scheduler) com [Vue Calendar](https://v-calendar.davidpaternina.com/) 
-* Validação de forumlários com [vee-validate](https://baianat.github.io/vee-validate)
-* Formatação de campos de formulários com [cleave.js](https://nosir.github.io/cleave.js)
+* Validação de forumlários com [simple-vue-validator](https://github.com/semisleep/simple-vue-validator)
+* Formatação de campos de formulários com [vue-the-mask](https://github.com/vuejs-tips/vue-the-mask)
 
 Ambiente de testes (local):
 * Vagrant
