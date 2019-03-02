@@ -82,7 +82,7 @@ export default {
   created() {
     var vm = this;
     this.$bus.$on('submit', function() {
-      vm.submit();
+      vm.submitEndereco();
     });
   },
   data() {
@@ -115,11 +115,13 @@ export default {
     },
   },
   methods: {
-    submit() {
+    submitEndereco() {
+      var vm = this;
       this.$validate()
       .then(function (success) {
         if (success) {
-          alert('Validation succeeded!');
+          console.log('Validação no endereço OK!');
+          vm.$bus.$emit('submitEndereco', vm.form);
         }
       });
     }

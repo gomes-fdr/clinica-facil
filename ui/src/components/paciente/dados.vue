@@ -162,6 +162,12 @@ const Validator = SimpleVueValidation.Validator.create({
 });
 
 export default {
+  created() {
+    var vm = this;
+    this.$bus.$on('submitEndereco', function(endereco) {
+      vm.copyEndereco(endereco);
+    });
+  },
   components: {
     Endereco
   },
@@ -179,12 +185,14 @@ export default {
         t_celular: '',
         t_fixo: '',
         t_reponsavel: '',
-        cep: '',
-        rua: '',
-        numero: '',
-        complemento: '',
-        cidade: '',
-        estado: '',
+        endereco: {
+          cep: '',
+          rua: '',
+          numero: '',
+          complemento: '',
+          cidade: '',
+          estado: '',
+        },
         envio_sms: true,
         adulto_inapto: false,
       },
@@ -208,22 +216,7 @@ export default {
     },
     'form.responsavel': function(value) {
       return Validator.value(value).required();
-    },
-    'form.cep': function(value) {
-      return Validator.value(value).required();
-    },
-    'form.rua': function(value) {
-      return Validator.value(value).required();
-    },
-    'form.numero': function(value) {
-      return Validator.value(value).required();
-    },
-    'form.cidade': function(value) {
-      return Validator.value(value).required();
-    },
-    'form.estado': function(value) {
-      return Validator.value(value).required();
-    },
+    },    
   },
   methods: {
     submit() {
@@ -231,9 +224,14 @@ export default {
       this.$validate()
       .then(function (success) {
         if (success) {
-          alert('Validation succeeded!');
+          console.log('Validou, enviando...');
         }
       });
+    },
+    copyEndereco(endereco) {
+      console.log('Copiando endereco...');
+      this.form.endereco = endereco;
+      console.log(JSON.stringify(this.form.endereco));
     }
   }
 };
