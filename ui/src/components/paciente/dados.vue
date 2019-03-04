@@ -277,7 +277,7 @@ export default {
       let birthday = moment(this.form.dt_nascimento, "DD/MM/YYYY");
       if (birthday.isValid()) {
           let age = Math.abs(birthday.diff(moment(), 'years'))
-          if (age >= 18) {
+          if (age > 18) {
               return (false || !this.form.adulto_inapto);
           } else {
               return false;
