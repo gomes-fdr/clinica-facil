@@ -135,6 +135,7 @@
             class="input"
             :mask="['(##) ####-####', '(##) #####-####']" 
             placeholder="Telefone Responsável"
+            :disabled=isChild
             v-model="form.t_reponsavel">
           </the-mask>
         </b-field>
@@ -147,19 +148,21 @@
     <div class="field is-grouped is-grouped-right">
       <div class="control is-grouped-right">
         <b-switch type="is-info">Envio de SMS?</b-switch>
-        <b-switch type="is-info">Adulto com Responsável?</b-switch>
+        <b-switch type="is-info" v-model="form.adulto_inapto">
+          Adulto com Responsável?
+        </b-switch>
       </div>
     </div>
     <hr>
     <div class="field is-grouped is-grouped-right">
       <p class="control">
-        <button type="reset" class="button">Limpar</button>
+        <button type="reset" class="button" >Limpar</button>
       </p>
       <p class="control">
-        <a class="button">Novo</a>
+        <a class="button" disabled>Novo</a>
       </p>
       <p class="control">
-        <button class="button" @click.prevent="submit">Atualizar</button>
+        <button class="button" @click.prevent="submit" disabled>Atualizar</button>
       </p>
     </div>
   </form>
@@ -168,6 +171,8 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator';
 import Endereco from "../endereco";
+
+var moment = require('moment');
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -266,6 +271,19 @@ export default {
       this.form.endereco = endereco;
       // console.log(JSON.stringify(this.form.endereco));
     }
-  }
+  },
+  computed: {
+    isChild() {
+      let birthday = moment(this.form.dt_nascimento, "DD/MM/YYYY");
+      if (birthday.isValid()) {
+          let age = Math.abs(birthday.diff(moment(), 'years'))
+          if (age >= 18) {
+              return (false || !this.form.adulto_inapto);
+          } else {
+              return false;
+          }
+      }
+    }
+  },
 };
 </script>
