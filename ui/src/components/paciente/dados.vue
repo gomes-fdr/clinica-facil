@@ -63,6 +63,7 @@
              name="cpf"
              v-mask="['###.###.###-##']"
              placeholder="CPF"
+             @blur="getPaciente"
              v-model="form.cpf">
             </b-autocomplete>
           </b-field>
@@ -172,6 +173,7 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator';
+import {debounce} from 'lodash'
 import Endereco from "../endereco";
 
 var moment = require('moment');
@@ -272,7 +274,38 @@ export default {
       // console.log('Copiando endereco...');
       this.form.endereco = endereco;
       // console.log(JSON.stringify(this.form.endereco));
-    }
+    },
+    getPaciente: debounce(function () {
+      if (!this.form.cpf.length) {
+          // this.data = []
+            return
+        }
+        var cpf = this.form.cpf;
+        cpf = cpf.replace('.', '');
+        cpf = cpf.replace('.', '');
+        cpf = cpf.replace('-', '');
+        this.$http.get(`http://localhost:5000/_paciente/${cpf}`)
+          .then(function(response) {
+              // this.data = []
+              if (response.body) {
+                  console.log(response.body);
+                  this.form = response.body;
+                  // this.form.rua = response.body.logradouro;
+                  // this.form.cidade = response.body.cidade;
+                  // this.form.estado = response.body.estado;
+              }
+              // debugger
+          })
+          .catch((error) => {
+            console.log('ERRO na chamada');
+              // this.data = [];
+              // this.erroCep();
+              // throw error;
+          })
+          .finally(() => {
+              // this.isFetching = false
+          })
+    }, 500)
   },
   computed: {
     isChild() {

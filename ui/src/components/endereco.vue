@@ -80,21 +80,13 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator';
+import {debounce} from 'lodash'
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
     required: 'Campo obrigatório'
   }
 });
-
-function debounce(func, wait) {
-    let timeout
-    return function(...args) {
-        const context = this
-        clearTimeout(timeout)
-        timeout = setTimeout(() => func.apply(context, args), wait)
-    }
-}
 
 export default {
   created() {
