@@ -7,10 +7,13 @@ import VueTheMask from 'vue-the-mask'
 import Paciente from './Paciente.vue'
 import EventBus from './plugins/event-bus'
 
+import VueResource from 'vue-resource';
+
 Vue.use(SimpleVueValidation);
 Vue.use(Buefy)
 Vue.use(EventBus)
 Vue.use(VueTheMask)
+Vue.use(VueResource);
 
 new Vue({
   el: '#app',

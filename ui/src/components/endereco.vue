@@ -8,14 +8,16 @@
           <b-field
           :type="{'is-danger': validation.hasError('form.cep') }"
           :message="[validation.firstError('form.cep')]">
-            <the-mask
+            <b-autocomplete
               name="cep"
-              class="input"
-              :class="{'input is-danger': validation.hasError('form.cep') }"
-              mask="##.###-###"
+              id="cep"
+              v-mask="'##.###-###'"
               placeholder="CEP"
+              @blur="getCEP"
+              :loading="isFetching"
+              :data="data"
               v-model="form.cep">
-            </the-mask>
+            </b-autocomplete>
           </b-field>
           <b-field
           :type="{'is-danger': validation.hasError('form.rua') }"
@@ -84,6 +86,16 @@ const Validator = SimpleVueValidation.Validator.create({
     required: 'Campo obrigatório'
   }
 });
+
+function debounce(func, wait) {
+    let timeout
+    return function(...args) {
+        const context = this
+        clearTimeout(timeout)
+        timeout = setTimeout(() => func.apply(context, args), wait)
+    }
+}
+
 export default {
   created() {
     var vm = this;
@@ -100,7 +112,9 @@ export default {
         complemento: '',
         cidade: '',
         estado: '',
-      }
+      },
+      isFetching: false,
+      data: []
     }
   },
   validators: {
@@ -130,8 +144,52 @@ export default {
           vm.$bus.$emit('submitEndereco', vm.form);
         }
       });
+    },
+    getCEP: debounce(function () {
+        if (!this.form.cep.length) {
+          this.data = []
+            return
+        }
+        var cep = this.form.cep;
+        cep = cep.replace('.', '');
+        cep = cep.replace('-', '');
+
+        this.isFetching = true;
+        this.$http.get(`https://api.postmon.com.br/v1/cep/${cep}`)
+            .then(function(response) {
+                this.data = []
+                if (response.body) {
+                    // console.log(response.body);
+                    this.form.rua = response.body.logradouro;
+                    this.form.cidade = response.body.cidade;
+                    this.form.estado = response.body.estado;
+                }
+                // debugger
+            })
+            .catch((error) => {
+                this.data = [];
+                this.erroCep();
+                // throw error;
+            })
+            .finally(() => {
+                this.isFetching = false
+            })
+    }, 500),
+    erroCep() {
+        this.$toast.open({
+            duration: 5000,
+            message: 'CEP não encontrado',
+            type: 'is-warning',
+            position: 'is-bottom'
+
+        })
     }
   }
 }
 </script>
 
+<style>
+    #cep {
+      background-color: #FFDB7E;
+    }
+</style>
