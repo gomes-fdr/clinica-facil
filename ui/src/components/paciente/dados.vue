@@ -58,15 +58,13 @@
           <b-field
           :type="{'is-danger': validation.hasError('form.cpf') }"
           :message="[validation.firstError('form.cpf')]">
-            <the-mask
+            <b-autocomplete
              id="cpf"
              name="cpf"
-             class="input"
-            :class="{'input is-danger': validation.hasError('form.cpf') }"
-             mask="###.###.###-##"
+             v-mask="['###.###.###-##']"
              placeholder="CPF"
              v-model="form.cpf">
-            </the-mask>
+            </b-autocomplete>
           </b-field>
       </div>
     </div>
@@ -237,7 +235,7 @@ export default {
       return Validator.value(value).length(10);
     },
     'form.cpf': function(value) {
-      return Validator.value(value).required().length(11);
+      return Validator.value(value).required().length(11+3);
     },
     'form.filiacao': function(value) {
       return Validator.value(value).required();
