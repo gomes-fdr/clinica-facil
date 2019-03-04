@@ -9,6 +9,7 @@
           :type="{'is-danger': validation.hasError('form.nome') }"
           :message="[validation.firstError('form.nome')]">
             <b-input
+             id="nome"
              name="nome"
              type="text"
              placeholder="Nome"
@@ -58,6 +59,7 @@
           :type="{'is-danger': validation.hasError('form.cpf') }"
           :message="[validation.firstError('form.cpf')]">
             <the-mask
+             id="cpf"
              name="cpf"
              class="input"
             :class="{'input is-danger': validation.hasError('form.cpf') }"
@@ -147,7 +149,9 @@
 
     <div class="field is-grouped is-grouped-right">
       <div class="control is-grouped-right">
-        <b-switch type="is-info">Envio de SMS?</b-switch>
+        <b-switch type="is-info" v-model="this.hasCelPhone">
+          Envio de SMS?
+        </b-switch>
         <b-switch type="is-info" v-model="form.adulto_inapto">
           Adulto com Responsável?
         </b-switch>
@@ -214,7 +218,7 @@ export default {
           cidade: '',
           estado: '',
         },
-        envio_sms: true,
+        envio_sms: false,
         adulto_inapto: false,
       },
     };
@@ -283,7 +287,17 @@ export default {
               return false;
           }
       }
+    },
+    hasCelPhone() {
+      if (this.form.t_celular) {
+        return true;
+      }
     }
   },
 };
 </script>
+<style>
+    #cpf, #nome {
+      background-color: #FFDB7E;
+    }
+</style>
