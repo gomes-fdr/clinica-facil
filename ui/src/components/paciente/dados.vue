@@ -195,10 +195,10 @@
         <button type="reset" class="button">Limpar</button>
       </p>
       <p class="control">
-        <a class="button" disabled>Novo</a>
+        <a class="button" :disabled="bNovo">Novo</a>
       </p>
       <p class="control">
-        <button class="button" @click.prevent="submit" disabled>Atualizar</button>
+        <button class="button" @click.prevent="submit" :disabled="bAtualizar">Atualizar</button>
       </p>
     </div>
   </form>
@@ -246,6 +246,8 @@ export default {
       },
       isFetching: false,
       data: [],
+      bNovo: true,
+      bAtualizar: true
     };
   },
   validators: {
@@ -332,19 +334,20 @@ export default {
           // this.data = []
           if (response.body) {
             this.form = response.body;
-            // console.log(response.body);
-            // console.log(response.body.endereco);
-            // this.form.rua = response.body.logradouro;
-            // this.form.cidade = response.body.cidade;
-            // this.form.estado = response.body.estado;
+            this.bAtualizar = false;
+            this.bNovo = true;
           }
-          // debugger
         })
         .catch(error => {
-          console.log("ERRO na chamada");
-          // this.data = [];
-          // this.erroCep();
-          // throw error;
+          this.$toast.open({
+            duration: 5000,
+            message: 'PACIENTE não encontrado',
+            type: 'is-warning',
+            position: 'is-bottom'
+
+        })
+          this.bNovo = false;
+          this.bAtualizar = true;
         })
         .finally(() => {
           // this.isFetching = false
