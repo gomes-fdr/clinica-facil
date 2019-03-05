@@ -284,12 +284,13 @@ export default {
         cpf = cpf.replace('.', '');
         cpf = cpf.replace('.', '');
         cpf = cpf.replace('-', '');
-        this.$http.get(`http://localhost:5000/_paciente/${cpf}`)
+        this.$http.get(`http://localhost:5000/api/v1/paciente/${cpf}`)
           .then(function(response) {
               // this.data = []
               if (response.body) {
                   console.log(response.body);
                   this.form = response.body;
+                  conosle.log(response.body.endereco)
                   // this.form.rua = response.body.logradouro;
                   // this.form.cidade = response.body.cidade;
                   // this.form.estado = response.body.estado;
