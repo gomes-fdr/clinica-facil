@@ -1,5 +1,5 @@
 <template>
-  <form>
+  <form id="dados">
     <div class="field is-horizontal">
       <div class="field-label is-normal">
         <label class="label">Identificação</label>
@@ -192,7 +192,7 @@
     <hr>
     <div class="field is-grouped is-grouped-right">
       <p class="control">
-        <button type="reset" class="button">Limpar</button>
+        <button type="reset" @click.prevent="reset" class="button">Limpar</button>
       </p>
       <p class="control">
         <a class="button" :disabled="bNovo">Novo</a>
@@ -391,6 +391,32 @@ export default {
             position: 'is-bottom'
 
         })
+    },
+    reset() {
+      this.form.nome = '';
+      this.form.email = '';
+      this.form.dt_nascimento = '';
+      this.form.rg = '';
+      this.form.cpf = '';
+      this.form.filiacao = '';
+      this.form.profissao = '';
+      this.form.responsavel = '';
+      this.form.t_celular = '';
+      this.form.t_fixo = '';
+      this.form.t_reponsavel = '';
+      this.form.endereco.cep = '';
+      this.form.endereco.rua = '';
+      this.form.endereco.numero = '';
+      this.form.endereco.complemento = '';
+      this.form.endereco.cidade = '';
+      this.form.endereco.estado = '';
+      this.form.envio_sms = '';
+      this.form.adultoInapto = '';
+      this.isFetching = false;
+      this.data = [];
+      this.bNovo = true;
+      this.bAtualizar = true;
+      this.validation.reset();
     }
   },
   computed: {

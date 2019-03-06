@@ -14,7 +14,7 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item">
+        <a class="navbar-item" href="/">
           Inicio
         </a>
 
@@ -22,7 +22,7 @@
           Agenda
         </a>
 
-        <a class="navbar-item">
+        <a class="navbar-item" href="/paciente">
           Paciente
         </a>
 
