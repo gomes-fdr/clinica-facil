@@ -39,7 +39,7 @@ def paciente_api(cpf):
                 'estado': 'RS',
             },
             'envioSMS': True,
-            'adultoInapto': False
+            'adultoInapto': True
         }
         return jsonify(paciente), 200
     else:
