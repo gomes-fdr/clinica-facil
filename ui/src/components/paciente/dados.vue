@@ -219,6 +219,7 @@ const Validator = SimpleVueValidation.Validator.create({
 });
 
 export default {
+  name: 'Dados',
   data() {
     return {
       form: {

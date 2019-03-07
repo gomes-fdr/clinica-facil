@@ -3,6 +3,7 @@ import Navegacao from './components/navegacao'
 import RodaPe from './components/roda-pe'
 
 export default {
+  name: 'App',
   components: {
     Navegacao,
     RodaPe

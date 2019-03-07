@@ -1,19 +1,5 @@
-<script>
-import Navegacao from './components/navegacao'
-import RodaPe from './components/roda-pe'
-import PacienteTabs from './components/paciente/main'
-
-export default {
-  components: {
-    Navegacao,
-    RodaPe,
-    PacienteTabs
-  }
-}
-</script>
-
 <template>
-<div>
+<section>
   <navegacao/>
   <section class="hero is-link is-fullheight-with-navbar">
     <div class="hero-body">
@@ -23,9 +9,25 @@ export default {
     </div>
     <roda-pe/>
   </section>
-</div>
+</section>
 </template>
-<style>
+
+<script>
+import Navegacao from './components/navegacao'
+import RodaPe from './components/roda-pe'
+import PacienteTabs from './components/paciente/main'
+
+export default {
+  name: 'Paciente',
+  components: {
+    Navegacao,
+    RodaPe,
+    PacienteTabs
+  }
+}
+</script>
+
+<style scoped>
   .hero-body {
     background-color: #3F51B5;
   }

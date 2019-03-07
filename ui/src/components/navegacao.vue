@@ -14,17 +14,12 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item" href="/">
-          Inicio
-        </a>
-
+         <router-link class="navbar-item" to="/">Inicio</router-link>
         <a class="navbar-item">
           Agenda
         </a>
-
-        <a class="navbar-item" href="/paciente">
-          Paciente
-        </a>
+        
+         <router-link class="navbar-item" to="/paciente">Paciente</router-link>
 
         <a class="navbar-item">
           Profissional

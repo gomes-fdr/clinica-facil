@@ -21,7 +21,7 @@
                   <input class="input is-large" type="password" placeholder="Sua Senha">
                 </div>
               </div>
-              <button class="button is-block is-info is-large is-fullwidth">Login</button>
+              <button class="button is-block is-info is-large is-fullwidth" @click.prevent="login">Login</button>
             </form>
           </div>
         </div>
@@ -29,8 +29,24 @@
     </div>
   </section>
 </template>
+<script>
+export default {
+  name: 'Login',
+  data() {
+    return {
 
-<style>
+    }
+  },
+  methods: {
+    login() {
+      console.log('Logando...');
+    }
+  }
+}
+</script>
+
+
+<style scoped>
   html,
   body {
     /* font-family: "Open Sans", serif; */

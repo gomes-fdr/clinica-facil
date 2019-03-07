@@ -1,13 +1,3 @@
-<script>
-import Dados from './dados'
-export default {
-  components: {
-    Dados
-  }
-}
-</script>
-
-
 <template>
   <section>
     <div class="card">
@@ -25,3 +15,13 @@ export default {
     </div>
   </section>
 </template>
+<script>
+import Dados from './dados'
+
+export default {
+  name: 'PacienteTabs',
+  components: {
+    Dados
+  }
+}
+</script>

@@ -2,17 +2,11 @@ from flask import render_template
 from flask import jsonify, request
 from app.core import bp
 
-@bp.route('/login', methods=['GET', 'POST'])
-def login():
-    return render_template('login.html')
-
-@bp.route('/', methods=['GET', 'POST'])
-def index():
-    return render_template('index.html')
-
-@bp.route('/paciente', methods=['GET', 'POST'])
-def paciente():
-    return render_template('paciente.html')
+@bp.route('/', defaults={'path': ''})
+@bp.route('/<path:path>')
+def catch_all(path):
+    print("Path: {}".format(path))
+    return render_template("index.html")
 
 @bp.route('/api/v1/paciente/<cpf>', methods=['GET'])
 def paciente_api(cpf):

@@ -6,8 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   entry: {
     main: './src/main.js',
-    login: './src/login.js',
-    paciente: './src/paciente.js',
+    // login: './src/login.js',
+    // paciente: './src/paciente.js',
 
   },
   output: {
