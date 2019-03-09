@@ -9,8 +9,23 @@
           :type="{'is-danger': validation.hasError('form.nome') }"
           :message="[validation.firstError('form.nome')]"
         >
-          <b-input id="nome" name="nome" type="text" placeholder="Nome" v-model="form.nome"></b-input>
+          <div class="control is-expanded">
+            <input
+              class="input"
+              id="nome"
+              name="nome"
+              type="text"
+              placeholder="Nome"
+              v-model="form.nome"
+            >
+          </div>
+          <div class="control">
+            <a class="button is-warning" @click.prevent="pesquisarNome">
+              <i class="fas fa-search"></i>
+            </a>
+          </div>
         </b-field>
+
         <b-field
           :type="{'is-danger': validation.hasError('form.email') }"
           :message="[validation.firstError('form.email')]"
@@ -28,33 +43,33 @@
           :type="{'is-danger': validation.hasError('form.dt_nascimento') }"
           :message="[validation.firstError('form.dt_nascimento')]"
         >
-          <b-input
-            name="dt_nascimento"
-            placeholder="Data Nascimento"
-            v-model="form.dt_nascimento"
-          ></b-input>
+          <b-input name="dt_nascimento" placeholder="Data Nascimento" v-model="form.dt_nascimento"></b-input>
         </b-field>
         <b-field
           :type="{'is-danger': validation.hasError('form.rg') }"
           :message="[validation.firstError('form.rg')]"
         >
-          <b-input
-            name="rg"
-            placeholder="Identidade"
-            v-model="form.rg"
-          ></b-input>
+          <b-input name="rg" placeholder="Identidade" v-model="form.rg"></b-input>
         </b-field>
         <b-field
           :type="{'is-danger': validation.hasError('form.cpf') }"
           :message="[validation.firstError('form.cpf')]"
         >
-          <b-autocomplete
-            id="cpf"
-            name="cpf"
-            placeholder="CPF"
-            @blur="getPaciente"
-            v-model="form.cpf"
-          ></b-autocomplete>
+          <div class="control is-expanded">
+            <input
+              class="input"
+              id="cpf"
+              name="cpf"
+              type="text"
+              placeholder="CPF"
+              v-model="form.cpf"
+            >
+          </div>
+          <div class="control">
+            <a class="button is-warning" @click.prevent="pesquisarCPF">
+              <i class="fas fa-search"></i>
+            </a>
+          </div>
         </b-field>
       </div>
     </div>
@@ -77,12 +92,12 @@
           :type="{'is-danger': validation.hasError('form.responsavel') }"
           :message="[validation.firstError('form.responsavel')]"
         >
-          <b-input 
-           name="responsavel" 
-           placeholder="Responsável" 
-           :disabled="isChild"
-           v-model="form.responsavel">
-          </b-input>
+          <b-input
+            name="responsavel"
+            placeholder="Responsável"
+            :disabled="isChild"
+            v-model="form.responsavel"
+          ></b-input>
         </b-field>
       </div>
     </div>
@@ -93,20 +108,10 @@
       </div>
       <div class="field-body">
         <b-field>
-          <b-input
-            name="celular"
-            type="text"
-            placeholder="Celular"
-            v-model="form.t_celular"
-          ></b-input>
+          <b-input name="celular" type="text" placeholder="Celular" v-model="form.t_celular"></b-input>
         </b-field>
         <b-field>
-          <b-input
-            name="fixo"
-            type="text"
-            placeholder="Fixo"
-            v-model="form.t_fixo"
-          ></b-input>
+          <b-input name="fixo" type="text" placeholder="Fixo" v-model="form.t_fixo"></b-input>
         </b-field>
         <b-field>
           <b-input
@@ -129,15 +134,21 @@
             :type="{'is-danger': validation.hasError('form.endereco.cep') }"
             :message="[validation.firstError('form.endereco.cep')]"
           >
-            <b-autocomplete
-              name="cep"
-              id="cep"
-              placeholder="CEP"
-              @blur="getCEP"
-              :loading="form.isFetching"
-              :data="form.data"
-              v-model="form.endereco.cep"
-            ></b-autocomplete>
+            <div class="control is-expanded">
+              <input
+                class="input"
+                id="cep"
+                name="cep"
+                type="text"
+                placeholder="CEP"
+                v-model="form.endereco.cep"
+              >
+            </div>
+            <div class="control">
+              <a class="button is-warning" @click.prevent="pesquisarCEP">
+                <i class="fas fa-search"></i>
+              </a>
+            </div>
           </b-field>
           <b-field
             :type="{'is-danger': validation.hasError('form.endereco.rua') }"
@@ -149,11 +160,7 @@
             :type="{'is-danger': validation.hasError('form.endereco.numero') }"
             :message="[validation.firstError('form.endereco.numero')]"
           >
-            <b-input
-              name="numero"
-              placeholder="Número"
-              v-model="form.endereco.numero"
-            ></b-input>
+            <b-input name="numero" placeholder="Número" v-model="form.endereco.numero"></b-input>
           </b-field>
         </div>
       </div>
@@ -164,7 +171,11 @@
         </div>
         <div class="field-body">
           <b-field>
-            <b-input name="complemento" placeholder="Complemento" v-model="form.endereco.complemento"></b-input>
+            <b-input
+              name="complemento"
+              placeholder="Complemento"
+              v-model="form.endereco.complemento"
+            ></b-input>
           </b-field>
           <b-field
             :type="{'is-danger': validation.hasError('form.endereco.cidade') }"
@@ -219,7 +230,7 @@ const Validator = SimpleVueValidation.Validator.create({
 });
 
 export default {
-  name: 'Dados',
+  name: "Dados",
   data() {
     return {
       form: {
@@ -275,21 +286,21 @@ export default {
     "form.responsavel": function(value) {
       return Validator.value(value).required();
     },
-    'form.endereco.cep': function(value) {
+    "form.endereco.cep": function(value) {
       return Validator.value(value).required();
     },
-    'form.endereco.rua': function(value) {
+    "form.endereco.rua": function(value) {
       return Validator.value(value).required();
     },
-    'form.endereco.numero': function(value) {
+    "form.endereco.numero": function(value) {
       return Validator.value(value).required();
     },
-    'form.endereco.cidade': function(value) {
+    "form.endereco.cidade": function(value) {
       return Validator.value(value).required();
     },
-    'form.endereco.estado': function(value) {
+    "form.endereco.estado": function(value) {
       return Validator.value(value).required();
-    },
+    }
   },
   methods: {
     submit() {
@@ -320,7 +331,8 @@ export default {
       this.form.endereco = endereco;
       // console.log(JSON.stringify(this.form.endereco));
     },
-    getPaciente: debounce(function() {
+    pesquisarCPF() {
+      console.log("Pesquisar CPF");
       if (!this.form.cpf.length) {
         // this.data = []
         return;
@@ -342,82 +354,86 @@ export default {
         .catch(error => {
           this.$toast.open({
             duration: 5000,
-            message: 'PACIENTE não encontrado',
-            type: 'is-warning',
-            position: 'is-bottom'
-
-        })
+            message: "PACIENTE não encontrado",
+            type: "is-warning",
+            position: "is-bottom"
+          });
           this.bNovo = false;
           this.bAtualizar = true;
         })
         .finally(() => {
           // this.isFetching = false
         });
-    }, 500),
-    getCEP: debounce(function () {
-        if (!this.form.endereco.cep.length) {
-          this.data = []
-            return
-        }
-        var cep = this.form.endereco.cep;
-        cep = cep.replace('.', '');
-        cep = cep.replace('-', '');
+    },
+    pesquisarCEP() {
+      console.log("Pesquisar CEP: " + this.form.endereco.cep.length);
+      if (!this.form.endereco.cep.length) {
+        this.data = [];
+        console.log("Nada enviado...");
+        return;
+      }
+      var cep = this.form.endereco.cep;
+      cep = cep.replace(".", "");
+      cep = cep.replace("-", "");
 
-        this.isFetching = true;
-        this.$http.get(`https://api.postmon.com.br/v1/cep/${cep}`)
-            .then(function(response) {
-                this.data = []
-                if (response.body) {
-                    // console.log(response.body);
-                    this.form.endereco.rua = response.body.logradouro;
-                    this.form.endereco.cidade = response.body.cidade;
-                    this.form.endereco.estado = response.body.estado;
-                }
-                // debugger
-            })
-            .catch((error) => {
-                this.data = [];
-                this.erroCep();
-                // throw error;
-            })
-            .finally(() => {
-                this.isFetching = false
-            })
-    }, 500),
-    erroCep() {
-        this.$toast.open({
-            duration: 5000,
-            message: 'CEP não encontrado',
-            type: 'is-warning',
-            position: 'is-bottom'
-
+      this.isFetching = true;
+      this.$http
+        .get(`https://api.postmon.com.br/v1/cep/${cep}`)
+        .then(function(response) {
+          this.data = [];
+          if (response.body) {
+            // console.log(response.body);
+            this.form.endereco.rua = response.body.logradouro;
+            this.form.endereco.cidade = response.body.cidade;
+            this.form.endereco.estado = response.body.estado;
+          }
+          // debugger
         })
+        .catch(error => {
+          this.data = [];
+          this.erroCep();
+          // throw error;
+        })
+        .finally(() => {
+          this.isFetching = false;
+        });
+    },
+    erroCep() {
+      this.$toast.open({
+        duration: 5000,
+        message: "CEP não encontrado",
+        type: "is-warning",
+        position: "is-bottom"
+      });
     },
     reset() {
-      this.form.nome = '';
-      this.form.email = '';
-      this.form.dt_nascimento = '';
-      this.form.rg = '';
-      this.form.cpf = '';
-      this.form.filiacao = '';
-      this.form.profissao = '';
-      this.form.responsavel = '';
-      this.form.t_celular = '';
-      this.form.t_fixo = '';
-      this.form.t_reponsavel = '';
-      this.form.endereco.cep = '';
-      this.form.endereco.rua = '';
-      this.form.endereco.numero = '';
-      this.form.endereco.complemento = '';
-      this.form.endereco.cidade = '';
-      this.form.endereco.estado = '';
-      this.form.envio_sms = '';
-      this.form.adultoInapto = '';
+      this.form.nome = "";
+      this.form.email = "";
+      this.form.dt_nascimento = "";
+      this.form.rg = "";
+      this.form.cpf = "";
+      this.form.filiacao = "";
+      this.form.profissao = "";
+      this.form.responsavel = "";
+      this.form.t_celular = "";
+      this.form.t_fixo = "";
+      this.form.t_reponsavel = "";
+      this.form.endereco.cep = "";
+      this.form.endereco.rua = "";
+      this.form.endereco.numero = "";
+      this.form.endereco.complemento = "";
+      this.form.endereco.cidade = "";
+      this.form.endereco.estado = "";
+      this.form.envio_sms = "";
+      this.form.adultoInapto = "";
       this.isFetching = false;
       this.data = [];
       this.bNovo = true;
       this.bAtualizar = true;
       this.validation.reset();
+    },
+    pesquisarNome() {
+      console.log("Pesquisar paciente");
     }
   },
   computed: {
@@ -440,10 +456,3 @@ export default {
   }
 };
 </script>
-<style>
-#cpf,
-#nome,
-#cep {
-  background-color: #ffdb7e;
-}
-</style>
