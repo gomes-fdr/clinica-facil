@@ -10,18 +10,40 @@
               <img src="../assets/logo-darmas.png">
             </figure>
             <form>
-              <div class="field">
+              <b-field
+                :type="{'is-danger': validation.hasError('form.email') }"
+                :message="[validation.firstError('form.email')]"
+              >
                 <div class="control">
-                  <input class="input is-large" type="email" placeholder="Seu Email" autofocus>
+                  <input
+                    name="email"
+                    class="input is-large"
+                    type="email"
+                    v-model="form.email"
+                    placeholder="Seu Email"
+                    autofocus
+                  >
                 </div>
-              </div>
+              </b-field>
 
-              <div class="field">
+              <b-field
+                :type="{'is-danger': validation.hasError('form.password') }"
+                :message="[validation.firstError('form.password')]"
+              >
                 <div class="control">
-                  <input class="input is-large" type="password" placeholder="Sua Senha">
+                  <input
+                    name="password"
+                    class="input is-large"
+                    type="password"
+                    v-model="form.password"
+                    placeholder="Sua Senha"
+                  >
                 </div>
-              </div>
-              <button class="button is-block is-info is-large is-fullwidth" @click.prevent="login">Login</button>
+              </b-field>
+              <button
+                class="button is-block is-info is-large is-fullwidth"
+                @click.prevent="login"
+              >Login</button>
             </form>
           </div>
         </div>
@@ -30,59 +52,101 @@
   </section>
 </template>
 <script>
+import SimpleVueValidation from "simple-vue-validator";
+
+const Validator = SimpleVueValidation.Validator.create({
+  templates: {
+    required: "Campo obrigatório",
+    email: "Formato de e-mail inválido",
+    length: "Tamanho do campo inválido"
+  }
+});
+
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
-
+      form: {
+        email: "",
+        password: ""
+      }
+    };
+  },
+  validators: {
+    "form.email": function(value) {
+      return Validator.value(value).required().email();
+    },
+    "form.password": function(value) {
+      return Validator.value(value).required();
     }
   },
   methods: {
     login() {
-      console.log('Logando...');
+      console.log("Logando...");
+      var vm = this;
+      // this.$bus.$emit("submit");
+      this.$validate().then(function(success) {
+        if (success) {
+          // console.log('Validou, enviando...');
+          // console.log(JSON.stringify(vm.form));
+          vm.$toast.open({
+            message: "Formulário preenchido com sucesso!",
+            type: "is-success",
+            position: "is-bottom"
+          });
+          return;
+        } else {
+          vm.$toast.open({
+            message:
+              "Formulário inválido! Verifique o preenchimento dos campos",
+            type: "is-danger",
+            position: "is-bottom"
+          });
+        }
+      });
     }
   }
-}
+};
 </script>
 
 
 <style scoped>
-  html,
-  body {
-    /* font-family: "Open Sans", serif; */
-    font-size: 14px;
-    font-weight: 300;
-  }
-  .hero.is-success {
-    background: #f2f6fa;
-  }
-  .hero .nav,
-  .hero.is-success .nav {
-    -webkit-box-shadow: none;
-    box-shadow: none;
-  }
-  .box {
-    margin-top: 5rem;
-  }
-  .avatar {
-    margin-top: -70px;
-    padding-bottom: 20px;
-  }
-  .avatar img {
-    padding: 5px;
-    background: #fff;
-    border-radius: 50%;
-    -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1),
-      0 0 0 1px rgba(10, 10, 10, 0.1);
-    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
-  }
-  input {
-    font-weight: 300;
-  }
-  p {
-    font-weight: 700;
-  }
-  p.subtitle {
-    padding-top: 1rem;
-  }
+html,
+body {
+  /* font-family: "Open Sans", serif; */
+  font-size: 14px;
+  font-weight: 300;
+}
+.hero.is-success {
+  background: #f2f6fa;
+}
+.hero .nav,
+.hero.is-success .nav {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.box {
+  margin-top: 5rem;
+}
+.avatar {
+  margin-top: -70px;
+  padding-bottom: 20px;
+}
+.avatar img {
+  padding: 5px;
+  background: #fff;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.1);
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+}
+input {
+  font-weight: 300;
+}
+p {
+  font-weight: 700;
+}
+p.subtitle {
+  padding-top: 1rem;
+}
 </style>
