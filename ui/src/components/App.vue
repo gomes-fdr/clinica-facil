@@ -1,6 +1,6 @@
 <script>
-import Navegacao from './components/navegacao'
-import RodaPe from './components/roda-pe'
+import Navegacao from './navegacao'
+import RodaPe from './roda-pe'
 
 export default {
   name: 'App',

@@ -7,7 +7,7 @@
           <p class="subtitle has-text-grey">Por favor, identifique-se para entrar.</p>
           <div class="box">
             <figure class="avatar">
-              <img src="./assets/logo-darmas.png">
+              <img src="../assets/logo-darmas.png">
             </figure>
             <form>
               <div class="field">

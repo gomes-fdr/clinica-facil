@@ -9,6 +9,7 @@ from app.models import User
 
 #IMPORTANTE, tem que colocar isso header de solicitação
 # headers = {'content-type': 'application/json'} 
+# fonte: https://stackabuse.com/single-page-apps-with-vue-js-and-flask-jwt-authentication/
 
 # decorator para protger rotas, somente autenticados com token podem ser acessados
 def token_required(f):  

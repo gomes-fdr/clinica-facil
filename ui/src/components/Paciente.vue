@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import Navegacao from './components/navegacao'
-import RodaPe from './components/roda-pe'
-import PacienteTabs from './components/paciente/main'
+import Navegacao from './navegacao'
+import RodaPe from './roda-pe'
+import PacienteTabs from './paciente/main'
 
 export default {
   name: 'Paciente',

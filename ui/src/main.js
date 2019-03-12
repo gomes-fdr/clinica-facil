@@ -5,9 +5,9 @@ import 'buefy/dist/buefy.css'
 import SimpleVueValidation from 'simple-vue-validator';
 import VueResource from 'vue-resource';
 
-import App from './App.vue'
-import Paciente from './Paciente.vue'
-import Login from './Login.vue'
+import App from './components/App'
+import Paciente from './components/Paciente'
+import Login from './components/Login'
 
 import EventBus from './plugins/event-bus'
 
