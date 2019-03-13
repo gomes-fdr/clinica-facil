@@ -13,21 +13,16 @@
 </template>
 
 <script>
-import Navegacao from "./Navegacao";
-import RodaPe from "./RodaPe";
+import Navegacao from './Navegacao'
+import RodaPe from './RodaPe'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     Navegacao,
     RodaPe
-  },
-  data() {
-    return {};
-  },
-  mounted() {},
-  methods: {}
-};
+  }
+}
 </script>
 
 <style>
