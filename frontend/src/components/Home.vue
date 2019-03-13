@@ -1,43 +1,40 @@
-
 <template>
   <div>
-    <p>Home page</p>
-    <p>Random number from backend: {{ randomNumber }}</p>
-    <button @click="getRandom">New random number</button>
+    <navegacao/>
+    <section class="hero is-link is-fullheight-with-navbar">
+      <div class="hero-body">
+        <div class="container">
+          <p class="title">Sistema de Gestão da Clinica Darmas</p>
+        </div>
+      </div>
+      <roda-pe/>
+    </section>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import Navegacao from "./Navegacao";
+import RodaPe from "./RodaPe";
+
 export default {
-  data () {
-    return {
-      randomNumber: 0
-    }
+  name: "App",
+  components: {
+    Navegacao,
+    RodaPe
   },
-  methods: {
-    getRandomInt (min, max) {
-      min = Math.ceil(min)
-      max = Math.floor(max)
-      return Math.floor(Math.random() * (max - min + 1)) + min
-    },
-    getRandom () {
-      // this.randomNumber = this.getRandomInt(1, 100)
-      this.randomNumber = this.getRandomFromBackend()
-    },
-    getRandomFromBackend () {
-      const path = `http://localhost:5000/api/random`
-      axios.get(path)
-      .then(response => {
-        this.randomNumber = response.data.randomNumber
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    }
+  data() {
+    return {};
   },
-  created () {
-    this.getRandom()
-  }
-}
+  mounted() {},
+  methods: {}
+};
 </script>
+
+<style>
+.hero-body {
+  background-color: #3f51b5;
+}
+.hero-foot {
+  background-color: white;
+}
+</style>
