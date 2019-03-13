@@ -51,6 +51,12 @@ def catch_all(path):
     print("Path: {}".format(path))
     return render_template("index.html")
 
+# @bp.route('/', defaults={'path': ''})
+# @bp.route('/<path:path>')               # url /books will fail into here
+# def index(path):
+#     print("Path: {}".format(path))
+#     return current_app.make_response('index.html')
+
 @bp.route('/api/v1/status', methods=['GET'])
 def status():
     return jsonify({'status': 'ok v1'})

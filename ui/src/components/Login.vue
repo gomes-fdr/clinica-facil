@@ -53,6 +53,7 @@
 </template>
 <script>
 import SimpleVueValidation from "simple-vue-validator";
+import auth from "../auth";
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -67,14 +68,16 @@ export default {
   data() {
     return {
       form: {
-        email: "",
+        email: "joe@example.com",
         password: ""
       }
     };
   },
   validators: {
     "form.email": function(value) {
-      return Validator.value(value).required().email();
+      return Validator.value(value)
+        .required()
+        .email();
     },
     "form.password": function(value) {
       return Validator.value(value).required();
@@ -89,12 +92,19 @@ export default {
         if (success) {
           // console.log('Validou, enviando...');
           // console.log(JSON.stringify(vm.form));
-          vm.$toast.open({
-            message: "Formulário preenchido com sucesso!",
-            type: "is-success",
-            position: "is-bottom"
+          // vm.$toast.open({
+          //   message: "Formulário preenchido com sucesso!",
+          //   type: "is-success",
+          //   position: "is-bottom"
+          // });
+
+          auth.login(vm.form.email, vm.form.password, loggedIn => {
+            if (loggedIn) {
+              vm.$router.replace(vm.$route.query.redirect || "/");
+            }
           });
-          return;
+
+          // return;
         } else {
           vm.$toast.open({
             message:
