@@ -3,22 +3,22 @@ import Router from 'vue-router'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import SimpleVueValidation from 'simple-vue-validator'
-// import auth from '../auth'
+import auth from '../auth'
 
-// function requireAuth (to, from, next) {
-//   if (!auth.loggedIn()) {
-//     next({
-//       path: '/login',
-//       query: { redirect: to.fullPath }
-//     })
-//   } else {
-//     next()
-//   }
-// }
+function requireAuth (to, from, next) {
+  if (!auth.loggedIn()) {
+    next({
+      path: '/login',
+      query: { redirect: to.fullPath }
+    })
+  } else {
+    next()
+  }
+}
 
 const routerOptions = [
-  { path: '/', component: 'Home' },
-  { path: '/paciente', component: 'Paciente' },
+  { path: '/', component: 'Home', beforeEnter: requireAuth },
+  { path: '/paciente', component: 'Paciente', beforeEnter: requireAuth },
   { path: '/login', component: 'Login' },
   { path: '*', component: 'NotFound' }
 ]

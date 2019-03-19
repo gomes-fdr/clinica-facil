@@ -33,7 +33,7 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <a class="button is-light">
+            <a class="button is-light" @click.prevent="logout">
               Sair
             </a>
           </div>
@@ -42,3 +42,17 @@
     </div>
   </nav>
 </template>
+
+<script>
+import auth from '../auth'
+
+export default {
+  methods: {
+    logout () {
+      auth.logout()
+      location.reload()
+    }
+  }
+}
+</script>
+
