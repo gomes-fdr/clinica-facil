@@ -87,24 +87,22 @@ export default {
     login () {
       console.log('Logando...')
       var vm = this
-      // this.$bus.$emit("submit");
       this.$validate().then(function (success) {
         if (success) {
-          // console.log('Validou, enviando...');
-          // console.log(JSON.stringify(vm.form));
-          // vm.$toast.open({
-          //   message: "Formulário preenchido com sucesso!",
-          //   type: "is-success",
-          //   position: "is-bottom"
-          // });
 
           auth.login(vm.form.email, vm.form.password, loggedIn => {
             if (loggedIn) {
               vm.$router.replace(vm.$route.query.redirect || '/')
+            } else {
+                  vm.$toast.open({
+                  message:
+                  'Usuário ou senha INVÁLIDOS',
+                  type: 'is-danger',
+                  position: 'is-bottom'
+              })
             }
           })
 
-          // return;
         } else {
           vm.$toast.open({
             message:
