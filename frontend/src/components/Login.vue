@@ -94,11 +94,10 @@ export default {
             if (loggedIn) {
               vm.$router.replace(vm.$route.query.redirect || '/')
             } else {
-                  vm.$toast.open({
-                  message:
-                  'Usuário ou senha INVÁLIDOS',
-                  type: 'is-danger',
-                  position: 'is-bottom'
+              vm.$toast.open({
+                message: 'Usuário ou senha INVÁLIDOS',
+                type: 'is-danger',
+                position: 'is-bottom'
               })
             }
           })
