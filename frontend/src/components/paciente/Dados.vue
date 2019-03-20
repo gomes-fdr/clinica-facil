@@ -342,28 +342,29 @@ export default {
         .get(`http://localhost:5000/api/v1/paciente/${cpf}`)
         .then(function (response) {
           // this.data = []
-          if (response.body) {
-            this.form = response.body
+          console.log(response.data)
+          if (response.data) {
+            this.form = response.data
             this.bAtualizar = false
             this.bNovo = true
           }
         })
-        // .catch(error => {
-        //   this.$toast.open({
-        //     duration: 5000,
-        //     message: 'PACIENTE não encontrado',
-        //     type: 'is-warning',
-        //     position: 'is-bottom'
-        //   })
-        //   this.bNovo = false
-        //   this.bAtualizar = true
-        // })
+        .catch(error => {
+          this.$toast.open({
+            duration: 5000,
+            message: 'PACIENTE não encontrado',
+            type: 'is-warning',
+            position: 'is-bottom'
+          })
+          this.bNovo = false
+          this.bAtualizar = true
+        })
         .finally(() => {
-          // this.isFetching = false
+          this.isFetching = false
         })
     },
     pesquisarCEP () {
-      console.log('Pesquisar CEP: ' + this.form.endereco.cep.length)
+      var vm = this
       if (!this.form.endereco.cep.length) {
         this.data = []
         console.log('Nada enviado...')
@@ -373,24 +374,21 @@ export default {
       cep = cep.replace('.', '')
       cep = cep.replace('-', '')
 
-      this.isFetching = true
       this.$http
-        .get(`https://api.postmon.com.br/v1/cep/${cep}`)
+        .get(`https://viacep.com.br/ws/${cep}/json`)
         .then(function (response) {
-          this.data = []
-          if (response.body) {
+          if (response.data) {
             // console.log(response.body);
-            this.form.endereco.rua = response.body.logradouro
-            this.form.endereco.cidade = response.body.cidade
-            this.form.endereco.estado = response.body.estado
+            vm.form.endereco.rua = response.data.logradouro
+            vm.form.endereco.cidade = response.data.localidade
+            vm.form.endereco.estado = response.data.uf
           }
         })
-        // .catch(error => {
-        //   this.data = []
-        //   this.erroCep()
-        // })
+        .catch(function (error) {
+          vm.erroCep()
+        })
         .finally(() => {
-          this.isFetching = false
+          vm.isFetching = false
         })
     },
     erroCep () {

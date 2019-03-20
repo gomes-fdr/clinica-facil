@@ -25,5 +25,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     // Fechamento de blocos
     'padded-blocks': 0,
+    // Uso de variavel inicializada por callback
+    'handle-callback-err': 0,
   }
 }
