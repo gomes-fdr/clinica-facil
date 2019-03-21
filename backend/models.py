@@ -16,11 +16,11 @@ class User:
             return None
 
         # user = cls.query.filter_by(email=email).first()
-        user = {'id': '1', 'email': 'gomes.fdr@gmail.com', 'password': '1234'}
+        user = {'id': '1', 'email': 'recepcao@clinicadarmas.com.br', 'password': '1234'}
         print(user.get('password'))
 
         # if not user or not check_password_hash((user['password']), password):
-        if not user or (user.get('password') != str(password)):
+        if not user or (user.get('password') != str(password)) or (user.get('email') != email):
             return None
 
         return user

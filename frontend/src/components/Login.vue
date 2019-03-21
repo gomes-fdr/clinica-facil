@@ -68,7 +68,7 @@ export default {
   data () {
     return {
       form: {
-        email: 'joe@example.com',
+        email: 'recepcao@clinicadarmas.com.br',
         password: ''
       }
     }
@@ -85,7 +85,6 @@ export default {
   },
   methods: {
     login () {
-      console.log('Logando...')
       var vm = this
       this.$validate().then(function (success) {
         if (success) {
@@ -101,7 +100,6 @@ export default {
               })
             }
           })
-
         } else {
           vm.$toast.open({
             message:

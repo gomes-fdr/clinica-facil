@@ -1,6 +1,9 @@
 /* eslint-disable standard/no-callback-literal */
 /* globals localStorage */
 
+import axios from 'axios'
+import { API_URL } from './main'
+
 export default {
   login (email, pass, cb) {
     cb = arguments[arguments.length - 1]
@@ -29,12 +32,10 @@ export default {
     delete localStorage.token
     if (cb) cb()
     this.onChange(false)
-    // this.$router.push('/login')
-    console.log('saindo...')
   },
 
   loggedIn () {
-    return !!localStorage.token
+    return localStorage.token
   },
 
   onChange () {}
@@ -42,15 +43,22 @@ export default {
 
 function pretendRequest (email, pass, cb) {
   setTimeout(() => {
-    // const path = `http://localhost:5000/api/v1/`
-    // axios.get(path)
-    if (email === 'joe@example.com' && pass === 'password1') {
+    axios({
+      method: 'post',
+      url: API_URL + 'token',
+      data: {
+        email: email,
+        password: pass
+      }
+    })
+    .then(response => {
       cb({
         authenticated: true,
-        token: Math.random().toString(36).substring(7)
+        token: response.data['token']
       })
-    } else {
+    })
+    .catch(error => {
       cb({ authenticated: false })
-    }
-  }, 0)
+    })
+  }, 100)
 }

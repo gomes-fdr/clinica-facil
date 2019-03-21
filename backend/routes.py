@@ -94,11 +94,9 @@ def register():
     # return jsonify(user.to_dict()), 201
     return jsonify(data), 201
 
-@bp.route('/api/v1/login', methods=['POST'])
+@bp.route('/api/v1/token', methods=['POST'])
 def login():
     data = request.get_json()
-    print('imprimindo data...')
-    print(data)
     user = User.autorizar(**data)
 
     if not user:
