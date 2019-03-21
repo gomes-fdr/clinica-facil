@@ -341,7 +341,7 @@ export default {
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('-', '')
       this.$http
-        .get(`http://localhost:5000/api/v1/paciente/${cpf}`, {'headers': {'Authorization': `b: ${auth.getToken()}`}})
+        .get(`http://localhost:5000/api/v1/paciente/cpf/${cpf}`, {'headers': {'Authorization': `b: ${auth.getToken()}`}})
         .then(function (response) {
           if (response.data) {
             vm.form = response.data

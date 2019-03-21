@@ -52,11 +52,9 @@ def token_required(f):
 def status():
     return jsonify({'status': 'ok v1'})
 
-@bp.route('/api/v1/paciente/<cpf>', methods=['GET'])
+@bp.route('/api/v1/paciente/cpf/<cpf>', methods=['GET'])
 @token_required
-def paciente_api(cpf):
-    print('parametros')
-    print(cpf)
+def paciente_cpf(cpf):
     if cpf == '60976900025':
         paciente = {
             'total': 1,
@@ -89,6 +87,12 @@ def paciente_api(cpf):
             'status': 'Not found' 
         }
     return jsonify(paciente), 404
+
+
+@bp.route('/api/v1/paciente/nome/<nome>', methods=['GET'])
+def paciente_nome(nome):
+    return jsonify({'total':0, 'status': 'Not found'})
+
 
 @bp.route('/api/v1/register/', methods=['POST'])
 def register():
