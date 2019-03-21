@@ -16,6 +16,7 @@ def token_required(f):
     @wraps(f)
     def _verify(*args, **kwargs):
         auth_headers = request.headers.get('Authorization', '').split()
+        # auth_headers = auth_headers[0].split('.')
 
         invalid_msg = {
             'message': 'Invalid token. Registeration and / or authentication required',
@@ -26,6 +27,8 @@ def token_required(f):
             'authenticated': False
         }
 
+        print(auth_headers)
+        print(len(auth_headers))
         if len(auth_headers) != 2:
             return jsonify(invalid_msg), 401
 
@@ -38,7 +41,7 @@ def token_required(f):
                 raise RuntimeError('User not found')
             return f(*args, **kwargs)
         except jwt.ExpiredSignatureError:
-            return jsonify(expired_msg), 401 # 401 is Unauthorized HTTP status code
+            return jsonify(expired_msg), 440
         except (jwt.InvalidTokenError, Exception) as e:
             print(e)
             return jsonify(invalid_msg), 401
@@ -52,6 +55,8 @@ def status():
 @bp.route('/api/v1/paciente/<cpf>', methods=['GET'])
 @token_required
 def paciente_api(cpf):
+    print('parametros')
+    print(cpf)
     if cpf == '60976900025':
         paciente = {
             'total': 1,
@@ -81,7 +86,7 @@ def paciente_api(cpf):
     else:
         paciente = {
             'total':0,
-            'situacao': 'Não encontrado' 
+            'status': 'Not found' 
         }
     return jsonify(paciente), 404
 
@@ -105,7 +110,7 @@ def login():
     token = jwt.encode({
         'sub': user['email'],
         'iat': datetime.utcnow(),
-        'exp': datetime.utcnow() + timedelta(minutes=30)
+        'exp': datetime.utcnow() + timedelta(minutes=60)
     }, '0123456789')
 
     return jsonify({'token': token.decode('UTF-8')})

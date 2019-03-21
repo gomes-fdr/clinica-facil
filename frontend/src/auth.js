@@ -32,6 +32,7 @@ export default {
     delete localStorage.token
     if (cb) cb()
     this.onChange(false)
+    location.reload()
   },
 
   loggedIn () {

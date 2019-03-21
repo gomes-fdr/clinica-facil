@@ -217,6 +217,7 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
+import auth from '../../auth'
 
 var moment = require('moment')
 
@@ -334,33 +335,44 @@ export default {
       if (!this.form.cpf.length) {
         return
       }
+      var vm = this
       var cpf = this.form.cpf
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('-', '')
       this.$http
-        .get(`http://localhost:5000/api/v1/paciente/${cpf}`)
+        .get(`http://localhost:5000/api/v1/paciente/${cpf}`, {'headers': {'Authorization': `b: ${auth.getToken()}`}})
         .then(function (response) {
-          // this.data = []
-          console.log(response.data)
           if (response.data) {
-            this.form = response.data
-            this.bAtualizar = false
-            this.bNovo = true
+            vm.form = response.data
+            vm.bAtualizar = false
+            vm.bNovo = true
           }
         })
         .catch(error => {
-          this.$toast.open({
-            duration: 5000,
-            message: 'PACIENTE não encontrado',
-            type: 'is-warning',
-            position: 'is-bottom'
-          })
-          this.bNovo = false
-          this.bAtualizar = true
+          console.log(error.response.status)
+
+          if (error.response.status === 440) {
+            this.$toast.open({
+              duration: 5000,
+              message: 'SESSÃO expirou',
+              type: 'is-danger',
+              position: 'is-bottom'
+            })
+            setTimeout(function () { auth.logout() }, 5000)
+          } else {
+            this.$toast.open({
+              duration: 5000,
+              message: 'PACIENTE não encontrado',
+              type: 'is-warning',
+              position: 'is-bottom'
+            })
+          }
+          vm.bNovo = false
+          vm.bAtualizar = true
         })
         .finally(() => {
-          this.isFetching = false
+          vm.isFetching = false
         })
     },
     pesquisarCEP () {

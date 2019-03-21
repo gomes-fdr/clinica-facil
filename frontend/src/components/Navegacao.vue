@@ -50,7 +50,6 @@ export default {
   methods: {
     logout () {
       auth.logout()
-      location.reload()
     }
   }
 }
