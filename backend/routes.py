@@ -31,12 +31,12 @@ def token_required(f):
 
         try:
             token = auth_headers[1]
-            data = jwt.decode(token, current_app.config['SECRET_KEY'])
+            data = jwt.decode(token, '0123456789')
             # user = User.query.filter_by(email=data['sub']).first()
-            user = {'id': '1', 'email': 'gomes.fdr@gmail.com', 'password': '1234'}
+            user = {'id': '1', 'email': 'recepcao@clinicadarmas.com.br', 'password': '1234'}
             if not user:
                 raise RuntimeError('User not found')
-            return f(user, *args, **kwargs)
+            return f(*args, **kwargs)
         except jwt.ExpiredSignatureError:
             return jsonify(expired_msg), 401 # 401 is Unauthorized HTTP status code
         except (jwt.InvalidTokenError, Exception) as e:
