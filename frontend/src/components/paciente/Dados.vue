@@ -43,13 +43,25 @@
           :type="{'is-danger': validation.hasError('form.dt_nascimento') }"
           :message="[validation.firstError('form.dt_nascimento')]"
         >
-          <b-input name="dt_nascimento" placeholder="Data Nascimento" v-model="form.dt_nascimento"></b-input>
+          <input
+           name="dt_nascimento"
+           class="input"
+           placeholder="Data Nascimento"
+           v-model="form.dt_nascimento"
+           v-mask="'##/##/####'"
+          >
         </b-field>
         <b-field
           :type="{'is-danger': validation.hasError('form.rg') }"
           :message="[validation.firstError('form.rg')]"
         >
-          <b-input name="rg" placeholder="Identidade" v-model="form.rg"></b-input>
+          <input
+           name="rg"
+           class="input"
+           placeholder="Identidade"
+           v-model="form.rg"
+           v-mask="'##########'"
+          >
         </b-field>
         <b-field
           :type="{'is-danger': validation.hasError('form.cpf') }"
@@ -57,19 +69,19 @@
         >
           <div class="control is-expanded">
             <input
-              class="input"
               id="cpf"
               name="cpf"
               type="text"
+              class="input"
               placeholder="CPF"
               v-model="form.cpf"
+              v-mask="'###.###.###-##'"
+              @keyup.ctrl.70="pesquisarCPF"
             >
           </div>
-          <div class="control">
-            <a class="button is-warning" @click.prevent="pesquisarCPF">
-              <i class="fas fa-search"></i>
-            </a>
-          </div>
+          <a class="button is-warning" @click.prevent="pesquisarCPF">
+            <i class="fas fa-search"></i>
+          </a>
         </b-field>
       </div>
     </div>
@@ -108,18 +120,34 @@
       </div>
       <div class="field-body">
         <b-field>
-          <b-input name="celular" type="text" placeholder="Celular" v-model="form.t_celular"></b-input>
+          <input
+           name="celular"
+           type="text"
+           class="input"
+           placeholder="Celular"
+           v-model="form.t_celular"
+           v-mask="'(##)# #### ####'"
+          >
         </b-field>
         <b-field>
-          <b-input name="fixo" type="text" placeholder="Fixo" v-model="form.t_fixo"></b-input>
+          <input
+           name="fixo"
+           class="input"
+           type="text"
+           placeholder="Fixo"
+           v-model="form.t_fixo"
+           v-mask="'(##)#### ####'"
+          >
         </b-field>
         <b-field>
-          <b-input
+          <input
             name="tel_resp"
+            class="input"
             placeholder="Telefone Responsável"
             :disabled="isChild"
             v-model="form.t_reponsavel"
-          ></b-input>
+            v-mask="'(##)# #### ####'"
+          >
         </b-field>
       </div>
     </div>
@@ -142,6 +170,7 @@
                 type="text"
                 placeholder="CEP"
                 v-model="form.endereco.cep"
+                v-mask="'##.###-###'"
               >
             </div>
             <div class="control">
@@ -278,7 +307,7 @@ export default {
     'form.cpf': function (value) {
       return Validator.value(value)
         .required()
-        .length(11)
+        .length(11 + 3)
     },
     'form.filiacao': function (value) {
       return Validator.value(value).required()
