@@ -124,6 +124,7 @@
              type="text"
              placeholder="Responsável"
              v-model="form.responsavel"
+             :disabled="isChild"
             >
           </p>
           <p v-show="validation.hasError('form.responsavel') " class="help is-danger">{{ validation.firstError('form.responsavel') }}</p>
@@ -167,6 +168,7 @@
              placeholder="Telefone Responsável"
              v-model="form.t_responsavel"
              v-mask="'###########'"
+             :disabled="isChild"
             >
           </p>
           <p v-show="validation.hasError('form.t_responsavel') " class="help is-danger">{{ validation.firstError('form.t_responsavel') }}</p>
@@ -518,10 +520,11 @@ export default {
   },
   computed: {
     isChild () {
+      console.log('entrei')
       let birthday = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
       if (birthday.isValid()) {
         let age = Math.abs(birthday.diff(moment(), 'years'))
-        if (age > 18) {
+        if (age >= 18) {
           return false || !this.form.adultoInapto
         } else {
           return false
