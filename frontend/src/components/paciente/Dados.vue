@@ -270,10 +270,10 @@
         <button type="reset" class="button" @click.prevent="reset">Limpar</button>
       </p>
       <p class="control">
-        <a class="button">Novo</a>
+        <a class="button" :disabled="bNovo">Novo</a>
       </p>
       <p class="control">
-        <button class="button" @click.prevent="submit">Atualizar</button>
+        <button class="button" :disabled="bAtualizar" @click.prevent="submit">Atualizar</button>
       </p>
     </div>
   </form>
@@ -353,7 +353,9 @@ export default {
       }
     },
     'form.t_responsavel': function (value) {
-      return Validator.value(value).required()
+      if (this.form.adultoInapto) {
+        return Validator.value(value).required()
+      }
     },
     'form.endereco.cep': function (value) {
       return Validator.value(value).required()
