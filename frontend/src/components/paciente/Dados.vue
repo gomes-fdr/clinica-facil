@@ -186,7 +186,7 @@
              :class="{'is-danger': validation.hasError('form.endereco.rua')}"
              type="text"
              placeholder="Rua"
-             v-model="form.rua"
+             v-model="form.endereco.rua"
             >
           </p>
           <p v-show="validation.hasError('form.endereco.rua') " class="help is-danger">{{ validation.firstError('form.endereco.rua') }}</p>
@@ -260,7 +260,7 @@
 
     <div class="field is-grouped is-grouped-right">
       <div class="control is-grouped-right">
-        <b-switch type="is-info">Envio de SMS?</b-switch>
+        <b-switch type="is-info" v-model="form.envio_sms">Envio de SMS?</b-switch>
         <b-switch type="is-info" v-model="form.adultoInapto">Adulto com Responsável?</b-switch>
       </div>
     </div>
@@ -526,11 +526,6 @@ export default {
         } else {
           return false
         }
-      }
-    },
-    hasCelPhone () {
-      if (this.form.t_celular) {
-        return true
       }
     }
   }
