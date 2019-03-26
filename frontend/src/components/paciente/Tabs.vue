@@ -4,7 +4,8 @@
       <header class="card-header">
         <p class="card-header-title">Informações do paciente</p>
       </header>
-      <b-tabs position="is-centered" class="block" v-model="activeTab">
+      <br>
+      <b-tabs position="is-centered"  type="is-toggle-rounded" v-model="activeTab">
         <b-tab-item label="Dados">
           <dados/>
         </b-tab-item>
@@ -49,3 +50,4 @@ export default {
   }
 }
 </script>
+

@@ -12,7 +12,6 @@
              class="input"
              :class="{'is-danger': true}"
              type="text"
-             placeholder="Numero Carteira"
             >
           </p>
           <p v-show="true" class="help is-danger">xxx</p>
