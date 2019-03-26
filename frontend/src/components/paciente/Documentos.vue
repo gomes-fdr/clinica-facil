@@ -20,7 +20,7 @@
         <b-field class="file">
             <b-upload v-model="file">
                 <a class="button is-info">
-                    Click para enviar
+                    Arquivo
                 </a>
             </b-upload>
             <span class="file-name" v-if="file">
@@ -64,7 +64,9 @@ export default {
       form: {
         dt_validade: ''
       },
-      data: [],
+      data: [
+          {'descricao': 'Documento de teste', 'dt_recebimento': '12/12/2019', 'responsavel': 'Fabiano Gomes'}
+      ],
       columns: [
         {
           field: 'descricao',
@@ -73,6 +75,10 @@ export default {
         {
           field: 'dt_recebimento',
           label: 'Data da Gravação'
+        },
+        {
+          field: 'responsavel',
+          label: 'Responsavel'
         }
       ],
       checkedRows: [],
