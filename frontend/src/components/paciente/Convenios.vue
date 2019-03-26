@@ -75,7 +75,7 @@
 </template>
 <script>
 export default {
-  name: 'Convenio',
+  name: 'Convenios',
   beforeCreate () {
     // carregaInfo () {
     console.log('Carregando infos...')

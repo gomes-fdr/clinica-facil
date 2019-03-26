@@ -70,7 +70,7 @@
 </template>
 <script>
 export default {
-  name: 'Prontuario',
+  name: 'Prontuarios',
   data () {
     return {
       form: {

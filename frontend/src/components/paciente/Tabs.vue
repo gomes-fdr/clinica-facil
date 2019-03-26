@@ -9,27 +9,31 @@
           <dados/>
         </b-tab-item>
         <b-tab-item label="Convênios" >
-          <convenio/>
+          <convenios/>
         </b-tab-item>
         <b-tab-item label="Prontuário" >
-          <prontuario/>
+          <prontuarios/>
         </b-tab-item>
-        <b-tab-item label="Documentos" disabled></b-tab-item>
+        <b-tab-item label="Documentos" >
+          <documentos/>
+        </b-tab-item>
       </b-tabs>
     </div>
   </section>
 </template>
 <script>
 import Dados from './Dados'
-import Convenio from './Convenio'
-import Prontuario from './Prontuario'
+import Convenios from './Convenios'
+import Prontuarios from './Prontuarios'
+import Documentos from './Documentos'
 
 export default {
   name: 'Tabs',
   components: {
     Dados,
-    Convenio,
-    Prontuario
+    Convenios,
+    Prontuarios,
+    Documentos
   },
   data () {
     return {

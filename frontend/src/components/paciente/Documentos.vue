@@ -1,0 +1,89 @@
+<template>
+<div>
+  <form>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Descrição</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control is-expanded">
+            <input
+             class="input"
+             :class="{'is-danger': true}"
+             type="text"
+             placeholder="Numero Carteira"
+            >
+          </p>
+          <p v-show="true" class="help is-danger">xxx</p>
+        </div>
+        <b-field class="file">
+            <b-upload v-model="file">
+                <a class="button is-info">
+                    Click para enviar
+                </a>
+            </b-upload>
+            <span class="file-name" v-if="file">
+                {{ file.name }}
+            </span>
+        </b-field>
+      </div>
+    </div>
+    <div class="field is-grouped is-grouped-right">
+      <p class="control">
+        <a class="button" @click.prevent="pesquisarPlano">Salvar</a>
+      </p>
+    </div>
+  </form>
+
+  <b-table 
+  :data="data"
+  :columns="columns"
+  :checked-rows.sync="checkedRows"
+  checkable
+  >
+  </b-table>
+  <div class="field is-grouped is-grouped-right">
+    <button class="button field is-info" @click="checkedRows = []"
+      :disabled="!checkedRows.length">
+      Visualizar
+    </button>
+  </div>
+</div>
+</template>
+<script>
+export default {
+  name: 'Documentos',
+  beforeCreate () {
+    // carregaInfo () {
+    console.log('Carregando infos...')
+    // }
+  },
+  data () {
+    return {
+      form: {
+        dt_validade: ''
+      },
+      data: [],
+      columns: [
+        {
+          field: 'descricao',
+          label: 'Descrição'
+        },
+        {
+          field: 'dt_recebimento',
+          label: 'Data da Gravação'
+        }
+      ],
+      checkedRows: [],
+      file: null
+    }
+  },
+  methods: {
+    pesquisarPlano () {
+      console.log('Consulta planos de saude')
+    }
+  }
+}
+</script>
+
