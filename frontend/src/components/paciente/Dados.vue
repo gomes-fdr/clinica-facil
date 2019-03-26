@@ -1,4 +1,6 @@
 <template>
+<div>
+
   <form>
     <div class="field is-horizontal">
       <div class="field-label is-normal">
@@ -279,6 +281,7 @@
       </p>
     </div>
   </form>
+</div>
 </template>
 
 <script>
@@ -520,7 +523,6 @@ export default {
   },
   computed: {
     isChild () {
-      console.log('entrei')
       let birthday = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
       if (birthday.isValid()) {
         let age = Math.abs(birthday.diff(moment(), 'years'))
