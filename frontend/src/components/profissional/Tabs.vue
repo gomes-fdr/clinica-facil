@@ -2,18 +2,12 @@
   <section>
     <div class="card">
       <header class="card-header">
-        <p class="card-header-title">Informações do paciente</p>
+        <p class="card-header-title">Informações do profissional</p>
       </header>
       <br>
       <b-tabs position="is-centered"  type="is-toggle-rounded" v-model="activeTab">
         <b-tab-item label="Dados">
           <dados/>
-        </b-tab-item>
-        <b-tab-item label="Convênios" >
-          <convenios/>
-        </b-tab-item>
-        <b-tab-item label="Prontuário" >
-          <prontuarios/>
         </b-tab-item>
         <b-tab-item label="Documentos" >
           <documentos/>
@@ -24,16 +18,12 @@
 </template>
 <script>
 import Dados from './Dados'
-import Convenios from './Convenios'
-import Prontuarios from './Prontuarios'
 import Documentos from './Documentos'
 
 export default {
   name: 'Tabs',
   components: {
     Dados,
-    Convenios,
-    Prontuarios,
     Documentos
   },
   data () {
@@ -55,3 +45,5 @@ export default {
     background-color: #eaf0f4;
 }
 </style>
+
+

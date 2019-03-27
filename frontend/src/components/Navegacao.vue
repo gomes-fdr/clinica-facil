@@ -17,11 +17,7 @@
          <router-link class="navbar-item" to="/">Inicio</router-link>
          <router-link class="navbar-item" to="/agenda">Agenda</router-link>
          <router-link class="navbar-item" to="/paciente">Paciente</router-link>
-
-        <a class="navbar-item">
-          Profissional
-        </a>
-
+         <router-link class="navbar-item" to="/profissional">Profissional</router-link>
         <a class="navbar-item">
           Ajuda
         </a>
