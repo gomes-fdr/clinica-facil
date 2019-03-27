@@ -18,6 +18,7 @@ function requireAuth (to, from, next) {
 
 const routerOptions = [
   { path: '/', component: 'Home', beforeEnter: requireAuth },
+  { path: '/agenda', component: 'Agenda', beforeEnter: requireAuth },
   { path: '/paciente', component: 'Paciente', beforeEnter: requireAuth },
   { path: '/login', component: 'Login' },
   { path: '*', component: 'NotFound' }

@@ -15,10 +15,7 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
          <router-link class="navbar-item" to="/">Inicio</router-link>
-        <a class="navbar-item">
-          Agenda
-        </a>
-        
+         <router-link class="navbar-item" to="/agenda">Agenda</router-link>
          <router-link class="navbar-item" to="/paciente">Paciente</router-link>
 
         <a class="navbar-item">
