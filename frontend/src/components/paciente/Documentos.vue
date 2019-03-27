@@ -89,12 +89,6 @@ export default {
   methods: {
     pesquisarPlano () {
       console.log('Consulta planos de saude')
-      console.log()
-      if (auth.isValidJwt(auth.getToken())) {
-        console.log('token valido')
-      } else {
-        console.log('token INVALIDO')
-      }
     }
   }
 }

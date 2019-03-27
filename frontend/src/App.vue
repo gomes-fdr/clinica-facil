@@ -15,7 +15,7 @@ export default {
     }
   },
   created: function () {
-    this.timer = setTimeout(function () {
+    this.timer = setInterval(function () {
       console.log('Verifica login ')
       if (auth.getToken()) {
         if (auth.isValidJwt(auth.getToken())) {
@@ -25,7 +25,7 @@ export default {
           auth.logout()
         }
       }
-    }, 5000)
+    }, 1000 * 60)
   }
 }
 </script>
