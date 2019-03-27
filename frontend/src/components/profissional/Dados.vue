@@ -127,23 +127,23 @@
           <p class="control is-expanded">
             <input
              class="input"
-             :class="{'is-danger': true}"
+             :class="{'is-danger': validation.hasError('form.perfil') }"
              type="text"
              placeholder="Perfil"
             >
           </p>
-          <p v-show="true " class="help is-danger">xxx</p>
+          <p v-show="validation.hasError('form.perfil')" class="help is-danger">{{ validation.firstError('form.perfil') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
             <input
              class="input"
-             :class="{'is-danger': true}"
+             :class="{'is-danger': validation.hasError('form.situacao') }"
              type="text"
              placeholder="Situação"
             >
           </p>
-          <p v-show="true " class="help is-danger">xxx</p>
+          <p v-show="validation.hasError('form.situacao')" class="help is-danger">{{ validation.firstError('form.situacao') }}</p>
         </div>
       </div>
     </div>
