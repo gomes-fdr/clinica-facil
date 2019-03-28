@@ -6,6 +6,7 @@ from functools import wraps
 
 from . import bp
 from .models import User
+from .serealizer import UserSchema
 
 #IMPORTANTE, tem que colocar isso header de solicitação
 # headers = {'content-type': 'application/json'} 
@@ -16,7 +17,6 @@ def token_required(f):
     @wraps(f)
     def _verify(*args, **kwargs):
         auth_headers = request.headers.get('Authorization', '').split()
-        # auth_headers = auth_headers[0].split('.')
 
         invalid_msg = {
             'message': 'Invalid token. Registeration and / or authentication required',
