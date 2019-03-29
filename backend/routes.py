@@ -5,8 +5,6 @@ from datetime import datetime, timedelta
 from functools import wraps
 
 from . import bp
-from .models import User
-from .serealizer import UserSchema
 
 #IMPORTANTE, tem que colocar isso header de solicitação
 # headers = {'content-type': 'application/json'} 
@@ -92,30 +90,3 @@ def paciente_cpf(cpf):
 @bp.route('/api/v1/paciente/nome/<nome>', methods=['GET'])
 def paciente_nome(nome):
     return jsonify({'total':0, 'status': 'Not found'})
-
-
-@bp.route('/api/v1/register/', methods=['POST'])
-def register():
-    data = request.get_json()
-    # user = User(**data)
-    # db.session.add(user)
-    # db.session.commit()
-    # return jsonify(user.to_dict()), 201
-    return jsonify(data), 201
-
-@bp.route('/api/v1/token', methods=['POST'])
-def login():
-    data = request.get_json()
-    user = User.autorizar(**data)
-
-    if not user:
-        return jsonify({'message': 'Credenciais Invalidas', 'authenticated': False}), 401
-
-    token = jwt.encode({
-        'sub': user['email'],
-        'iat': datetime.utcnow(),
-        'exp': datetime.utcnow() + timedelta(minutes=60)
-    }, '0123456789')
-
-    return jsonify({'token': token.decode('UTF-8')})
-

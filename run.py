@@ -25,6 +25,9 @@ app.register_blueprint(api)
 from backend.user import bp_user
 app.register_blueprint(bp_user)
 
+from backend.token import bp_token
+app.register_blueprint(bp_token)
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
