@@ -1,7 +1,7 @@
 from flask_marshmallow import Marshmallow
 from marshmallow import ValidationError, fields, validates
 
-from .models import User
+from .models import User, Paciente
 
 ma = Marshmallow()
 
@@ -14,3 +14,10 @@ class UserSchema(ma.ModelSchema):
 
     email = fields.Str(required=True)
     password = fields.Str(required=True)
+
+
+class PacienteSchema(ma.ModelSchema):
+    class Meta:
+        model = Paciente
+
+    nome = fields.Str(required=True)
