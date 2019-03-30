@@ -1,12 +1,11 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, current_app, jsonify, request
+
 from .serealizer import UserSchema
 
 bp_user = Blueprint('user', __name__)
 
-@bp_user.route('/create-user', methods=['POST'])
+@bp_user.route('/api/v1/create-user', methods=['POST'])
 def register():
-    # import ipdb; ipdb.set_trace()
-
     us = UserSchema()
 
     user, error = us.load(request.json)

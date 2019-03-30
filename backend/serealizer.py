@@ -1,5 +1,6 @@
-from marshmallow import fields, validates, ValidationError
 from flask_marshmallow import Marshmallow
+from marshmallow import ValidationError, fields, validates
+
 from .models import User
 
 ma = Marshmallow()

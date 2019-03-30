@@ -1,10 +1,14 @@
 import os
-from flask import Flask, render_template, jsonify
-from flask_migrate import Migrate
+
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 from backend.models import configure as config_db
+from backend.paciente import bp_paciente
 from backend.serealizer import configure as config_ma
+from backend.token import bp_token
+from backend.user import bp_user
 
 app = Flask(__name__,
             static_folder = "./dist/static",
@@ -19,14 +23,11 @@ config_db(app)
 config_ma(app)
 Migrate(app, app.db)
 
-from backend import bp as api
-app.register_blueprint(api)
-
-from backend.user import bp_user
 app.register_blueprint(bp_user)
 
-from backend.token import bp_token
 app.register_blueprint(bp_token)
+
+app.register_blueprint(bp_paciente)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
