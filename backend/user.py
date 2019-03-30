@@ -6,6 +6,9 @@ bp_user = Blueprint('user', __name__)
 
 @bp_user.route('/api/v1/create-user', methods=['POST'])
 def register():
+    """
+    Adiciona um usuário no sistema.
+    """
     us = UserSchema()
 
     user, error = us.load(request.json)

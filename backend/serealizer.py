@@ -19,5 +19,3 @@ class UserSchema(ma.ModelSchema):
 class PacienteSchema(ma.ModelSchema):
     class Meta:
         model = Paciente
-
-    nome = fields.Str(required=True)

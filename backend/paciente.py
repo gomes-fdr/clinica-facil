@@ -9,6 +9,9 @@ bp_paciente = Blueprint('paciente', __name__)
 
 @bp_paciente.route('/api/v1/paciente', methods=['POST'])
 def paciente_novo():
+    """
+    Insere um novo paciente no sistema.
+    """
     pa = PacienteSchema()
 
     p, error = pa.load(request.json)
@@ -27,6 +30,9 @@ def paciente_novo():
 
 @bp_paciente.route('/api/v1/paciente/cpf/<cpf>', methods=['GET'])
 def paciente_cpf(cpf):
+    """
+    Busca um paciente pelo CPF.
+    """
     
     paciente = Paciente.query.filter_by(cpf = cpf).first()
 
@@ -39,4 +45,7 @@ def paciente_cpf(cpf):
 @bp_paciente.route('/api/v1/paciente/nome/<nome>', methods=['GET'])
 @token_required
 def paciente_nome(nome):
+    """
+    Busca um paciente pelo nome ou parte dele.
+    """
     return jsonify({'total':0, 'status': 'Not found'}), 404

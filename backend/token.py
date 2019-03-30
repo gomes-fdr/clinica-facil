@@ -48,6 +48,9 @@ def token_required(f):
 # fonte: https://stackabuse.com/single-page-apps-with-vue-js-and-flask-jwt-authentication/
 @bp_token.route('/api/v1/token', methods=['POST'])
 def token():
+    """
+    Entrega um token valido por 1 hora para o usuário navegar no sistema.
+    """
     user, error = UserSchema().load(request.json)
 
     if error:
@@ -64,3 +67,4 @@ def token():
         return jsonify({'token': token.decode('UTF-8')}), 200
     
     return jsonify({'message': 'Credenciais Invalidas', 'authenticated': False}), 401
+    
