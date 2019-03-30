@@ -17,9 +17,7 @@ Grupo de tecnologias utilizadas no desenvolvimento deste sistema.
 * Formatação de campos de formulários com [v-mask](https://github.com/probil/v-mask)
 
 Ambiente de testes (local):
-* Vagrant
-* Ubuntu 14.04
-* Dokku
+* Docker imagem do banco postgresql
 
 Hospedado na digitalocean, usando:
 * Droplet(VM) linux
