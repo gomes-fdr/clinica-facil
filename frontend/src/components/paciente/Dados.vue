@@ -292,6 +292,7 @@
 import SimpleVueValidation from 'simple-vue-validator'
 import auth from '../../auth'
 import { API_URL } from '../../main'
+import axios from 'axios'
 
 var moment = require('moment')
 
@@ -419,7 +420,6 @@ export default {
       cpf = cpf.replace('-', '')
       this.$http
         .get(`${API_URL}paciente/cpf/${cpf}`, {
-          headers: { Authorization: `b: ${auth.getToken()}` }
         })
         .then(function (response) {
           if (response.data) {
@@ -471,7 +471,7 @@ export default {
       cep = cep.replace('.', '')
       cep = cep.replace('-', '')
 
-      this.$http
+      axios
         .get(`https://viacep.com.br/ws/${cep}/json`)
         .then(function (response) {
           if (response.data) {
@@ -526,12 +526,13 @@ export default {
       console.log('Pesquisar paciente')
     },
     novoPaciente () {
-      // if (!this.validaForm()) return
+      if (this.validaForm() === false) return
       console.log('Novo Paciente')
-      // let vm = this
+      let vm = this
       let data = {}
 
       data = {...this.form} // clonar obeto sem referencias
+      delete data.id // Para facilitar a inserção de usuários com dados semelhantes
       let dtTmp = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
       data.dt_nascimento = dtTmp
 
@@ -540,14 +541,25 @@ export default {
       this.$http
       .post(`${API_URL}paciente`, data)
       .then(function (response) {
-        console.log(response)
+        // console.log(response)
+        vm.$toast.open({
+          message: 'SUCESSO! PACIENTE gravado.',
+          type: 'is-success',
+          position: 'is-bottom'
+        })
       })
       .catch(function (error) {
-        console.log(error.response)
+        // console.log(error.response)
+        vm.$toast.open({
+          message:
+            'FALHA ao inserir novo PACIENTE!',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
       })
     },
     atualizarPaciente () {
-      // if (!this.validaForm()) return
+      if (!this.validaForm()) return
       console.log('Atualizar Paciente')
       let vm = this
       // let data = this.form
@@ -569,7 +581,12 @@ export default {
         })
       })
       .catch(function (error) {
-        console.log(error.response)
+        vm.$toast.open({
+          message:
+            'FALHA ao atualizar PACIENTE!',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
       })
     },
     validaForm () {
