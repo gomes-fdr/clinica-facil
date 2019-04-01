@@ -187,25 +187,25 @@
           <p class="control is-expanded">
             <input
              class="input"
-             :class="{'is-danger': validation.hasError('form.endereco.rua')}"
+             :class="{'is-danger': validation.hasError('form.rua')}"
              type="text"
              placeholder="Rua"
-             v-model="form.endereco.rua"
+             v-model="form.rua"
             >
           </p>
-          <p v-show="validation.hasError('form.endereco.rua') " class="help is-danger">{{ validation.firstError('form.endereco.rua') }}</p>
+          <p v-show="validation.hasError('form.rua') " class="help is-danger">{{ validation.firstError('form.rua') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
             <input
              class="input"
-             :class="{'is-danger': validation.hasError('form.endereco.numero')}"
+             :class="{'is-danger': validation.hasError('form.numero')}"
              type="text"
              placeholder="Numero"
-             v-model="form.endereco.numero"
+             v-model="form.numero"
             >
           </p>
-          <p v-show="validation.hasError('form.endereco.numero') " class="help is-danger">{{ validation.firstError('form.endereco.numero') }}</p>
+          <p v-show="validation.hasError('form.numero') " class="help is-danger">{{ validation.firstError('form.numero') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
@@ -222,25 +222,25 @@
           <p class="control is-expanded">
             <input 
             class="input"
-            :class="{'is-danger': validation.hasError('form.endereco.cidade')}"
+            :class="{'is-danger': validation.hasError('form.cidade')}"
             type="text"
             placeholder="Cidade"
-            v-model="form.endereco.cidade"
+            v-model="form.cidade"
             >
           </p>
-          <p v-show="validation.hasError('form.endereco.cidade') " class="help is-danger">{{ validation.firstError('form.endereco.cidade') }}</p>
+          <p v-show="validation.hasError('form.cidade') " class="help is-danger">{{ validation.firstError('form.cidade') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
             <input 
              class="input"
-             :class="{'is-danger': validation.hasError('form.endereco.estado')}"
+             :class="{'is-danger': validation.hasError('form.estado')}"
              type="text"
              placeholder="Estado"
-             v-model="form.endereco.estado"
+             v-model="form.estado"
             >
           </p>
-          <p v-show="validation.hasError('form.endereco.estado') " class="help is-danger">{{ validation.firstError('form.endereco.estado') }}</p>
+          <p v-show="validation.hasError('form.estado') " class="help is-danger">{{ validation.firstError('form.estado') }}</p>
         </div>
         <div class="field">
         <div class="field has-addons">
@@ -248,7 +248,7 @@
             <input class="input"
              type="text"
               placeholder="CEP"
-              v-model="form.endereco.cep"
+              v-model="form.cep"
               v-mask="'########'"
             >
           </p>
@@ -314,14 +314,12 @@ export default {
         t_celular: '',
         t_fixo: '',
         t_responsavel: '',
-        endereco: {
-          cep: '',
-          rua: '',
-          numero: '',
-          complemento: '',
-          cidade: '',
-          estado: ''
-        },
+        cep: '',
+        rua: '',
+        numero: '',
+        complemento: '',
+        cidade: '',
+        estado: '',
         envio_sms: false,
         adultoInapto: false
       },
@@ -362,19 +360,19 @@ export default {
         return Validator.value(value).required()
       }
     },
-    'form.endereco.cep': function (value) {
+    'form.cep': function (value) {
       return Validator.value(value).required()
     },
-    'form.endereco.rua': function (value) {
+    'form.rua': function (value) {
       return Validator.value(value).required()
     },
-    'form.endereco.numero': function (value) {
+    'form.numero': function (value) {
       return Validator.value(value).required()
     },
-    'form.endereco.cidade': function (value) {
+    'form.cidade': function (value) {
       return Validator.value(value).required()
     },
-    'form.endereco.estado': function (value) {
+    'form.estado': function (value) {
       return Validator.value(value).required()
     }
   },
@@ -400,11 +398,6 @@ export default {
           })
         }
       })
-    },
-    copyEndereco (endereco) {
-      // console.log('Copiando endereco...');
-      this.form.endereco = endereco
-      // console.log(JSON.stringify(this.form.endereco));
     },
     pesquisarCPF () {
       console.log('Pesquisar CPF')
@@ -457,12 +450,12 @@ export default {
     },
     pesquisarCEP () {
       var vm = this
-      if (!this.form.endereco.cep.length) {
+      if (!this.form.cep.length) {
         this.data = []
         console.log('Nada enviado...')
         return
       }
-      var cep = this.form.endereco.cep
+      var cep = this.form.cep
       cep = cep.replace('.', '')
       cep = cep.replace('-', '')
 
@@ -471,9 +464,9 @@ export default {
         .then(function (response) {
           if (response.data) {
             // console.log(response.body);
-            vm.form.endereco.rua = response.data.logradouro
-            vm.form.endereco.cidade = response.data.localidade
-            vm.form.endereco.estado = response.data.uf
+            vm.form.rua = response.data.logradouro
+            vm.form.cidade = response.data.localidade
+            vm.form.estado = response.data.uf
           }
         })
         .catch(function (error) {
@@ -503,12 +496,12 @@ export default {
       this.form.t_celular = ''
       this.form.t_fixo = ''
       this.form.t_reponsavel = ''
-      this.form.endereco.cep = ''
-      this.form.endereco.rua = ''
-      this.form.endereco.numero = ''
-      this.form.endereco.complemento = ''
-      this.form.endereco.cidade = ''
-      this.form.endereco.estado = ''
+      this.form.cep = ''
+      this.form.rua = ''
+      this.form.numero = ''
+      this.form.complemento = ''
+      this.form.cidade = ''
+      this.form.estado = ''
       this.form.envio_sms = ''
       this.form.adultoInapto = false
       this.isFetching = false
