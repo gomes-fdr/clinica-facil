@@ -274,7 +274,7 @@
         <button type="reset" class="button" @click.prevent="reset">Limpar</button>
       </p>
       <p class="control">
-        <a class="button" :disabled="bNovo">Novo</a>
+        <a class="button" :disabled="bNovo" @click.prevent="novoPaciente">Novo</a>
       </p>
       <p class="control">
         <button class="button" :disabled="bAtualizar" @click.prevent="submit">Atualizar</button>
@@ -287,6 +287,7 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 import auth from '../../auth'
+import { API_URL } from '../../main'
 
 var moment = require('moment')
 
@@ -302,22 +303,48 @@ export default {
   name: 'Dados',
   data () {
     return {
+    //   form: {
+    //     nome: '',
+    //     email: '',
+    //     dt_nascimento: '',
+    //     rg: '',
+    //     cpf: '',
+    //     filiacao: '',
+    //     profissao: '',
+    //     responsavel: '',
+    //     t_celular: '',
+    //     t_fixo: '',
+    //     t_responsavel: '',
+    //     cep: '',
+    //     rua: '',
+    //     numero: '',
+    //     complemento: '',
+    //     cidade: '',
+    //     estado: '',
+    //     envio_sms: false,
+    //     adultoInapto: false
+    //   },
+    //   isFetching: false,
+    //   data: [],
+    //   bNovo: true,
+    //   bAtualizar: true
+    // }
       form: {
-        nome: '',
-        email: '',
-        dt_nascimento: '',
-        rg: '',
-        cpf: '',
-        filiacao: '',
-        profissao: '',
+        nome: 'Fabiano da Rosa Gomes',
+        email: 'gomes@gomes.com',
+        dt_nascimento: '24/05/1974',
+        rg: '8051099541',
+        cpf: '60976900025',
+        filiacao: 'Marion da Rosa Gomes',
+        profissao: 'Desenvolvedor',
         responsavel: '',
-        t_celular: '',
+        t_celular: '51995432916',
         t_fixo: '',
         t_responsavel: '',
-        cep: '',
+        cep: '91720430',
         rua: '',
-        numero: '',
-        complemento: '',
+        numero: '380',
+        complemento: 'casa',
         cidade: '',
         estado: '',
         envio_sms: false,
@@ -378,26 +405,8 @@ export default {
   },
   methods: {
     submit () {
-      var vm = this
-      // this.$bus.$emit('submit');
-      this.$validate().then(function (success) {
-        if (success) {
-          // console.log('Validou, enviando...');
-          // console.log(JSON.stringify(vm.form));
-          vm.$toast.open({
-            message: 'Formulário preenchido com sucesso!',
-            type: 'is-success',
-            position: 'is-bottom'
-          })
-        } else {
-          vm.$toast.open({
-            message:
-              'Formulário inválido! Verifique o preenchimento dos campos',
-            type: 'is-danger',
-            position: 'is-bottom'
-          })
-        }
-      })
+      if (!this.validaForm()) return
+      console.log('entrou...')
     },
     pesquisarCPF () {
       console.log('Pesquisar CPF')
@@ -410,12 +419,15 @@ export default {
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('-', '')
       this.$http
-        .get(`http://localhost:5000/api/v1/paciente/cpf/${cpf}`, {
+        .get(`${API_URL}paciente/cpf/${cpf}`, {
           headers: { Authorization: `b: ${auth.getToken()}` }
         })
         .then(function (response) {
           if (response.data) {
-            vm.form = response.data
+            let tmp = {...response.data}
+            let t = moment(tmp.dt_nascimento).format('DD/MM/YYYY')
+            tmp.dt_nascimento = t
+            vm.form = tmp
             vm.bAtualizar = false
             vm.bNovo = true
           }
@@ -512,6 +524,51 @@ export default {
     },
     pesquisarNome () {
       console.log('Pesquisar paciente')
+    },
+    novoPaciente () {
+      // if (!this.validaForm()) return
+      console.log('Novo Paciente')
+      // let vm = this
+      let data = {}
+
+      data = {...this.form} // clonar obeto sem referencias
+      let dtTmp = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
+      data.dt_nascimento = dtTmp
+
+      console.log(JSON.stringify(data))
+
+      this.$http
+      .post(`${API_URL}paciente`, data)
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error.response)
+      })
+    },
+    validaForm () {
+      var vm = this
+      // this.$bus.$emit('submit');
+      this.$validate().then(function (success) {
+        if (success) {
+          // console.log('Validou, enviando...');
+          // console.log(JSON.stringify(vm.form));
+          vm.$toast.open({
+            message: 'Formulário preenchido com sucesso!',
+            type: 'is-success',
+            position: 'is-bottom'
+          })
+          return true
+        } else {
+          vm.$toast.open({
+            message:
+              'Formulário inválido! Verifique o preenchimento dos campos',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        }
+        return false
+      })
     }
   },
   computed: {

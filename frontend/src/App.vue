@@ -14,18 +14,12 @@ export default {
       timer: ''
     }
   },
-  created: function () {
+  mounted: function () {
     this.timer = setInterval(function () {
-      console.log('Verifica login ')
-      if (auth.getToken()) {
-        if (auth.isValidJwt(auth.getToken())) {
-          console.log('token valido')
-        } else {
-          console.log('token INVALIDO')
-          auth.logout()
-        }
+      if (!auth.isValidJwt(auth.getToken())) {
+        auth.logout()
       }
-    }, 1000 * 60)
+    }, 1000 * 60 * 30)
   }
 }
 </script>
