@@ -8,6 +8,7 @@ from .models import Paciente
 bp_paciente = Blueprint('paciente', __name__)
 
 @bp_paciente.route('/api/v1/paciente', methods=['POST'])
+@token_required
 def paciente_novo():
     """
     Insere um novo paciente no sistema.
@@ -29,6 +30,7 @@ def paciente_novo():
 
 
 @bp_paciente.route('/api/v1/paciente/<cpf>', methods=['POST'])
+@token_required
 def paciente_atualizar(cpf):
     """
     Atualiza um paciente no sistema.
@@ -65,6 +67,7 @@ def paciente_atualizar(cpf):
 
 
 @bp_paciente.route('/api/v1/paciente/cpf/<cpf>', methods=['GET'])
+@token_required
 def paciente_cpf(cpf):
     """
     Busca um paciente pelo CPF.
