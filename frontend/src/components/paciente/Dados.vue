@@ -471,7 +471,9 @@ export default {
       cep = cep.replace('.', '')
       cep = cep.replace('-', '')
 
-      axios
+      const instance = axios
+
+      instance
         .get(`https://viacep.com.br/ws/${cep}/json`)
         .then(function (response) {
           if (response.data) {
@@ -559,7 +561,7 @@ export default {
       })
     },
     atualizarPaciente () {
-      if (!this.validaForm()) return
+      if (this.validaForm() === false) return
       console.log('Atualizar Paciente')
       let vm = this
       // let data = this.form
