@@ -209,7 +209,11 @@
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
-            <input class="input" type="text" placeholder="Complemento">
+            <input 
+            class="input"
+            type="text" placeholder="Complemento"
+            v-model="form.complemento"
+            >
           </p>
         </div>
       </div>
@@ -264,7 +268,7 @@
 
     <div class="field is-grouped is-grouped-right">
       <div class="control is-grouped-right">
-        <b-switch type="is-info" v-model="form.envio_sms">Envio de SMS?</b-switch>
+        <b-switch type="is-info" v-model="form.envioSMS">Envio de SMS?</b-switch>
         <b-switch type="is-info" v-model="form.adultoInapto">Adulto com Responsável?</b-switch>
       </div>
     </div>
@@ -277,7 +281,7 @@
         <a class="button" :disabled="bNovo" @click.prevent="novoPaciente">Novo</a>
       </p>
       <p class="control">
-        <button class="button" :disabled="bAtualizar" @click.prevent="submit">Atualizar</button>
+        <button class="button" :disabled="bAtualizar" @click.prevent="atualizarPaciente">Atualizar</button>
       </p>
     </div>
   </form>
@@ -303,57 +307,56 @@ export default {
   name: 'Dados',
   data () {
     return {
-    //   form: {
-    //     nome: '',
-    //     email: '',
-    //     dt_nascimento: '',
-    //     rg: '',
-    //     cpf: '',
-    //     filiacao: '',
-    //     profissao: '',
-    //     responsavel: '',
-    //     t_celular: '',
-    //     t_fixo: '',
-    //     t_responsavel: '',
-    //     cep: '',
-    //     rua: '',
-    //     numero: '',
-    //     complemento: '',
-    //     cidade: '',
-    //     estado: '',
-    //     envio_sms: false,
-    //     adultoInapto: false
-    //   },
-    //   isFetching: false,
-    //   data: [],
-    //   bNovo: true,
-    //   bAtualizar: true
-    // }
       form: {
-        nome: 'Fabiano da Rosa Gomes',
-        email: 'gomes@gomes.com',
-        dt_nascimento: '24/05/1974',
-        rg: '8051099541',
-        cpf: '60976900025',
-        filiacao: 'Marion da Rosa Gomes',
-        profissao: 'Desenvolvedor',
+        nome: '',
+        email: '',
+        dt_nascimento: '',
+        rg: '',
+        cpf: '',
+        filiacao: '',
+        profissao: '',
         responsavel: '',
-        t_celular: '51995432916',
+        t_celular: '',
         t_fixo: '',
         t_responsavel: '',
-        cep: '91720430',
+        cep: '',
         rua: '',
-        numero: '380',
-        complemento: 'casa',
+        numero: '',
+        complemento: '',
         cidade: '',
         estado: '',
-        envio_sms: false,
+        envioSMS: false,
         adultoInapto: false
       },
       isFetching: false,
       data: [],
       bNovo: true,
       bAtualizar: true
+      // form: {
+      //   nome: 'Fabiano da Rosa Gomes',
+      //   email: 'gomes@gomes.com',
+      //   dt_nascimento: '24/05/1974',
+      //   rg: '8051099541',
+      //   cpf: '60976900025',
+      //   filiacao: 'Marion da Rosa Gomes',
+      //   profissao: 'Desenvolvedor',
+      //   responsavel: '',
+      //   t_celular: '51995432916',
+      //   t_fixo: '',
+      //   t_responsavel: '',
+      //   cep: '91720430',
+      //   rua: '',
+      //   numero: '380',
+      //   complemento: 'casa',
+      //   cidade: '',
+      //   estado: '',
+      //   envioSMS: false,
+      //   adultoInapto: false
+      // },
+      // isFetching: false,
+      // data: [],
+      // bNovo: true,
+      // bAtualizar: true
     }
   },
   validators: {
@@ -404,10 +407,6 @@ export default {
     }
   },
   methods: {
-    submit () {
-      if (!this.validaForm()) return
-      console.log('entrou...')
-    },
     pesquisarCPF () {
       console.log('Pesquisar CPF')
       if (!this.form.cpf.length) {
@@ -424,9 +423,10 @@ export default {
         })
         .then(function (response) {
           if (response.data) {
-            let tmp = {...response.data}
+            let tmp = response.data
             let t = moment(tmp.dt_nascimento).format('DD/MM/YYYY')
             tmp.dt_nascimento = t
+            // console.log(tmp)
             vm.form = tmp
             vm.bAtualizar = false
             vm.bNovo = true
@@ -514,7 +514,7 @@ export default {
       this.form.complemento = ''
       this.form.cidade = ''
       this.form.estado = ''
-      this.form.envio_sms = ''
+      this.form.envioSMS = ''
       this.form.adultoInapto = false
       this.isFetching = false
       this.data = []
@@ -535,12 +535,38 @@ export default {
       let dtTmp = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
       data.dt_nascimento = dtTmp
 
-      console.log(JSON.stringify(data))
+      // console.log(JSON.stringify(data))
 
       this.$http
       .post(`${API_URL}paciente`, data)
       .then(function (response) {
         console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error.response)
+      })
+    },
+    atualizarPaciente () {
+      // if (!this.validaForm()) return
+      console.log('Atualizar Paciente')
+      let vm = this
+      // let data = this.form
+
+      let data = {...this.form} // clonar objeto sem referencias
+      let dtTmp = moment(data.dt_nascimento, 'DD/MM/YYYY')
+      data.dt_nascimento = dtTmp
+
+      // console.log(JSON.stringify(data))
+
+      this.$http
+      .post(`${API_URL}paciente/${this.form.cpf}`, data)
+      .then(function (response) {
+        // console.log(response)
+        vm.$toast.open({
+          message: 'SUCESSO! Dados atualizados.',
+          type: 'is-success',
+          position: 'is-bottom'
+        })
       })
       .catch(function (error) {
         console.log(error.response)

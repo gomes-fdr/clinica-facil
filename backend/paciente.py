@@ -28,6 +28,42 @@ def paciente_novo():
     return pa.jsonify(p), 201
 
 
+@bp_paciente.route('/api/v1/paciente/<cpf>', methods=['POST'])
+def paciente_atualizar(cpf):
+    """
+    Atualiza um paciente no sistema.
+    """
+    data = request.json
+    paciente = Paciente.query.filter_by(cpf = cpf).first()
+
+    paciente.nome = data['nome']
+    paciente.email = data['email']
+    paciente.dt_nascimento = data['dt_nascimento']
+    paciente.rg = data['rg']
+    paciente.filiacao = data['filiacao']
+    paciente.profissao = data['profissao']
+    paciente.responsavel = data['responsavel']
+    paciente.t_celular = data['t_celular']
+    paciente.t_fixo = data['t_fixo']
+    paciente.t_responsavel = data['t_responsavel']
+    paciente.cep = data['cep']
+    paciente.rua = data['rua']
+    paciente.numero = data['numero']
+    paciente.complemento = data['complemento']
+    paciente.cidade = data['cidade']
+    paciente.estado = data['estado']
+    paciente.envioSMS = data['envioSMS']
+    paciente.adultoInapto = data['adultoInapto']
+    
+    try:
+        current_app.db.session.commit()
+    except SQLAlchemyError as e:
+        return jsonify({'message': 'Fail to update PACIENTE'}), 400
+
+    pa = PacienteSchema()
+    return pa.jsonify(pa), 204
+
+
 @bp_paciente.route('/api/v1/paciente/cpf/<cpf>', methods=['GET'])
 def paciente_cpf(cpf):
     """
@@ -49,3 +85,4 @@ def paciente_nome(nome):
     Busca um paciente pelo nome ou parte dele.
     """
     return jsonify({'total':0, 'status': 'Not found'}), 404
+
