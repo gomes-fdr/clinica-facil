@@ -285,6 +285,18 @@
       </p>
     </div>
   </form>
+  <b-modal :active.sync="isImageModalActive">
+    <button class="button">Selecionar</button>
+    <b-table 
+    :data="tabPaciente.data"
+    :columns="tabPaciente.columns"
+    :selected.sync="tabPaciente.selected"
+    @click="copiaPaciente"
+    >
+    
+    </b-table>
+
+  </b-modal>
 </div>
 </template>
 
@@ -308,6 +320,21 @@ export default {
   name: 'Dados',
   data () {
     return {
+      isImageModalActive: false,
+      tabPaciente: {
+        data: [],
+        columns: [
+          {
+            field: 'nome',
+            label: 'Nome'
+          },
+          {
+            field: 'cpf',
+            label: 'CPF'
+          }
+        ],
+        selected: null
+      },
       form: {
         nome: '',
         email: '',
@@ -330,34 +357,8 @@ export default {
         adultoInapto: false
       },
       isFetching: false,
-      data: [],
       bNovo: true,
       bAtualizar: true
-      // form: {
-      //   nome: 'Fabiano da Rosa Gomes',
-      //   email: 'gomes@gomes.com',
-      //   dt_nascimento: '24/05/1974',
-      //   rg: '8051099541',
-      //   cpf: '60976900025',
-      //   filiacao: 'Marion da Rosa Gomes',
-      //   profissao: 'Desenvolvedor',
-      //   responsavel: '',
-      //   t_celular: '51995432916',
-      //   t_fixo: '',
-      //   t_responsavel: '',
-      //   cep: '91720430',
-      //   rua: '',
-      //   numero: '380',
-      //   complemento: 'casa',
-      //   cidade: '',
-      //   estado: '',
-      //   envioSMS: false,
-      //   adultoInapto: false
-      // },
-      // isFetching: false,
-      // data: [],
-      // bNovo: true,
-      // bAtualizar: true
     }
   },
   validators: {
@@ -408,6 +409,10 @@ export default {
     }
   },
   methods: {
+    copiaPaciente () {
+      console.log('Copia Paciente')
+      console.log(this.tabPaciente.selected)
+    },
     pesquisarCPF () {
       console.log('Pesquisar CPF')
       if (!this.form.cpf.length) {
@@ -486,9 +491,6 @@ export default {
         .catch(function (error) {
           vm.erroCep()
         })
-        .finally(() => {
-          vm.isFetching = false
-        })
     },
     erroCep () {
       this.$toast.open({
@@ -526,6 +528,29 @@ export default {
     },
     pesquisarNome () {
       console.log('Pesquisar paciente')
+      if (!this.form.nome.length) {
+        return
+      }
+
+      let vm = this
+
+      this.$http
+        .get(`${API_URL}paciente/nome/${vm.form.nome}`, {
+        })
+      .then(function (response) {
+        // console.log(response)
+        vm.tabPaciente.data = response.data
+        vm.isImageModalActive = true
+      })
+      .catch(function (error) {
+        // console.log(error)
+        vm.$toast.open({
+          message:
+            'NENHUM PACIENTE encontrado.',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      })
     },
     novoPaciente () {
       if (this.validaForm() === false) return

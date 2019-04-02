@@ -56,7 +56,7 @@ export default {
   name: 'Documentos',
   beforeCreate () {
     // carregaInfo () {
-    console.log('Carregando infos...')
+    // console.log('Carregando infos...')
     // }
   },
   data () {
