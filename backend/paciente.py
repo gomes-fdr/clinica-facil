@@ -61,9 +61,8 @@ def paciente_atualizar(cpf):
         current_app.db.session.commit()
     except SQLAlchemyError as e:
         return jsonify({'message': 'Fail to update PACIENTE'}), 400
-
-    pa = PacienteSchema()
-    return pa.jsonify(pa), 204
+     
+    return PacienteSchema().jsonify(pa), 204
 
 
 @bp_paciente.route('/api/v1/paciente/cpf/<cpf>', methods=['GET'])
@@ -82,10 +81,16 @@ def paciente_cpf(cpf):
     
 
 @bp_paciente.route('/api/v1/paciente/nome/<nome>', methods=['GET'])
-@token_required
 def paciente_nome(nome):
     """
     Busca um paciente pelo nome ou parte dele.
     """
-    return jsonify({'total':0, 'status': 'Not found'}), 404
+
+    # pacientes = Paiente.query.filter(Paciente.nome.ilike('%' +nome+ '%')).all()
+    pacientes = current_app.db.session.query(Paciente.nome, Paciente.cpf).filter(Paciente.nome.ilike('%' +nome+ '%')).all()
+
+    if not pacientes:
+        return jsonify({'message': 'Paciente Not Found'}), 404
+
+    return PacienteSchema(many=True).jsonify(pacientes), 200
 
