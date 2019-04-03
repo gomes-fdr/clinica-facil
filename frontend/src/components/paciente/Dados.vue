@@ -286,12 +286,12 @@
     </div>
   </form>
   <b-modal :active.sync="isImageModalActive">
-    <button class="button">Selecionar</button>
     <b-table 
     :data="tabPaciente.data"
+    :loading="tabPaciente.isLoading"
     :columns="tabPaciente.columns"
     :selected.sync="tabPaciente.selected"
-    @click="copiaPaciente"
+    @dblclick="copiaPaciente"
     >
     
     </b-table>
@@ -305,6 +305,7 @@ import SimpleVueValidation from 'simple-vue-validator'
 import auth from '../../auth'
 import { API_URL } from '../../main'
 import axios from 'axios'
+import _ from 'lodash'
 
 var moment = require('moment')
 
@@ -322,6 +323,7 @@ export default {
     return {
       isImageModalActive: false,
       tabPaciente: {
+        isLoading: false,
         data: [],
         columns: [
           {
@@ -411,7 +413,8 @@ export default {
   methods: {
     copiaPaciente () {
       console.log('Copia Paciente')
-      console.log(this.tabPaciente.selected)
+      this.form.cpf = `${this.tabPaciente.selected.cpf}`
+      this.isImageModalActive = false
     },
     pesquisarCPF () {
       console.log('Pesquisar CPF')
@@ -526,14 +529,13 @@ export default {
       this.bAtualizar = true
       this.validation.reset()
     },
-    pesquisarNome () {
+    pesquisarNome: _.debounce(function () {
       console.log('Pesquisar paciente')
       if (!this.form.nome.length) {
         return
       }
-
       let vm = this
-
+      vm.tabPaciente.isLoading = true
       this.$http
         .get(`${API_URL}paciente/nome/${vm.form.nome}`, {
         })
@@ -551,7 +553,10 @@ export default {
           position: 'is-bottom'
         })
       })
-    },
+      .finally(function () {
+        vm.tabPaciente.isLoading = false
+      })
+    }, 500),
     novoPaciente () {
       if (this.validaForm() === false) return
       console.log('Novo Paciente')
