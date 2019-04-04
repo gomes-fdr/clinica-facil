@@ -104,6 +104,7 @@
              class="input"
              type="text"
              placeholder="Faculdade"
+             v-model="form.faculdade"
             >
           </p>
         </div>
@@ -113,11 +114,13 @@
              class="input"
              type="text"
              placeholder="Numero Conselho"
+             v-model="form.no_conselho"
             >
           </p>
         </div>
       </div>
     </div>
+
     <div class="field is-horizontal">
       <div class="field-label is-normal">
         <label class="label">Perfil</label>
@@ -130,6 +133,7 @@
              :class="{'is-danger': validation.hasError('form.perfil') }"
              type="text"
              placeholder="Perfil"
+             v-model="form.perfil"
             >
           </p>
           <p v-show="validation.hasError('form.perfil')" class="help is-danger">{{ validation.firstError('form.perfil') }}</p>
@@ -141,6 +145,7 @@
              :class="{'is-danger': validation.hasError('form.situacao') }"
              type="text"
              placeholder="Situação"
+             v-model="form.situacao"
             >
           </p>
           <p v-show="validation.hasError('form.situacao')" class="help is-danger">{{ validation.firstError('form.situacao') }}</p>
@@ -187,25 +192,25 @@
           <p class="control is-expanded">
             <input
              class="input"
-             :class="{'is-danger': validation.hasError('form.endereco.rua')}"
+             :class="{'is-danger': validation.hasError('form.rua')}"
              type="text"
              placeholder="Rua"
-             v-model="form.endereco.rua"
+             v-model="form.rua"
             >
           </p>
-          <p v-show="validation.hasError('form.endereco.rua') " class="help is-danger">{{ validation.firstError('form.endereco.rua') }}</p>
+          <p v-show="validation.hasError('form.rua') " class="help is-danger">{{ validation.firstError('form.endereco.rua') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
             <input
              class="input"
-             :class="{'is-danger': validation.hasError('form.endereco.numero')}"
+             :class="{'is-danger': validation.hasError('form.numero')}"
              type="text"
              placeholder="Numero"
-             v-model="form.endereco.numero"
+             v-model="form.numero"
             >
           </p>
-          <p v-show="validation.hasError('form.endereco.numero') " class="help is-danger">{{ validation.firstError('form.endereco.numero') }}</p>
+          <p v-show="validation.hasError('form.numero') " class="help is-danger">{{ validation.firstError('form.endereco.numero') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
@@ -222,25 +227,25 @@
           <p class="control is-expanded">
             <input 
             class="input"
-            :class="{'is-danger': validation.hasError('form.endereco.cidade')}"
+            :class="{'is-danger': validation.hasError('form.cidade')}"
             type="text"
             placeholder="Cidade"
-            v-model="form.endereco.cidade"
+            v-model="form.cidade"
             >
           </p>
-          <p v-show="validation.hasError('form.endereco.cidade') " class="help is-danger">{{ validation.firstError('form.endereco.cidade') }}</p>
+          <p v-show="validation.hasError('form.cidade') " class="help is-danger">{{ validation.firstError('form.cidade') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
             <input 
              class="input"
-             :class="{'is-danger': validation.hasError('form.endereco.estado')}"
+             :class="{'is-danger': validation.hasError('form.estado')}"
              type="text"
              placeholder="Estado"
-             v-model="form.endereco.estado"
+             v-model="form.estado"
             >
           </p>
-          <p v-show="validation.hasError('form.endereco.estado') " class="help is-danger">{{ validation.firstError('form.endereco.estado') }}</p>
+          <p v-show="validation.hasError('form.estado') " class="help is-danger">{{ validation.firstError('form.estado') }}</p>
         </div>
         <div class="field">
         <div class="field has-addons">
@@ -248,7 +253,7 @@
             <input class="input"
              type="text"
               placeholder="CEP"
-              v-model="form.endereco.cep"
+              v-model="form.cep"
               v-mask="'########'"
             >
           </p>
@@ -268,10 +273,10 @@
         <button type="reset" class="button" @click.prevent="reset">Limpar</button>
       </p>
       <p class="control">
-        <a class="button" :disabled="bNovo">Novo</a>
+        <a class="button" :disabled="!bNovo" @click.prevent="novoProfissional">Novo</a>
       </p>
       <p class="control">
-        <button class="button" :disabled="bAtualizar" @click.prevent="submit">Atualizar</button>
+        <button class="button" :disabled="bAtualizar" >Atualizar</button>
       </p>
     </div>
   </form>
@@ -281,6 +286,9 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 import auth from '../../auth'
+import { API_URL } from '../../main'
+import axios from 'axios'
+import _ from 'lodash'
 
 var moment = require('moment')
 
@@ -296,26 +304,40 @@ export default {
   name: 'Dados',
   data () {
     return {
+      isImageModalActive: false,
+      tabPaciente: {
+        isLoading: false,
+        data: [],
+        columns: [
+          {
+            field: 'nome',
+            label: 'Nome'
+          },
+          {
+            field: 'cpf',
+            label: 'CPF'
+          }
+        ],
+        selected: null
+      },
       form: {
         nome: '',
         email: '',
         dt_nascimento: '',
-        rg: '',
         cpf: '',
+        rg: '',
         faculdade: '',
         no_conselho: '',
         perfil: '',
         situacao: '',
         t_celular: '',
         t_fixo: '',
-        endereco: {
-          cep: '',
-          rua: '',
-          numero: '',
-          complemento: '',
-          cidade: '',
-          estado: ''
-        }
+        cep: '',
+        rua: '',
+        numero: '',
+        complemento: '',
+        cidade: '',
+        estado: ''
       },
       bNovo: true,
       bAtualizar: true
@@ -339,48 +361,75 @@ export default {
         .required()
         .length(11)
     },
-    'form.filiacao': function (value) {
+    'form.perfil': function (value) {
       return Validator.value(value).required()
     },
-    'form.responsavel': function (value) {
-      if (this.form.adultoInapto) {
-        return Validator.value(value).required()
-      }
-    },
-    'form.t_responsavel': function (value) {
-      if (this.form.adultoInapto) {
-        return Validator.value(value).required()
-      }
-    },
-    'form.endereco.cep': function (value) {
+    'form.situacao': function (value) {
       return Validator.value(value).required()
     },
-    'form.endereco.rua': function (value) {
+    'form.cep': function (value) {
       return Validator.value(value).required()
     },
-    'form.endereco.numero': function (value) {
+    'form.rua': function (value) {
       return Validator.value(value).required()
     },
-    'form.endereco.cidade': function (value) {
+    'form.numero': function (value) {
       return Validator.value(value).required()
     },
-    'form.endereco.estado': function (value) {
+    'form.cidade': function (value) {
+      return Validator.value(value).required()
+    },
+    'form.estado': function (value) {
       return Validator.value(value).required()
     }
   },
   methods: {
-    submit () {
+    novoProfissional () {
+      if (this.validaForm() === false) return
+      console.log('Novo Profissional')
+      let vm = this
+      let data = {}
+
+      data = {...this.form}
+      delete data.id
+      let dtTmp = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
+      data.dt_nascimento = dtTmp
+
+      console.log(JSON.stringify(data))
+
+      this.$http
+      .post(`${API_URL}profissional`, data)
+      .then(function (response) {
+        console.log(response)
+        vm.$toast.open({
+          message: 'SUCESSO! PACIENTE gravado.',
+          type: 'is-success',
+          position: 'is-bottom'
+        })
+      })
+      .catch(function (error) {
+        console.log(error)
+        vm.$toast.open({
+          message:
+            'FALHA ao inserir novo PACIENTE!',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      })
+    },
+    validaForm () {
       var vm = this
       // this.$bus.$emit('submit');
       this.$validate().then(function (success) {
         if (success) {
-          // console.log('Validou, enviando...');
+          console.log('Validou, enviando...');
           // console.log(JSON.stringify(vm.form));
           vm.$toast.open({
             message: 'Formulário preenchido com sucesso!',
             type: 'is-success',
             position: 'is-bottom'
           })
+          return true
         } else {
           vm.$toast.open({
             message:
@@ -389,88 +438,60 @@ export default {
             position: 'is-bottom'
           })
         }
+        return false
       })
     },
-    copyEndereco (endereco) {
-      // console.log('Copiando endereco...');
-      this.form.endereco = endereco
-      // console.log(JSON.stringify(this.form.endereco));
-    },
-    pesquisarCPF () {
-      console.log('Pesquisar CPF')
-      if (!this.form.cpf.length) {
-        return
-      }
-      var vm = this
-      var cpf = this.form.cpf
-      cpf = cpf.replace('.', '')
-      cpf = cpf.replace('.', '')
-      cpf = cpf.replace('-', '')
-      this.$http
-        .get(`http://localhost:5000/api/v1/paciente/cpf/${cpf}`, {
-          headers: { Authorization: `b: ${auth.getToken()}` }
-        })
-        .then(function (response) {
-          if (response.data) {
-            vm.form = response.data
-            vm.bAtualizar = false
-            vm.bNovo = true
-          }
-        })
-        .catch(error => {
-          console.log(error.response.status)
-
-          if (error.response.status === 440) {
-            this.$toast.open({
-              duration: 5000,
-              message: 'SESSÃO expirou',
-              type: 'is-danger',
-              position: 'is-bottom'
-            })
-            setTimeout(function () {
-              auth.logout()
-            }, 5000)
-          } else {
-            this.$toast.open({
-              duration: 5000,
-              message: 'PACIENTE não encontrado',
-              type: 'is-warning',
-              position: 'is-bottom'
-            })
-          }
-          vm.bNovo = false
-          vm.bAtualizar = true
-        })
-        .finally(() => {
-          vm.isFetching = false
-        })
+    reset () {
+      this.form.nome = ''
+      this.form.email = ''
+      this.form.dt_nascimento = ''
+      this.form.rg = ''
+      this.form.cpf = ''
+      this.form.filiacao = ''
+      this.form.profissao = ''
+      this.form.responsavel = ''
+      this.form.t_celular = ''
+      this.form.t_fixo = ''
+      this.form.t_reponsavel = ''
+      this.form.cep = ''
+      this.form.rua = ''
+      this.form.numero = ''
+      this.form.complemento = ''
+      this.form.cidade = ''
+      this.form.estado = ''
+      this.form.envioSMS = ''
+      this.form.adultoInapto = false
+      this.isFetching = false
+      this.data = []
+      this.bNovo = true
+      this.bAtualizar = true
+      this.validation.reset()
     },
     pesquisarCEP () {
       var vm = this
-      if (!this.form.endereco.cep.length) {
+      if (!this.form.cep.length) {
         this.data = []
         console.log('Nada enviado...')
         return
       }
-      var cep = this.form.endereco.cep
+      var cep = this.form.cep
       cep = cep.replace('.', '')
       cep = cep.replace('-', '')
 
-      this.$http
+      const instance = axios
+
+      instance
         .get(`https://viacep.com.br/ws/${cep}/json`)
         .then(function (response) {
           if (response.data) {
             // console.log(response.body);
-            vm.form.endereco.rua = response.data.logradouro
-            vm.form.endereco.cidade = response.data.localidade
-            vm.form.endereco.estado = response.data.uf
+            vm.form.rua = response.data.logradouro
+            vm.form.cidade = response.data.localidade
+            vm.form.estado = response.data.uf
           }
         })
         .catch(function (error) {
           vm.erroCep()
-        })
-        .finally(() => {
-          vm.isFetching = false
         })
     },
     erroCep () {
@@ -480,32 +501,6 @@ export default {
         type: 'is-warning',
         position: 'is-bottom'
       })
-    },
-    reset () {
-      this.form.nome = ''
-      this.form.email = ''
-      this.form.dt_nascimento = ''
-      this.form.rg = ''
-      this.form.cpf = ''
-      this.form.faculdade = ''
-      this.form.no_conselho = ''
-      this.form.perfil = ''
-      this.form.situacao = ''
-      this.form.t_celular = ''
-      this.form.t_fixo = ''
-      this.form.endereco.cep = ''
-      this.form.endereco.rua = ''
-      this.form.endereco.numero = ''
-      this.form.endereco.complemento = ''
-      this.form.endereco.cidade = ''
-      this.form.endereco.estado = ''
-      this.form.envio_sms = ''
-      this.bNovo = true
-      this.bAtualizar = true
-      this.validation.reset()
-    },
-    pesquisarNome () {
-      console.log('Pesquisar paciente')
     }
   },
   computed: {

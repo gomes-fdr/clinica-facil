@@ -32,6 +32,29 @@ class Perfil(db.Model):
 
     profissionais = db.relationship('Profissional', backref='perfil', lazy='dynamic')
 
+    @staticmethod
+    def insere():
+        perfis = {
+            'Administracao': (Permissao.ADM_SISTEMA)
+            'Cliente': (),
+            'Recepção': (),
+            'Psicólogo': (),
+            'Psiquiatra': (),
+            'Nutricionista': (),
+            'Fonoaudiólogo': (),
+            'Neurologista': (),
+            'Financeiro': (),
+            'Coordenador-Agendas': (),
+        }
+        for p in perfis:
+            perfil = Perfil.query.filter_by(descricao=p).first()
+            if perfil is None:
+                perfil = Perfil(descricao = p)
+            perfil.permissao = perfis[p]
+            db.session.add(perfil)
+        db.session.commit()
+
+
 
 class Situacao(db.Model):
     """

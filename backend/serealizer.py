@@ -3,6 +3,7 @@ from marshmallow import ValidationError, fields, validates
 
 from backend.models.paciente import Paciente
 from backend.models.profissional import User
+from backend.models.profissional import Profissional
 
 ma = Marshmallow()
 
@@ -20,3 +21,8 @@ class UserSchema(ma.ModelSchema):
 class PacienteSchema(ma.ModelSchema):
     class Meta:
         model = Paciente
+
+
+class ProfissionalSchema(ma.ModelSchema):
+    class Meta:
+        model = Profissional
