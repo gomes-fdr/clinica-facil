@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 
 from backend.models import configure as config_db
 from backend.paciente import bp_paciente
+from backend.profissional import bp_profissional
 from backend.serealizer import configure as config_ma
 from backend.token import bp_token
 from backend.user import bp_user
@@ -24,10 +25,9 @@ config_ma(app)
 Migrate(app, app.db)
 
 app.register_blueprint(bp_user)
-
 app.register_blueprint(bp_token)
-
 app.register_blueprint(bp_paciente)
+app.register_blueprint(bp_profissional)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

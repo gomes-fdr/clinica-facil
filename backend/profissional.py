@@ -1,4 +1,5 @@
 from flask import Blueprint, current_app, jsonify, request
+from backend.models.profissional import Profissional
 
 bp_profissional = Blueprint('profissional', __name__)
 

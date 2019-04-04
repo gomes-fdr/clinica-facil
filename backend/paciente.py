@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from .token import token_required
 from .serealizer import PacienteSchema
-from .models import Paciente
+from backend.models.paciente import Paciente
 
 bp_paciente = Blueprint('paciente', __name__)
 

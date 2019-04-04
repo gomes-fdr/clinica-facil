@@ -6,7 +6,7 @@ from functools import wraps
 import jwt
 from flask import Blueprint, current_app, jsonify, request
 
-from .models import User
+from backend.models.profissional import User
 from .serealizer import UserSchema
 
 bp_token = Blueprint('token', __name__)

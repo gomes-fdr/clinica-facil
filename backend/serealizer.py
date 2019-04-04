@@ -1,7 +1,8 @@
 from flask_marshmallow import Marshmallow
 from marshmallow import ValidationError, fields, validates
 
-from .models import User, Paciente
+from backend.models.paciente import Paciente
+from backend.models.profissional import User
 
 ma = Marshmallow()
 
