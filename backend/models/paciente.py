@@ -10,7 +10,7 @@ class Paciente(db.Model):
     email = db.Column(db.String(100))
     dt_nascimento = db.Column(db.DateTime, nullable=False)
     cpf = db.Column(db.String(11), index=True, unique=True, nullable=False)
-    rg = db.Column(db.String(10), unique=True)
+    rg = db.Column(db.String(10))
     filiacao = db.Column(db.String(100), nullable=False)
     profissao = db.Column(db.String(100))
     responsavel = db.Column(db.String(100))
