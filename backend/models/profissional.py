@@ -35,16 +35,48 @@ class Perfil(db.Model):
     @staticmethod
     def insere():
         perfis = {
-            'Administracao': (Permissao.ADM_SISTEMA)
-            'Cliente': (),
-            'Recepção': (),
-            'Psicólogo': (),
-            'Psiquiatra': (),
-            'Nutricionista': (),
-            'Fonoaudiólogo': (),
-            'Neurologista': (),
-            'Financeiro': (),
-            'Coordenador-Agendas': (),
+            'Administracao': (Permissao.COORD_USUARIOS),
+            'Recepcao': (
+                Permissao.V_AGENDA |
+                Permissao.E_AGENDA
+            ),
+            'Psicologo': (
+                Permissao.V_AGENDA |
+                Permissao.E_AGENDA |
+                Permissao.V_PRONTUARIO |
+                Permissao.E_PRONTUARIO
+            ),
+            'Psiquiatra': (
+                Permissao.V_AGENDA |
+                Permissao.E_AGENDA |
+                Permissao.V_PRONTUARIO |
+                Permissao.E_PRONTUARIO
+            ),
+            'Nutricionista': (
+                Permissao.V_AGENDA |
+                Permissao.E_AGENDA |
+                Permissao.V_PRONTUARIO |
+                Permissao.E_PRONTUARIO
+            ),
+            'Fonoaudiologo': (
+                Permissao.V_AGENDA |
+                Permissao.E_AGENDA |
+                Permissao.V_PRONTUARIO |
+                Permissao.E_PRONTUARIO
+            ),
+            'Neurologista': (
+                Permissao.V_AGENDA |
+                Permissao.E_AGENDA |
+                Permissao.V_PRONTUARIO |
+                Permissao.E_PRONTUARIO
+            ),
+            'Coordenador-Agendas': (
+                Permissao.COORD_AGENDA |
+                Permissao.V_AGENDA |
+                Permissao.E_AGENDA |
+                Permissao.V_PRONTUARIO |
+                Permissao.E_PRONTUARIO
+            ),
         }
         for p in perfis:
             perfil = Perfil.query.filter_by(descricao=p).first()
@@ -53,6 +85,9 @@ class Perfil(db.Model):
             perfil.permissao = perfis[p]
             db.session.add(perfil)
         db.session.commit()
+
+    def __repr__(self):
+        return '{}'.format(self.descricao)
 
 
 
@@ -77,6 +112,9 @@ class Situacao(db.Model):
                 situacao = Situacao(descricao = s)
             db.session.add(situacao)
         db.session.commit()
+
+    def __repr__(self):
+        return '{}'.format(self.descricao)
 
 
 class User(db.Model):
@@ -129,5 +167,11 @@ class Profissional(db.Model):
 
     perfil_id = db.Column(db.Integer, db.ForeignKey('perfil.id'))
     situacao_id = db.Column(db.Integer, db.ForeignKey('situacao.id'))
+
+    perfis = db.relationship("Perfil", backref=db.backref("perfil", lazy="dynamic"))
+    situacoes = db.relationship("Situacao", backref=db.backref("situacao", lazy="dynamic"))
+
+    def __repr__(self):
+        return 'Nome: {}, perfil: {}, situação: {}'.format(self.nome, self.perfil, self.situacao)
 
 

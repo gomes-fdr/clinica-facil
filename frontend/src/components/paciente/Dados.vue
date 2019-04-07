@@ -558,36 +558,46 @@ export default {
       })
     }, 500),
     novoPaciente () {
-      if (this.validaForm() === false) return
-      console.log('Novo Paciente')
+      console.log('Novo Profissional')
       let vm = this
       let data = {}
 
-      data = {...this.form} // clonar obeto sem referencias
-      delete data.id // Para facilitar a inserção de usuários com dados semelhantes
-      let dtTmp = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
-      data.dt_nascimento = dtTmp
-
-      // console.log(JSON.stringify(data))
-
-      this.$http
-      .post(`${API_URL}paciente`, data)
+      this.$validate()
       .then(function (response) {
-        // console.log(response)
-        vm.$toast.open({
-          message: 'SUCESSO! PACIENTE gravado.',
-          type: 'is-success',
-          position: 'is-bottom'
-        })
-      })
-      .catch(function (error) {
-        // console.log(error.response)
-        vm.$toast.open({
-          message:
-            'FALHA ao inserir novo PACIENTE!',
-          type: 'is-danger',
-          position: 'is-bottom'
-        })
+        console.log(response)
+        if (response === true) {
+          data = {...vm.form}
+          delete data.id
+          let dtTmp = moment(vm.form.dt_nascimento, 'DD/MM/YYYY')
+          data.dt_nascimento = dtTmp
+          console.log(JSON.stringify(data))
+          vm.$http
+          .post(`${API_URL}paciente`, data)
+          .then(function (response) {
+            console.log(response)
+            vm.$toast.open({
+              message: 'SUCESSO! PACIENTE gravado.',
+              type: 'is-success',
+              position: 'is-bottom'
+            })
+          })
+          .catch(function (error) {
+            console.log(error)
+            vm.$toast.open({
+              message:
+                'FALHA ao inserir novo PACIENTE!',
+              type: 'is-danger',
+              position: 'is-bottom'
+            })
+          })
+        } else {
+          vm.$toast.open({
+            message:
+              'FORMULÁRIO INCOMPLETO',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        }
       })
     },
     atualizarPaciente () {

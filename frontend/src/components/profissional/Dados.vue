@@ -126,28 +126,35 @@
         <label class="label">Perfil</label>
       </div>
       <div class="field-body">
-        <div class="field">
-          <p class="control is-expanded">
-            <input
-             class="input"
-             :class="{'is-danger': validation.hasError('form.perfil') }"
-             type="text"
-             placeholder="Perfil"
-             v-model="form.perfil"
+        <b-field>
+          <b-select 
+          placeholder="Perfil"
+          expanded
+          v-model="form.perfil"
+          >
+            <option
+              v-for="p in perfilAPI"
+              :value="p.id"
+              :key="p.id"
             >
-          </p>
+              {{ p.descricao }}
+            </option>
+          </b-select>
           <p v-show="validation.hasError('form.perfil')" class="help is-danger">{{ validation.firstError('form.perfil') }}</p>
-        </div>
+        </b-field>
         <div class="field">
-          <p class="control is-expanded has-icons-right">
-            <input
-             class="input"
-             :class="{'is-danger': validation.hasError('form.situacao') }"
-             type="text"
-             placeholder="Situação"
-             v-model="form.situacao"
-            >
-          </p>
+          <b-select 
+          placeholder="Situação"
+          expanded
+          v-model="form.situacao"
+          >
+            <option
+              v-for="s in situacaoAPI"
+              :value="s.id"
+              :key="s.id">
+              {{ s.descricao }}
+            </option>
+          </b-select>
           <p v-show="validation.hasError('form.situacao')" class="help is-danger">{{ validation.firstError('form.situacao') }}</p>
         </div>
       </div>
@@ -198,7 +205,7 @@
              v-model="form.rua"
             >
           </p>
-          <p v-show="validation.hasError('form.rua') " class="help is-danger">{{ validation.firstError('form.endereco.rua') }}</p>
+          <p v-show="validation.hasError('form.rua') " class="help is-danger">{{ validation.firstError('form.rua') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
@@ -210,7 +217,7 @@
              v-model="form.numero"
             >
           </p>
-          <p v-show="validation.hasError('form.numero') " class="help is-danger">{{ validation.firstError('form.endereco.numero') }}</p>
+          <p v-show="validation.hasError('form.numero') " class="help is-danger">{{ validation.firstError('form.numero') }}</p>
         </div>
         <div class="field">
           <p class="control is-expanded has-icons-right">
@@ -285,7 +292,7 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
-import auth from '../../auth'
+// import auth from '../../auth'
 import { API_URL } from '../../main'
 import axios from 'axios'
 import _ from 'lodash'
@@ -305,6 +312,8 @@ export default {
   data () {
     return {
       isImageModalActive: false,
+      perfilAPI: '',
+      situacaoAPI: '',
       tabPaciente: {
         isLoading: false,
         data: [],
@@ -367,9 +376,6 @@ export default {
     'form.situacao': function (value) {
       return Validator.value(value).required()
     },
-    'form.cep': function (value) {
-      return Validator.value(value).required()
-    },
     'form.rua': function (value) {
       return Validator.value(value).required()
     },
@@ -383,85 +389,120 @@ export default {
       return Validator.value(value).required()
     }
   },
+  created () {
+    this.perfilProfissional()
+    this.situacaoProfissional()
+  },
   methods: {
-    novoProfissional () {
-      if (this.validaForm() === false) return
-      console.log('Novo Profissional')
+    perfilProfissional () {
       let vm = this
-      let data = {}
-
-      data = {...this.form}
-      delete data.id
-      let dtTmp = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
-      data.dt_nascimento = dtTmp
-
-      console.log(JSON.stringify(data))
-
       this.$http
-      .post(`${API_URL}profissional`, data)
-      .then(function (response) {
-        console.log(response)
-        vm.$toast.open({
-          message: 'SUCESSO! PACIENTE gravado.',
-          type: 'is-success',
-          position: 'is-bottom'
+        .get(`${API_URL}profissional/perfil`, {
         })
+      .then(function (response) {
+        console.log(response.data)
+        vm.perfilAPI = response.data
+      })
+    },
+    situacaoProfissional () {
+      let vm = this
+      this.$http
+        .get(`${API_URL}profissional/situacao`, {
+        })
+      .then(function (response) {
+        console.log(response.data)
+        vm.situacaoAPI = response.data
+      })
+    },
+    pesquisarNome: _.debounce(function () {
+      console.log('Pesquisar paciente')
+      if (!this.form.nome.length) {
+        return
+      }
+      let vm = this
+      vm.tabPaciente.isLoading = true
+      this.$http
+        .get(`${API_URL}profissional/nome/${vm.form.nome}`, {
+        })
+      .then(function (response) {
+        // console.log(response)
+        vm.tabPaciente.data = response.data
+        vm.isImageModalActive = true
       })
       .catch(function (error) {
-        console.log(error)
+        // console.log(error)
         vm.$toast.open({
           message:
-            'FALHA ao inserir novo PACIENTE!',
+            'NENHUM PACIENTE encontrado.',
           type: 'is-danger',
           position: 'is-bottom'
         })
       })
-    },
-    validaForm () {
-      var vm = this
-      // this.$bus.$emit('submit');
-      this.$validate().then(function (success) {
-        if (success) {
-          console.log('Validou, enviando...');
-          // console.log(JSON.stringify(vm.form));
-          vm.$toast.open({
-            message: 'Formulário preenchido com sucesso!',
-            type: 'is-success',
-            position: 'is-bottom'
+      .finally(function () {
+        vm.tabPaciente.isLoading = false
+      })
+    }, 500),
+    novoProfissional () {
+      console.log('Novo Profissional')
+      let vm = this
+      let data = {}
+
+      this.$validate()
+      .then(function (response) {
+        // console.log(response)
+        if (response) {
+          data = {...vm.form}
+          delete data.id
+          let dtTmp = moment(vm.form.dt_nascimento, 'DD/MM/YYYY')
+          data.dt_nascimento = dtTmp
+          console.log(JSON.stringify(data))
+          vm.$http
+          .post(`${API_URL}profissional`, data)
+          .then(function (response) {
+            console.log(response)
+            vm.$toast.open({
+              message: 'SUCESSO! PACIENTE gravado.',
+              type: 'is-success',
+              position: 'is-bottom'
+            })
           })
-          return true
+          .catch(function (error) {
+            console.log(error)
+            vm.$toast.open({
+              message:
+                'FALHA ao inserir novo PACIENTE!',
+              type: 'is-danger',
+              position: 'is-bottom'
+            })
+          })
         } else {
           vm.$toast.open({
             message:
-              'Formulário inválido! Verifique o preenchimento dos campos',
+              'FORMULÁRIO INCOMPLETO',
             type: 'is-danger',
             position: 'is-bottom'
           })
         }
-        return false
       })
     },
     reset () {
       this.form.nome = ''
       this.form.email = ''
       this.form.dt_nascimento = ''
-      this.form.rg = ''
       this.form.cpf = ''
-      this.form.filiacao = ''
-      this.form.profissao = ''
-      this.form.responsavel = ''
+      this.form.rg = ''
+      this.form.faculdade = ''
+      this.form.no_conselho = ''
+      this.form.perfil = ''
+      this.form.situacao = ''
       this.form.t_celular = ''
       this.form.t_fixo = ''
-      this.form.t_reponsavel = ''
       this.form.cep = ''
       this.form.rua = ''
       this.form.numero = ''
       this.form.complemento = ''
       this.form.cidade = ''
       this.form.estado = ''
-      this.form.envioSMS = ''
-      this.form.adultoInapto = false
-      this.isFetching = false
       this.data = []
       this.bNovo = true
       this.bAtualizar = true
