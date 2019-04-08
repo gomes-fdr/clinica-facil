@@ -67,9 +67,18 @@ def profissional():
 
     return pa.jsonify(p), 201
 
-@bp_profissional.route('/api/v1/profissional/nome/<nome>', methods=['POST'])
-def profissional_nome(nome):
-    pass
+@bp_profissional.route('/api/v1/profissional/cpf/<cpf>', methods=['GET'])
+def profissional_cpf(cpf):
+    """
+    Busca um profissional pelo CPF.
+    """
+    
+    profissional = Profissional.query.filter_by(cpf = cpf).first()
+
+    if not profissional:
+        return jsonify({'message': 'Profissional Not Found'}), 404
+
+    return ProfissionalSchema().jsonify(profissional), 200
 
 
 @bp_profissional.route('/api/v1/profissional/perfil', methods=['GET'])

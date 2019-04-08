@@ -130,7 +130,7 @@
           <b-select 
           placeholder="Perfil"
           expanded
-          v-model="form.perfil"
+          v-model="form.perfis"
           >
             <option
               v-for="p in perfilAPI"
@@ -140,13 +140,13 @@
               {{ p.descricao }}
             </option>
           </b-select>
-          <p v-show="validation.hasError('form.perfil')" class="help is-danger">{{ validation.firstError('form.perfil') }}</p>
+          <p v-show="validation.hasError('form.perfis')" class="help is-danger">{{ validation.firstError('form.perfis') }}</p>
         </div>
         <div class="field">
           <b-select 
           placeholder="Situação"
           expanded
-          v-model="form.situacao"
+          v-model="form.situacoes"
           >
             <option
               v-for="s in situacaoAPI"
@@ -155,7 +155,7 @@
               {{ s.descricao }}
             </option>
           </b-select>
-          <p v-show="validation.hasError('form.situacao')" class="help is-danger">{{ validation.firstError('form.situacao') }}</p>
+          <p v-show="validation.hasError('form.situacoes')" class="help is-danger">{{ validation.firstError('form.situacoes') }}</p>
         </div>
       </div>
     </div>
@@ -280,7 +280,7 @@
         <button type="reset" class="button" @click.prevent="reset">Limpar</button>
       </p>
       <p class="control">
-        <a class="button" :disabled="!bNovo" @click.prevent="novoProfissional">Novo</a>
+        <a class="button" :disabled="bNovo" @click.prevent="novoProfissional">Novo</a>
       </p>
       <p class="control">
         <button class="button" :disabled="bAtualizar" >Atualizar</button>
@@ -337,8 +337,8 @@ export default {
         rg: '',
         faculdade: '',
         no_conselho: '',
-        perfil: '',
-        situacao: '',
+        perfis: '',
+        situacoes: '',
         t_celular: '',
         t_fixo: '',
         cep: '',
@@ -370,10 +370,10 @@ export default {
         .required()
         .length(11)
     },
-    'form.perfil': function (value) {
+    'form.perfis': function (value) {
       return Validator.value(value).required()
     },
-    'form.situacao': function (value) {
+    'form.situacoes': function (value) {
       return Validator.value(value).required()
     },
     'form.rua': function (value) {
@@ -400,7 +400,7 @@ export default {
         .get(`${API_URL}profissional/perfil`, {
         })
       .then(function (response) {
-        console.log(response.data)
+        // console.log(response.data)
         vm.perfilAPI = response.data
       })
     },
@@ -410,7 +410,7 @@ export default {
         .get(`${API_URL}profissional/situacao`, {
         })
       .then(function (response) {
-        console.log(response.data)
+        // console.log(response.data)
         vm.situacaoAPI = response.data
       })
     },
@@ -442,6 +442,36 @@ export default {
         vm.tabPaciente.isLoading = false
       })
     }, 500),
+    pesquisarCPF () {
+      console.log('Pesquisar CPF')
+      if (!this.form.cpf.length) {
+        return
+      }
+      let vm = this
+      this.$http
+        .get(`${API_URL}profissional/cpf/${vm.form.cpf}`, {
+        })
+        .then(function (response) {
+          let tmp = response.data
+          let t = moment(tmp.dt_nascimento).format('DD/MM/YYYY')
+          tmp.dt_nascimento = t
+          // console.log(tmp)
+          vm.form = tmp
+          vm.bAtualizar = false
+          vm.bNovo = true
+        })
+        .catch(error => {
+          console.log(error)
+          this.$toast.open({
+            duration: 5000,
+            message: 'PACIENTE não encontrado',
+            type: 'is-warning',
+            position: 'is-bottom'
+          })
+          vm.bNovo = false
+          vm.bAtualizar = true
+        })
+    },
     novoProfissional () {
       console.log('Novo Profissional')
       let vm = this
@@ -455,11 +485,11 @@ export default {
           delete data.id
           let dtTmp = moment(vm.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
-          console.log(JSON.stringify(data))
+          // console.log(JSON.stringify(data))
           vm.$http
           .post(`${API_URL}profissional`, data)
           .then(function (response) {
-            console.log(response)
+            // console.log(response)
             vm.$toast.open({
               message: 'SUCESSO! PACIENTE gravado.',
               type: 'is-success',
@@ -467,7 +497,7 @@ export default {
             })
           })
           .catch(function (error) {
-            console.log(error)
+            // console.log(error)
             vm.$toast.open({
               message:
                 'FALHA ao inserir novo PACIENTE!',
