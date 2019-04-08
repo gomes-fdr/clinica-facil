@@ -523,8 +523,8 @@ export default {
       this.form.rg = ''
       this.form.faculdade = ''
       this.form.no_conselho = ''
-      this.form.perfil = ''
-      this.form.situacao = ''
+      this.form.perfis = ''
+      this.form.situacoes = ''
       this.form.t_celular = ''
       this.form.t_fixo = ''
       this.form.cep = ''
@@ -572,19 +572,6 @@ export default {
         type: 'is-warning',
         position: 'is-bottom'
       })
-    }
-  },
-  computed: {
-    isChild () {
-      let birthday = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
-      if (birthday.isValid()) {
-        let age = Math.abs(birthday.diff(moment(), 'years'))
-        if (age >= 18) {
-          return false || !this.form.adultoInapto
-        } else {
-          return false
-        }
-      }
     }
   }
 }
