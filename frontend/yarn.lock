@@ -6023,6 +6023,20 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
+vue-acl@^4.0.7:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/vue-acl/-/vue-acl-4.0.7.tgz#435c17c685d4c5c0068d141b678aeb6972bf64e5"
+  integrity sha512-weC6YaSSfERa4RgqLakUJ8BI18m/GMBaYOFSVTy25xBKHAK3sahMP6V32cX7ohpXTDNDoXDiX9Nei76o+owM2A==
+  dependencies:
+    vue-e-bus "^1.0.0"
+
+vue-e-bus@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vue-e-bus/-/vue-e-bus-1.0.0.tgz#7c24b9e6bf9f6cd0a6efc43eb68d2086a7915a16"
+  integrity sha512-2zyMvCom6u39H56heUBzHgm6rYXSzI5GnADXA2wpPJ/qcie67d6Ee+oLR63XOwC6SiPfjMHva/2wsDfwxuZRNA==
+  dependencies:
+    vue "^2.5.16"
+
 vue-hot-reload-api@^2.2.0:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.3.tgz#2756f46cb3258054c5f4723de8ae7e87302a1ccf"
@@ -6072,6 +6086,11 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
+
+vue@^2.5.16:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
+  integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
 
 vue@^2.5.2:
   version "2.6.8"
