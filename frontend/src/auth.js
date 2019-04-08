@@ -5,6 +5,7 @@ import axios from 'axios'
 import { API_URL } from './main'
 
 export default {
+
   login (email, pass, cb) {
     cb = arguments[arguments.length - 1]
     if (localStorage.token) {
@@ -48,7 +49,12 @@ export default {
     const data = JSON.parse(atob(jwt.split('.')[1]))
     const exp = new Date(data.exp * 1000) // JS deals with dates in milliseconds since epoch
     const now = new Date()
+    this.profile = data.profile
     return now < exp
+  },
+
+  getProfile () {
+    return this.profile
   }
 }
 

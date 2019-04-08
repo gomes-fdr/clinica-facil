@@ -62,7 +62,8 @@ def token():
         token = jwt.encode({
         'sub': user.email,
         'iat': datetime.utcnow(),
-        'exp': datetime.utcnow() + timedelta(minutes=(60*4))
+        'exp': datetime.utcnow() + timedelta(minutes=(60*4)),
+        'profile': user.perfil_id
         }, os.environ['SALT_TOKEN'])
         return jsonify({'token': token.decode('UTF-8')}), 200
     
