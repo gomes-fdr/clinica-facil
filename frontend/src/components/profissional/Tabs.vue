@@ -12,6 +12,9 @@
         <b-tab-item label="Documentos" >
           <documentos/>
         </b-tab-item>
+        <b-tab-item label="Senha do Sistema" >
+          <senha/>
+        </b-tab-item>
       </b-tabs>
     </div>
   </section>
@@ -19,12 +22,14 @@
 <script>
 import Dados from './Dados'
 import Documentos from './Documentos'
+import Senha from './Senha'
 
 export default {
   name: 'Tabs',
   components: {
     Dados,
-    Documentos
+    Documentos,
+    Senha
   },
   data () {
     return {
