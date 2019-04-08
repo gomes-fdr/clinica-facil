@@ -126,7 +126,7 @@
         <label class="label">Perfil</label>
       </div>
       <div class="field-body">
-        <b-field>
+        <div class="field">
           <b-select 
           placeholder="Perfil"
           expanded
@@ -141,7 +141,7 @@
             </option>
           </b-select>
           <p v-show="validation.hasError('form.perfil')" class="help is-danger">{{ validation.firstError('form.perfil') }}</p>
-        </b-field>
+        </div>
         <div class="field">
           <b-select 
           placeholder="Situação"
