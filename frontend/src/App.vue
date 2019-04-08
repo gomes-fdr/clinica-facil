@@ -18,6 +18,8 @@ export default {
   },
   created () {
     if (auth.isValidJwt(auth.getToken()) === false) {
+      // Para tokens antigos
+      delete localStorage.token
       router.push('login')
     }
   },
