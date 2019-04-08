@@ -6,17 +6,24 @@
 
 <script>
 import auth from './auth'
+import router from './router'
 
 export default {
   name: 'app',
   data () {
     return {
-      timer: ''
+      timer: '',
+      bChecked: false
+    }
+  },
+  created () {
+    if (auth.isValidJwt(auth.getToken()) === false) {
+      router.push('login')
     }
   },
   mounted: function () {
     this.timer = setInterval(function () {
-      if (!auth.isValidJwt(auth.getToken())) {
+      if (auth.isValidJwt(auth.getToken()) === false) {
         auth.logout()
       }
     }, 1000 * 60 * 30)
