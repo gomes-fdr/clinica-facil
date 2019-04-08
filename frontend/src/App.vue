@@ -12,8 +12,7 @@ export default {
   name: 'app',
   data () {
     return {
-      timer: '',
-      bChecked: false
+      timer: ''
     }
   },
   created () {
