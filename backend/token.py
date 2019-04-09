@@ -6,7 +6,7 @@ from functools import wraps
 import jwt
 from flask import Blueprint, current_app, jsonify, request
 
-from backend.models.profissional import User
+from backend.models.profissional import User, Perfil
 from .serealizer import UserSchema
 
 bp_token = Blueprint('token', __name__)
@@ -57,13 +57,14 @@ def token():
         return jsonify(error), 401
 
     user = User.query.filter_by(email=user.email).first()
+    perfil = Perfil.query.filter_by(id=user.perfil_id).first()
 
     if user and user.verify_password(request.json['password']):
         token = jwt.encode({
         'sub': user.email,
         'iat': datetime.utcnow(),
         'exp': datetime.utcnow() + timedelta(minutes=(60*4)),
-        'profile': user.perfil_id
+        'profile': perfil.descricao
         }, os.environ['SALT_TOKEN'])
         return jsonify({'token': token.decode('UTF-8')}), 200
     

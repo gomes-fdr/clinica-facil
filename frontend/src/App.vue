@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    {{ $acl.get }}
     <router-view/>
   </div>
 </template>
@@ -21,6 +22,8 @@ export default {
       delete localStorage.token
       router.push('login')
     }
+    localStorage.perfil = 'Psicologo'
+    this.$acl.change(localStorage.perfil)
   },
   mounted: function () {
     this.timer = setInterval(function () {

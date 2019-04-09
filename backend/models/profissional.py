@@ -35,7 +35,7 @@ class Perfil(db.Model):
     @staticmethod
     def insere():
         perfis = {
-            'Administracao': (Permissao.COORD_USUARIOS),
+            'Administracao': (Permissao.ADM_SISTEMA),
             'Recepcao': (
                 Permissao.V_AGENDA |
                 Permissao.E_AGENDA
