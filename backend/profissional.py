@@ -17,11 +17,11 @@ def profissional():
     Insere um novo profissional no sistema.
     """
     data = request.json
-    perfil = Perfil.query.filter_by(id=data['perfil']).first()
+    perfil = Perfil.query.filter_by(id=data['perfis']).first()
     if not perfil:
         return jsonify({'message': 'Not possible find Perfil'}), 404
 
-    situacao = Situacao.query.filter_by(id=data['situacao']).first()
+    situacao = Situacao.query.filter_by(id=data['situacoes']).first()
     if not situacao:
         return jsonify({'message': 'Not possible find Situacao'}), 404
 
