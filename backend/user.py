@@ -9,6 +9,9 @@ def register():
     """
     Adiciona um usuário no sistema.
     """
+
+    # TODO: Falta gravar qual o perfil será utilizado, user precisa perfil?
+
     us = UserSchema()
 
     user, error = us.load(request.json)

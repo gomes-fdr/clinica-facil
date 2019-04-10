@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    {{ $acl.get }}
     <router-view/>
   </div>
 </template>
@@ -18,13 +17,8 @@ export default {
   },
   created () {
     if (auth.isValidJwt(auth.getToken()) === false) {
-      // Para tokens antigos
-      delete localStorage.token
       router.push('login')
     }
-    localStorage.perfil = auth.getProfile()
-    localStorage.setItem('perfil', 'Psicologo')
-    this.$acl.change(localStorage.getItem('perfil'))
   },
   mounted: function () {
     this.timer = setInterval(function () {

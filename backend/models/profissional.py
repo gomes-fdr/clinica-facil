@@ -127,6 +127,9 @@ class User(db.Model):
 
     perfil_id = db.Column(db.Integer, db.ForeignKey('perfil.id'))
 
+    def __repr__(self):
+        return 'email: {}'.format(self.email)
+
     @staticmethod
     def insere():
         """Insere usuário administrador do sistema"""

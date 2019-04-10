@@ -6,7 +6,7 @@ from functools import wraps
 import jwt
 from flask import Blueprint, current_app, jsonify, request
 
-from backend.models.profissional import User, Perfil, Profissional
+from backend.models.profissional import User, Perfil, Profissional, Situacao
 from .serealizer import UserSchema
 
 bp_token = Blueprint('token', __name__)
@@ -56,22 +56,41 @@ def token():
     if error:
         return jsonify(error), 401
 
-    user = User.query.filter_by(email=user.email).first()
-    perfil = Perfil.query.filter_by(id=user.perfil_id).first()
-    profissional = Profissional.query.filter_by(email=user.email)
+    try:
+        user = User.query.filter_by(email=user.email).first()
+    except:
+        return jsonify({'message': 'User not found'}), 401
 
-    # if user and \
-    #    user.verify_password(request.json['password']) and \
-    #    not profissional:
+    try:
+        profissional = Profissional.query.filter_by(email=user.email).first()
+    except:
+        return jsonify({'message': 'Profissional not found'}), 401
 
-    if user and user.verify_password(request.json['password']):
+    try:    
+        perfil = Perfil.query.filter_by(id=user.perfil_id).first()
+    except:
+        return jsonify({'message': 'Perfil not found'}), 401
+
+    try:
+        situacao = Situacao.query.filter_by(id=profissional.situacao_id).first()
+    except:
+        return jsonify({'message': 'Situacao not found'}), 401
+
+    if user and \
+       perfil and \
+       profissional and \
+       situacao and \
+       user.verify_password(request.json['password']):
+
         token = jwt.encode({
         'sub': user.email,
         'iat': datetime.utcnow(),
         'exp': datetime.utcnow() + timedelta(minutes=(60*4)),
-        'profile': perfil.descricao
+        'nome': profissional.nome,
+        'profile': perfil.descricao,
+        'situacao': situacao.descricao
         }, os.environ['SALT_TOKEN'])
         return jsonify({'token': token.decode('UTF-8')}), 200
     
-    return jsonify({'message': 'Credenciais Invalidas', 'authenticated': False}), 401
+    return jsonify({'message': 'Invalid Credentials'}), 401
     

@@ -23,7 +23,7 @@ const routerOptions = [
     component: 'Home',
     beforeEnter: requireAuth,
     meta: {
-      rule: 'isPsicologo'
+      rule: 'isAdministracao'
     }
   },
   { path: '/agenda', component: 'Agenda', beforeEnter: requireAuth },
