@@ -6,7 +6,7 @@ from functools import wraps
 import jwt
 from flask import Blueprint, current_app, jsonify, request
 
-from backend.models.profissional import User, Perfil
+from backend.models.profissional import User, Perfil, Profissional
 from .serealizer import UserSchema
 
 bp_token = Blueprint('token', __name__)
@@ -58,6 +58,11 @@ def token():
 
     user = User.query.filter_by(email=user.email).first()
     perfil = Perfil.query.filter_by(id=user.perfil_id).first()
+    profissional = Profissional.query.filter_by(email=user.email)
+
+    # if user and \
+    #    user.verify_password(request.json['password']) and \
+    #    not profissional:
 
     if user and user.verify_password(request.json['password']):
         token = jwt.encode({

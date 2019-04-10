@@ -22,8 +22,9 @@ export default {
       delete localStorage.token
       router.push('login')
     }
-    localStorage.perfil = 'Psicologo'
-    this.$acl.change(localStorage.perfil)
+    localStorage.perfil = auth.getProfile()
+    localStorage.setItem('perfil', 'Psicologo')
+    this.$acl.change(localStorage.getItem('perfil'))
   },
   mounted: function () {
     this.timer = setInterval(function () {
