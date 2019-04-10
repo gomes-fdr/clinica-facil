@@ -91,6 +91,7 @@ export default {
 
           auth.login(vm.form.email, vm.form.password, loggedIn => {
             if (loggedIn) {
+              vm.$acl.change(localStorage.getItem('perfil'))
               vm.$router.replace(vm.$route.query.redirect || '/')
             } else {
               vm.$toast.open({

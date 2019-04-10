@@ -7,10 +7,12 @@ import VueScheduler from 'v-calendar-scheduler'
 import 'v-calendar-scheduler/lib/main.css'
 
 import auth from './auth'
+import acl from './acl'
 
 Vue.use(VueScheduler)
 Vue.config.productionTip = false
 Vue.use(VueMask)
+Vue.config.productionTip = false
 
 export const API_URL = 'http://localhost:5000/api/v1/'
 
@@ -25,5 +27,6 @@ Vue.prototype.$http = instance
 new Vue({
   el: '#app',
   router,
+  acl,
   render: h => h(App)
 })

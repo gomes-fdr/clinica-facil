@@ -25,6 +25,9 @@
 
       <div class="navbar-end">
         <div class="navbar-item">
+          <p>{{nome}} [{{perfil}}]</p>
+        </div>
+        <div class="navbar-item">
           <div class="buttons">
             <a class="button is-light" @click.prevent="logout">
               Sair
@@ -40,6 +43,12 @@
 import auth from '../auth'
 
 export default {
+  data () {
+    return {
+      nome: localStorage.getItem('nome'),
+      perfil: localStorage.getItem('perfil')
+    }
+  },
   methods: {
     logout () {
       auth.logout()

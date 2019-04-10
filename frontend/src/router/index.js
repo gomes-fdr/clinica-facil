@@ -4,6 +4,7 @@ import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import SimpleVueValidation from 'simple-vue-validator'
 import auth from '../auth'
+// import { AclRule } from 'vue-acl'
 
 function requireAuth (to, from, next) {
   if (!auth.loggedIn()) {
@@ -17,11 +18,24 @@ function requireAuth (to, from, next) {
 }
 
 const routerOptions = [
-  { path: '/', component: 'Home', beforeEnter: requireAuth },
+  {
+    path: '/',
+    component: 'Home',
+    beforeEnter: requireAuth,
+    meta: {
+      rule: 'isAdministracao'
+    }
+  },
   { path: '/agenda', component: 'Agenda', beforeEnter: requireAuth },
   { path: '/paciente', component: 'Paciente', beforeEnter: requireAuth },
   { path: '/profissional', component: 'Profissional', beforeEnter: requireAuth },
-  { path: '/login', component: 'Login' },
+  {
+    path: '/login',
+    component: 'Login',
+    meta: {
+      rule: 'isPublico'
+    }
+  },
   { path: '*', component: 'NotFound' }
 ]
 const routes = routerOptions.map(route => {

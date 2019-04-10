@@ -35,7 +35,7 @@ class Perfil(db.Model):
     @staticmethod
     def insere():
         perfis = {
-            'Administracao': (Permissao.COORD_USUARIOS),
+            'Administracao': (Permissao.ADM_SISTEMA),
             'Recepcao': (
                 Permissao.V_AGENDA |
                 Permissao.E_AGENDA
@@ -126,6 +126,9 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
 
     perfil_id = db.Column(db.Integer, db.ForeignKey('perfil.id'))
+
+    def __repr__(self):
+        return 'email: {}'.format(self.email)
 
     @staticmethod
     def insere():
