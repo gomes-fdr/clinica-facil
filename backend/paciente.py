@@ -7,8 +7,9 @@ from backend.models.paciente import Paciente
 
 bp_paciente = Blueprint('paciente', __name__)
 
+# TODO: Revisar sistema de tokens
+
 @bp_paciente.route('/api/v1/paciente', methods=['POST'])
-@token_required
 def paciente_novo():
     """
     Insere um novo paciente no sistema.
@@ -30,7 +31,6 @@ def paciente_novo():
 
 
 @bp_paciente.route('/api/v1/paciente/<cpf>', methods=['POST'])
-@token_required
 def paciente_atualizar(cpf):
     """
     Atualiza um paciente no sistema.
@@ -62,11 +62,10 @@ def paciente_atualizar(cpf):
     except SQLAlchemyError as e:
         return jsonify({'message': 'Fail to update PACIENTE'}), 400
      
-    return PacienteSchema().jsonify(pa), 204
+    return PacienteSchema().jsonify(paciente), 204
 
 
 @bp_paciente.route('/api/v1/paciente/cpf/<cpf>', methods=['GET'])
-@token_required
 def paciente_cpf(cpf):
     """
     Busca um paciente pelo CPF.
