@@ -33,3 +33,5 @@ app.register_blueprint(bp_profissional)
 @app.route('/<path:path>')
 def catch_all(path):
     return render_template("index.html")
+
+# TODO: Criar estrutura para logar eventos importantes
