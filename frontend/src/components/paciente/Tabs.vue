@@ -12,10 +12,10 @@
         <b-tab-item label="Convênios" >
           <convenios/>
         </b-tab-item>
-        <b-tab-item label="Prontuário" >
+        <b-tab-item label="Prontuário" v-if="$acl.check('isAdministracao')">
           <prontuarios/>
         </b-tab-item>
-        <b-tab-item label="Documentos" >
+        <b-tab-item label="Documentos" v-if="$acl.check('isAdministracao')>
           <documentos/>
         </b-tab-item>
       </b-tabs>

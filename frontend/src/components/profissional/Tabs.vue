@@ -9,7 +9,7 @@
         <b-tab-item label="Dados">
           <dados/>
         </b-tab-item>
-        <b-tab-item label="Documentos" >
+        <b-tab-item label="Documentos" v-if="$acl.check('isAdministracao')">
           <documentos/>
         </b-tab-item>
         <b-tab-item label="Senha do Sistema" >

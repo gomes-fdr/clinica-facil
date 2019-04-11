@@ -27,8 +27,22 @@ const routerOptions = [
     }
   },
   { path: '/agenda', component: 'Agenda', beforeEnter: requireAuth },
-  { path: '/paciente', component: 'Paciente', beforeEnter: requireAuth },
-  { path: '/profissional', component: 'Profissional', beforeEnter: requireAuth },
+  {
+    path: '/paciente',
+    component: 'Paciente',
+    beforeEnter: requireAuth,
+    meta: {
+      rule: 'isAdministracao'
+    }
+  },
+  {
+    path: '/profissional',
+    component: 'Profissional',
+    beforeEnter: requireAuth,
+    meta: {
+      rule: 'isAdministracao'
+    }
+  },
   {
     path: '/login',
     component: 'Login',

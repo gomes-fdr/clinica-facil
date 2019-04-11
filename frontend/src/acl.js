@@ -11,13 +11,13 @@ export default new AclCreate({
   acceptLocalRules: true,
   globalRules: {
     isPsicologo: new AclRule('Psicologo'),
-    isAdministracao: new AclRule('Administracao').or('Psicologo'),
     isRecepcao: new AclRule('Recepcao'),
     isPsiquiatra: new AclRule('Psiquiatra'),
     isNutricionista: new AclRule('Nutricionista'),
     isFonoaudiologo: new AclRule('Fonoaudiologo'),
     isNeurologista: new AclRule('Neurologista'),
     isCoordenador_Agendas: new AclRule('Coordenador_Agendas'),
+    isAdministracao: new AclRule('Administracao').or('Psicologo'),
     isPublico: new AclRule('Publico')
   }
 })
