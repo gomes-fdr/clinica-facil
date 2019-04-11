@@ -79,7 +79,7 @@ def token():
     if user and \
        perfil and \
        profissional and \
-       situacao and \
+       situacao.descricao == 'Ativo' and \
        user.verify_password(request.json['password']):
 
         token = jwt.encode({
