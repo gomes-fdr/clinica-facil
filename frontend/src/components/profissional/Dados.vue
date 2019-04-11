@@ -357,7 +357,7 @@ export default {
       return Validator.value(value).required()
     },
     'form.email': function (value) {
-      return Validator.value(value).email()
+      return Validator.value(value).email().required()
     },
     'form.dt_nascimento': function (value) {
       return Validator.value(value).required()

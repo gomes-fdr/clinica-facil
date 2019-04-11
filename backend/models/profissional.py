@@ -1,4 +1,6 @@
 from . import db
+from sqlalchemy.exc import SQLAlchemyError
+from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 
 class Permissao:
@@ -125,8 +127,6 @@ class User(db.Model):
     email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
-    perfil_id = db.Column(db.Integer, db.ForeignKey('perfil.id'))
-
     def __repr__(self):
         return 'email: {}'.format(self.email)
 
@@ -153,11 +153,11 @@ class Profissional(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100), nullable=False, unique=True)
     dt_nascimento = db.Column(db.DateTime, nullable=False)
     cpf = db.Column(db.String(11), index=True, unique=True, nullable=False)
     rg = db.Column(db.String(10), unique=True)
-    faculdade = db.Column(db.String(100), nullable=False)
+    faculdade = db.Column(db.String(100))
     no_conselho = db.Column(db.String(100))
     t_celular = db.Column(db.String(20))
     t_fixo = db.Column(db.String(20))
@@ -176,5 +176,42 @@ class Profissional(db.Model):
 
     def __repr__(self):
         return 'Nome: {}, perfil: {}, situação: {}'.format(self.nome, self.perfil, self.situacao)
+
+    @staticmethod
+    def insere_adm():
+
+        try:
+            perfil = Perfil.query.filter_by(descricao='Administracao').first()
+        except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+
+        try:
+            situacao = Situacao.query.filter_by(descricao='Ativo').first()
+        except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+
+        try:
+            adm = Profissional(nome='Fabiano da Rosa Gomes', email='gomes.fdr@gmail.com', 
+                            dt_nascimento=datetime(1974, 5, 24), cpf='60976900025', faculdade='Senac', rua='Silvério Souto',
+                            numero='380', cidade='Porto Alegre', estado='RS', perfil=perfil, situacao=situacao)
+        except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+
+        db.session.add(adm)
+        db.session.commit()
+        return adm
+
+    def create_user(self, profissional):
+        try:
+            user = User(email=profissional.email, password='1234')
+        except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+
+        db.session.add(user)
+        db.session.commit()
+
+
+
+
 
 

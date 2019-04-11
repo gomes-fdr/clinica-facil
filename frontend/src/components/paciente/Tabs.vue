@@ -15,7 +15,7 @@
         <b-tab-item label="Prontuário" v-if="$acl.check('isAdministracao')">
           <prontuarios/>
         </b-tab-item>
-        <b-tab-item label="Documentos" v-if="$acl.check('isAdministracao')>
+        <b-tab-item label="Documentos" v-if="$acl.check('isAdministracao')">
           <documentos/>
         </b-tab-item>
       </b-tabs>

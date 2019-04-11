@@ -8,8 +8,12 @@ from backend.models.profissional import Profissional, Perfil, Situacao
 
 from marshmallow import pprint
 
-
 bp_profissional = Blueprint('profissional', __name__)
+
+# TODO: Revisar sistema de tokens
+# TODO: Atualizar Profissionais
+# TODO: Atualizar senhas de usuários
+# TODO: Pesquisar Profissionais por nome
 
 @bp_profissional.route('/api/v1/profissional', methods=['POST'])
 def profissional():
@@ -65,6 +69,8 @@ def profissional():
     except SQLAlchemyError as e:
         return jsonify({'message': 'User already in database'}), 403
 
+    # Cria novo profissional com senha padrão '1234'
+    p.create_user(p)
     return pa.jsonify(p), 201
 
 @bp_profissional.route('/api/v1/profissional/cpf/<cpf>', methods=['GET'])

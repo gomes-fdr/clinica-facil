@@ -67,7 +67,7 @@ def token():
         return jsonify({'message': 'Profissional not found'}), 401
 
     try:    
-        perfil = Perfil.query.filter_by(id=user.perfil_id).first()
+        perfil = Perfil.query.filter_by(id=profissional.perfil_id).first()
     except:
         return jsonify({'message': 'Perfil not found'}), 401
 
