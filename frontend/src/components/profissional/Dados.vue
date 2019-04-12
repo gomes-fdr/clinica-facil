@@ -450,7 +450,7 @@ export default {
         // console.log(error)
         vm.$toast.open({
           message:
-            'NENHUM PACIENTE encontrado.',
+            'NENHUM PROFISSIONAL encontrado com esse nome.',
           type: 'is-danger',
           position: 'is-bottom'
         })
