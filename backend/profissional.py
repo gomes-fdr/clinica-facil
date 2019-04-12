@@ -111,3 +111,20 @@ def situacao():
         return jsonify({'message': 'Situacao Not Found'}), 404
 
     return SituacaoSchema(many=True).jsonify(situacao), 200
+
+
+@bp_profissional.route('/api/v1/profissional/nome/<nome>', methods=['GET'])
+def profissional_nome(nome):
+    """
+    Busca um profissional pelo nome ou parte dele.
+    """
+
+    # pacientes = Paiente.query.filter(Paciente.nome.ilike('%' +nome+ '%')).all()
+    profissionais = current_app.db.session.query(Profissional.nome, Profissional.cpf).filter(Profissional.nome.ilike('%' +nome+ '%')).all()
+
+    profissionais = current_app.db.session.query(Profissional.nome, Profissional.cpf).filter(Profissional.nome.ilike('%' +nome+ '%')).all()
+    if not profissionais:
+        return jsonify({'message': 'Profissional Not Found'}), 404
+
+    return ProfissionalSchema(many=True).jsonify(profissionais), 200
+

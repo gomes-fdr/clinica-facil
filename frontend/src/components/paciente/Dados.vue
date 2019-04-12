@@ -535,13 +535,13 @@ export default {
         return
       }
       let vm = this
-      vm.tabPaciente.isLoading = true
+      vm.tabProfissional.isLoading = true
       this.$http
         .get(`${API_URL}paciente/nome/${vm.form.nome}`, {
         })
       .then(function (response) {
         // console.log(response)
-        vm.tabPaciente.data = response.data
+        vm.tabProfissional.data = response.data
         vm.isImageModalActive = true
       })
       .catch(function (error) {
@@ -554,7 +554,7 @@ export default {
         })
       })
       .finally(function () {
-        vm.tabPaciente.isLoading = false
+        vm.tabProfissional.isLoading = false
       })
     }, 500),
     novoPaciente () {

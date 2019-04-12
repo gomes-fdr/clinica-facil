@@ -287,6 +287,18 @@
       </p>
     </div>
   </form>
+  <b-modal :active.sync="isImageModalActive">
+    <b-table 
+    :data="tabProfissional.data"
+    :loading="tabProfissional.isLoading"
+    :columns="tabProfissional.columns"
+    :selected.sync="tabProfissional.selected"
+    @dblclick="copiaProfissional"
+    >
+    
+    </b-table>
+
+  </b-modal>
 </div>
 </template>
 
@@ -314,7 +326,7 @@ export default {
       isImageModalActive: false,
       perfilAPI: '',
       situacaoAPI: '',
-      tabPaciente: {
+      tabProfissional: {
         isLoading: false,
         data: [],
         columns: [
@@ -394,6 +406,11 @@ export default {
     this.situacaoProfissional()
   },
   methods: {
+    copiaProfissional () {
+      console.log('Copia Profissional')
+      this.form.cpf = `${this.tabProfissional.selected.cpf}`
+      this.isImageModalActive = false
+    },
     perfilProfissional () {
       let vm = this
       this.$http
@@ -420,13 +437,13 @@ export default {
         return
       }
       let vm = this
-      vm.tabPaciente.isLoading = true
+      vm.tabProfissional.isLoading = true
       this.$http
         .get(`${API_URL}profissional/nome/${vm.form.nome}`, {
         })
       .then(function (response) {
         // console.log(response)
-        vm.tabPaciente.data = response.data
+        vm.tabProfissional.data = response.data
         vm.isImageModalActive = true
       })
       .catch(function (error) {
@@ -439,7 +456,7 @@ export default {
         })
       })
       .finally(function () {
-        vm.tabPaciente.isLoading = false
+        vm.tabProfissional.isLoading = false
       })
     }, 500),
     pesquisarCPF () {
