@@ -210,6 +210,25 @@ class Profissional(db.Model):
         db.session.add(user)
         db.session.commit()
 
+    def update_user(self, profissional):
+        try:
+            user = User.query.filter_by(email=profissional.email).first()
+            # user.email = profissional_novo.email
+        except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+
+        db.session.commit()
+
+    
+    def update_password(self, profissional):
+        try:
+            user = User.query.filter_by(email=profissional.email).first()
+            user.email = profissional_novo.email
+        except SQLAlchemyError as e:
+                error = str(e.__dict__['orig'])
+
+        db.session.commit()
+
 
 
 

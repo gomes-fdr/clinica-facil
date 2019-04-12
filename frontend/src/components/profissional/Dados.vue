@@ -283,7 +283,7 @@
         <a class="button" :disabled="bNovo" @click.prevent="novoProfissional">Novo</a>
       </p>
       <p class="control">
-        <button class="button" :disabled="bAtualizar" >Atualizar</button>
+        <button class="button" :disabled="bAtualizar" @click.prevent="atualizarProfissional">Atualizar</button>
       </p>
     </div>
   </form>
@@ -588,6 +588,49 @@ export default {
         message: 'CEP não encontrado',
         type: 'is-warning',
         position: 'is-bottom'
+      })
+    },
+    atualizarProfissional () {
+      console.log('Atualizar profissional')
+      let vm = this
+      let data = {}
+
+      this.$validate()
+      .then(function (response) {
+        // console.log(response)
+        if (response) {
+          data = {...vm.form}
+          delete data.id
+          let dtTmp = moment(vm.form.dt_nascimento, 'DD/MM/YYYY')
+          data.dt_nascimento = dtTmp
+          // console.log(JSON.stringify(data))
+          vm.$http
+          .post(`${API_URL}profissional/${vm.form.cpf}`, data)
+          .then(function (response) {
+            // console.log(response)
+            vm.$toast.open({
+              message: 'SUCESSO! PROFISSIONAL gravado.',
+              type: 'is-success',
+              position: 'is-bottom'
+            })
+          })
+          .catch(function (error) {
+            // console.log(error)
+            vm.$toast.open({
+              message:
+                'FALHA ao inserir novo PROFISSIONAL!',
+              type: 'is-danger',
+              position: 'is-bottom'
+            })
+          })
+        } else {
+          vm.$toast.open({
+            message:
+              'FORMULÁRIO INCOMPLETO',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        }
       })
     }
   }

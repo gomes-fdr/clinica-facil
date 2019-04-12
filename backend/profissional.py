@@ -128,3 +128,35 @@ def profissional_nome(nome):
 
     return ProfissionalSchema(many=True).jsonify(profissionais), 200
 
+
+@bp_profissional.route('/api/v1/profissional/<cpf>', methods=['POST'])
+def profissional_atualizar(cpf):
+    """
+    Atualiza um profissional no sistema.
+    """
+    data = request.json
+    profissional = Profissional.query.filter_by(cpf = cpf).first()
+
+    profissional.nome = data['nome']
+    profissional.email = data['email']
+    profissional.dt_nascimento = data['dt_nascimento']
+    profissional.rg = data['rg']
+    profissional.faculdade = data['faculdade']
+    profissional.no_conselho = data['no_conselho']
+    profissional.perfil_id = data['perfis']
+    profissional.situacao_id = data['situacoes']
+    profissional.t_celular = data['t_celular']
+    profissional.t_fixo = data['t_fixo']
+    profissional.cep = data['cep']
+    profissional.rua = data['rua']
+    profissional.numero = data['numero']
+    profissional.complemento = data['complemento']
+    profissional.cidade = data['cidade']
+    profissional.estado = data['estado']
+    
+    try:
+        current_app.db.session.commit()
+    except SQLAlchemyError as e:
+        return jsonify({'message': 'Fail to update PROFISSIONAL'}), 400
+     
+    return ProfissionalSchema().jsonify(profissional), 204
