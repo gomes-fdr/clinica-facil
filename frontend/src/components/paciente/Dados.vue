@@ -266,6 +266,24 @@
       </div>
     </div>
 
+     <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Observações</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <p class="control is-expanded">
+            <input
+             class="input"
+             type="text"
+             placeholder="Observações do paciente"
+             v-model="form.observacoes"
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+
     <div class="field is-grouped is-grouped-right">
       <div class="control is-grouped-right">
         <b-switch type="is-info" v-model="form.envioSMS">Envio de SMS?</b-switch>
@@ -355,6 +373,7 @@ export default {
         complemento: '',
         cidade: '',
         estado: '',
+        observacoes: '',
         envioSMS: false,
         adultoInapto: false
       },
@@ -413,7 +432,36 @@ export default {
   methods: {
     copiaPaciente () {
       console.log('Copia Paciente')
-      this.form.cpf = `${this.tabPaciente.selected.cpf}`
+      // this.form.cpf = `${this.tabPaciente.selected.cpf}`
+      if (!this.tabPaciente.selected.nome) {
+        return
+      }
+      let vm = this
+      this.$http
+        .get(`${API_URL}paciente/nome-completo/${vm.tabPaciente.selected.nome}`, {
+        })
+      .then(function (response) {
+        // console.log(response)
+        let tmp = response.data
+        let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
+        tmp.dt_nascimento = t
+        // console.log(tmp)
+        vm.form = tmp
+        vm.bNovo = true
+        vm.bAtualizar = false
+      })
+      .catch(function (error) {
+        // console.log(error)
+        vm.$toast.open({
+          message:
+            'NENHUM PACIENTE encontrado.',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      })
+      .finally(function () {
+        vm.tabPaciente.isLoading = false
+      })
       this.isImageModalActive = false
     },
     pesquisarCPF () {
@@ -432,7 +480,7 @@ export default {
         .then(function (response) {
           if (response.data) {
             let tmp = response.data
-            let t = moment(tmp.dt_nascimento).format('DD/MM/YYYY')
+            let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
             tmp.dt_nascimento = t
             // console.log(tmp)
             vm.form = tmp
@@ -521,7 +569,8 @@ export default {
       this.form.complemento = ''
       this.form.cidade = ''
       this.form.estado = ''
-      this.form.envioSMS = ''
+      this.form.observacoes = ''
+      this.form.envioSMS = false
       this.form.adultoInapto = false
       this.isFetching = false
       this.data = []
@@ -535,13 +584,13 @@ export default {
         return
       }
       let vm = this
-      vm.tabProfissional.isLoading = true
+      vm.tabPaciente.isLoading = true
       this.$http
         .get(`${API_URL}paciente/nome/${vm.form.nome}`, {
         })
       .then(function (response) {
         // console.log(response)
-        vm.tabProfissional.data = response.data
+        vm.tabPaciente.data = response.data
         vm.isImageModalActive = true
       })
       .catch(function (error) {
@@ -554,7 +603,7 @@ export default {
         })
       })
       .finally(function () {
-        vm.tabProfissional.isLoading = false
+        vm.tabPaciente.isLoading = false
       })
     }, 500),
     novoPaciente () {
@@ -607,15 +656,15 @@ export default {
       // let data = this.form
 
       let data = {...this.form} // clonar objeto sem referencias
-      let dtTmp = moment(data.dt_nascimento, 'DD/MM/YYYY')
+      let dtTmp = moment.utc(data.dt_nascimento, 'DD/MM/YYYY')
       data.dt_nascimento = dtTmp
 
-      // console.log(JSON.stringify(data))
+      console.log(JSON.stringify(data))
 
       this.$http
       .post(`${API_URL}paciente/${this.form.cpf}`, data)
       .then(function (response) {
-        // console.log(response)
+        console.log(response)
         vm.$toast.open({
           message: 'SUCESSO! Dados atualizados.',
           type: 'is-success',
@@ -658,7 +707,7 @@ export default {
   },
   computed: {
     isChild () {
-      let birthday = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
+      let birthday = moment.utc(this.form.dt_nascimento, 'DD/MM/YYYY')
       if (birthday.isValid()) {
         let age = Math.abs(birthday.diff(moment(), 'years'))
         if (age >= 18) {

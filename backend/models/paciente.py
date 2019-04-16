@@ -25,6 +25,7 @@ class Paciente(db.Model):
     complemento = db.Column(db.String(100))
     cidade = db.Column(db.String(100))
     estado = db.Column(db.String(100))
+    observacoes = db.Column(db.String(100))
     envioSMS = db.Column(db.Boolean, default=False)
     adultoInapto = db.Column(db.Boolean, default=False)
 
