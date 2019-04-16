@@ -470,7 +470,7 @@ export default {
         })
         .then(function (response) {
           let tmp = response.data
-          let t = moment(tmp.dt_nascimento).format('DD/MM/YYYY')
+          let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
           tmp.dt_nascimento = t
           // console.log(tmp)
           vm.form = tmp
@@ -500,7 +500,7 @@ export default {
         if (response) {
           data = {...vm.form}
           delete data.id
-          let dtTmp = moment(vm.form.dt_nascimento, 'DD/MM/YYYY')
+          let dtTmp = moment.utc(vm.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
           // console.log(JSON.stringify(data))
           vm.$http
@@ -601,7 +601,7 @@ export default {
         if (response) {
           data = {...vm.form}
           delete data.id
-          let dtTmp = moment(vm.form.dt_nascimento, 'DD/MM/YYYY')
+          let dtTmp = moment.utc(vm.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
           // console.log(JSON.stringify(data))
           vm.$http
