@@ -5,6 +5,7 @@ from marshmallow_sqlalchemy.fields import Related
 from backend.models.paciente import Paciente
 from backend.models.profissional import User
 from backend.models.profissional import Profissional, Perfil, Situacao
+from backend.models.prontuario import ProntuarioLegado
 
 ma = Marshmallow()
 
@@ -50,3 +51,10 @@ class ProfissionalSchema(ma.ModelSchema):
 
     class Meta:
         model = Profissional
+
+
+class ProntuarioLegadoSchema(ma.ModelSchema):
+    paciente = fields.Nested(PacienteSchema)
+
+    class Meta:
+        model = ProntuarioLegado
