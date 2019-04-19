@@ -280,6 +280,9 @@
         <button type="reset" class="button" @click.prevent="reset">Limpar</button>
       </p>
       <p class="control">
+        <button class="button" :disabled="bSenha" @click.prevent="inicializaSenha">Inicializa Senha</button>
+      </p>
+      <p class="control">
         <a class="button" :disabled="bNovo" @click.prevent="novoProfissional">Novo</a>
       </p>
       <p class="control">
@@ -361,7 +364,8 @@ export default {
         estado: ''
       },
       bNovo: true,
-      bAtualizar: true
+      bAtualizar: true,
+      bSenha: true
     }
   },
   validators: {
@@ -408,7 +412,38 @@ export default {
   methods: {
     copiaProfissional () {
       console.log('Copia Profissional')
-      this.form.cpf = `${this.tabProfissional.selected.cpf}`
+      // this.form.cpf = `${this.tabProfissional.selected.cpf}`
+      // this.isImageModalActive = false
+      if (!this.tabProfissional.selected.nome) {
+        return
+      }
+      let vm = this
+      this.$http
+        .get(`${API_URL}profissional/nome-completo/${vm.tabProfissional.selected.nome}`, {
+        })
+      .then(function (response) {
+        // console.log(response)
+        let tmp = response.data
+        let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
+        tmp.dt_nascimento = t
+        // console.log(tmp)
+        vm.form = tmp
+        vm.bNovo = true
+        vm.bSenha = false
+        vm.bAtualizar = false
+      })
+      .catch(function (error) {
+        // console.log(error)
+        vm.$toast.open({
+          message:
+            'NENHUM PROFISSIONAL encontrado.',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      })
+      .finally(function () {
+        vm.tabProfissional.isLoading = false
+      })
       this.isImageModalActive = false
     },
     perfilProfissional () {
@@ -475,10 +510,11 @@ export default {
           // console.log(tmp)
           vm.form = tmp
           vm.bAtualizar = false
+          vm.bSenha = false
           vm.bNovo = true
         })
         .catch(error => {
-          console.log(error)
+          // console.log(error)
           this.$toast.open({
             duration: 5000,
             message: 'PACIENTE não encontrado',
@@ -486,6 +522,7 @@ export default {
             position: 'is-bottom'
           })
           vm.bNovo = false
+          vm.bSenha = false
           vm.bAtualizar = true
         })
     },
@@ -552,6 +589,7 @@ export default {
       this.form.estado = ''
       this.data = []
       this.bNovo = true
+      this.bSenha = true
       this.bAtualizar = true
       this.validation.reset()
     },
@@ -597,15 +635,21 @@ export default {
 
       this.$validate()
       .then(function (response) {
-        // console.log(response)
+        console.log(response)
         if (response) {
           data = {...vm.form}
           delete data.id
           let dtTmp = moment.utc(vm.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
-          // console.log(JSON.stringify(data))
+          if (!data.faculdade) {
+            data.faculdade = null
+          }
+          if (!data.no_conselho) {
+            data.no_conselho = null
+          }
+          console.log(JSON.stringify(data))
           vm.$http
-          .post(`${API_URL}profissional/${vm.form.cpf}`, data)
+          .post(`${API_URL}profissional/${vm.form.nome}`, data)
           .then(function (response) {
             // console.log(response)
             vm.$toast.open({
@@ -632,6 +676,9 @@ export default {
           })
         }
       })
+    },
+    inicializaSenha () {
+      console.log('Inicializa Senha de Profissional')
     }
   }
 }

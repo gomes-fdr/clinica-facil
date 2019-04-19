@@ -129,17 +129,21 @@ def profissional_nome(nome):
     return ProfissionalSchema(many=True).jsonify(profissionais), 200
 
 
-@bp_profissional.route('/api/v1/profissional/<cpf>', methods=['POST'])
-def profissional_atualizar(cpf):
+@bp_profissional.route('/api/v1/profissional/<nome>', methods=['POST'])
+def profissional_atualizar(nome):
     """
     Atualiza um profissional no sistema.
     """
     data = request.json
-    profissional = Profissional.query.filter_by(cpf = cpf).first()
+    profissional = Profissional.query.filter_by(nome = nome).first()
+
+    if not profissional:
+        return jsonify({'message': 'Profissional Not Found'}), 404
 
     profissional.nome = data['nome']
     profissional.email = data['email']
     profissional.dt_nascimento = data['dt_nascimento']
+    profissional.cpf = data['cpf']
     profissional.rg = data['rg']
     profissional.faculdade = data['faculdade']
     profissional.no_conselho = data['no_conselho']
@@ -160,3 +164,19 @@ def profissional_atualizar(cpf):
         return jsonify({'message': 'Fail to update PROFISSIONAL'}), 400
      
     return ProfissionalSchema().jsonify(profissional), 204
+
+
+@bp_profissional.route('/api/v1/profissional/nome-completo/<nome>', methods=['GET'])
+def profissional_nome_completo(nome):
+    """
+    Busca um profissional pelo nome ou parte dele.
+    Util apenas para uso com nomes vindo da lista de nomes.
+    """
+
+    # pacientes = Paiente.query.filter(Paciente.nome.ilike('%' +nome+ '%')).all()
+    profissional = Profissional.query.filter_by(nome = nome).first()
+
+    if not profissional:
+        return jsonify({'message': 'Profissional Not Found'}), 404
+
+    return ProfissionalSchema().jsonify(profissional), 200
