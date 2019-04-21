@@ -220,10 +220,11 @@ class Profissional(db.Model):
         db.session.commit()
 
     
-    def update_password(self, profissional):
+    def update_password(self, profissional, password):
         try:
             user = User.query.filter_by(email=profissional.email).first()
-            user.email = profissional_novo.email
+            user.password = password
+            user.gen_hash()
         except SQLAlchemyError as e:
                 error = str(e.__dict__['orig'])
 

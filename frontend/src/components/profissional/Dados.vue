@@ -280,7 +280,7 @@
         <button type="reset" class="button" @click.prevent="reset">Limpar</button>
       </p>
       <p class="control">
-        <button class="button" :disabled="bSenha" @click.prevent="inicializaSenha">Inicializa Senha</button>
+        <button class="button" :disabled="bSenha" @click.prevent="inicializaSenha('1234')">Inicializa Senha</button>
       </p>
       <p class="control">
         <a class="button" :disabled="bNovo" @click.prevent="novoProfissional">Novo</a>
@@ -307,8 +307,7 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
-// import auth from '../../auth'
-import { API_URL } from '../../main'
+import { API_URL, eBus } from '../../main'
 import axios from 'axios'
 import _ from 'lodash'
 
@@ -345,6 +344,7 @@ export default {
         selected: null
       },
       form: {
+        id: '',
         nome: '',
         email: '',
         dt_nascimento: '',
@@ -431,6 +431,7 @@ export default {
         vm.bNovo = true
         vm.bSenha = false
         vm.bAtualizar = false
+        eBus.$emit('PROFISSIONAL_ID', vm.form.id)
       })
       .catch(function (error) {
         // console.log(error)
@@ -677,8 +678,33 @@ export default {
         }
       })
     },
-    inicializaSenha () {
+    inicializaSenha (p) {
       console.log('Inicializa Senha de Profissional')
+      let data = {
+        id_profissional: this.form.id,
+        password: p
+      }
+      let vm = this
+
+      this.$http
+      .post(`${API_URL}profissional/reset-senha`, data)
+      .then(function (response) {
+        console.log(response)
+        vm.$toast.open({
+          message: 'SUCESSO! SENHA INICIALIZADA.',
+          type: 'is-success',
+          position: 'is-bottom'
+        })
+      })
+      .catch(function (error) {
+        // console.log(error)
+        vm.$toast.open({
+          message:
+            'FALHA ao INICIALIZAR senha!',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      })
     }
   }
 }

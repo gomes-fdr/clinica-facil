@@ -4,7 +4,7 @@ from backend.models.profissional import Profissional
 
 from .token import token_required
 from .serealizer import PacienteSchema, ProfissionalSchema, PerfilSchema, SituacaoSchema
-from backend.models.profissional import Profissional, Perfil, Situacao
+from backend.models.profissional import Profissional, Perfil, Situacao, User
 
 from marshmallow import pprint
 
@@ -180,3 +180,30 @@ def profissional_nome_completo(nome):
         return jsonify({'message': 'Profissional Not Found'}), 404
 
     return ProfissionalSchema().jsonify(profissional), 200
+
+
+@bp_profissional.route('/api/v1/profissional/reset-senha', methods=['POST'])
+def profissional_reset_senha():
+    """
+    Inicializa Profissional com senha
+    """
+    data = request.json
+
+    if not data['id_profissional'] or not data['password']:
+        return jsonify({'status': 'Password update fail, fields empty'}), 400
+
+    profissional = Profissional.query.filter_by(id = data['id_profissional']).first()
+
+    if not profissional:
+        return jsonify({'message': 'Profissional Not Found'}), 404
+
+    if not data['password']:
+        return jsonify({'status': 'Password update fail'}), 400
+
+    usuario = User.query.filter_by(email=profissional.email).first()
+    if usuario:
+        profissional.update_password(profissional, data['password'])
+    else:
+        profissional.create_user(profissional)
+
+    return jsonify({'status': 'Password updated'}), 200

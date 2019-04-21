@@ -15,6 +15,7 @@ Vue.use(VueMask)
 Vue.config.productionTip = false
 
 export const API_URL = 'http://localhost:5000/api/v1/'
+export const eBus = new Vue()
 
 const instance = axios.create({
   baseURL: API_URL,
