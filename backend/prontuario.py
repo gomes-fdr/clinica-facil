@@ -10,6 +10,7 @@ bp_prontuario = Blueprint('prontuario', __name__)
 # TODO: Revisar sistema de tokens
 
 @bp_prontuario.route('/api/v1/prontuario-legado/paciente/<paciente_id>', methods=['GET'])
+@token_required
 def prontuario_leg_paciente(paciente_id):
     """
     Busca prontuario legado, por ID de paciente

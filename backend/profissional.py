@@ -114,14 +114,13 @@ def situacao():
 
 
 @bp_profissional.route('/api/v1/profissional/nome/<nome>', methods=['GET'])
+@token_required
 def profissional_nome(nome):
     """
     Busca um profissional pelo nome ou parte dele.
     """
 
     # pacientes = Paiente.query.filter(Paciente.nome.ilike('%' +nome+ '%')).all()
-    profissionais = current_app.db.session.query(Profissional.nome, Profissional.cpf).filter(Profissional.nome.ilike('%' +nome+ '%')).all()
-
     profissionais = current_app.db.session.query(Profissional.nome, Profissional.cpf).filter(Profissional.nome.ilike('%' +nome+ '%')).all()
     if not profissionais:
         return jsonify({'message': 'Profissional Not Found'}), 404
@@ -130,6 +129,7 @@ def profissional_nome(nome):
 
 
 @bp_profissional.route('/api/v1/profissional/<nome>', methods=['POST'])
+@token_required
 def profissional_atualizar(nome):
     """
     Atualiza um profissional no sistema.
@@ -167,6 +167,7 @@ def profissional_atualizar(nome):
 
 
 @bp_profissional.route('/api/v1/profissional/nome-completo/<nome>', methods=['GET'])
+@token_required
 def profissional_nome_completo(nome):
     """
     Busca um profissional pelo nome ou parte dele.
@@ -183,6 +184,7 @@ def profissional_nome_completo(nome):
 
 
 @bp_profissional.route('/api/v1/profissional/reset-senha', methods=['POST'])
+@token_required
 def profissional_reset_senha():
     """
     Inicializa Profissional com senha

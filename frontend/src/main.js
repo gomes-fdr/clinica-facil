@@ -6,7 +6,6 @@ import VueMask from 'v-mask'
 import VueScheduler from 'v-calendar-scheduler'
 import 'v-calendar-scheduler/lib/main.css'
 
-import auth from './auth'
 import acl from './acl'
 
 Vue.use(VueScheduler)
@@ -19,7 +18,7 @@ export const eBus = new Vue()
 
 const instance = axios.create({
   baseURL: API_URL,
-  headers: { Authorization: `b: ${auth.getToken()}` }
+  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 
 Vue.prototype.$http = instance

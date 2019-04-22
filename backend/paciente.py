@@ -10,6 +10,7 @@ bp_paciente = Blueprint('paciente', __name__)
 # TODO: Revisar sistema de tokens
 
 @bp_paciente.route('/api/v1/paciente', methods=['POST'])
+@token_required
 def paciente_novo():
     """
     Insere um novo paciente no sistema.
@@ -31,6 +32,7 @@ def paciente_novo():
 
 
 @bp_paciente.route('/api/v1/paciente/<cpf>', methods=['POST'])
+@token_required
 def paciente_atualizar(cpf):
     """
     Atualiza um paciente no sistema.
@@ -67,6 +69,7 @@ def paciente_atualizar(cpf):
 
 
 @bp_paciente.route('/api/v1/paciente/cpf/<cpf>', methods=['GET'])
+@token_required
 def paciente_cpf(cpf):
     """
     Busca um paciente pelo CPF.
@@ -81,6 +84,7 @@ def paciente_cpf(cpf):
     
 
 @bp_paciente.route('/api/v1/paciente/nome/<nome>', methods=['GET'])
+@token_required
 def paciente_nome(nome):
     """
     Busca um paciente pelo nome ou parte dele.
@@ -96,6 +100,7 @@ def paciente_nome(nome):
 
 
 @bp_paciente.route('/api/v1/paciente/nome-completo/<nome>', methods=['GET'])
+@token_required
 def paciente_nome_completo(nome):
     """
     Busca um paciente pelo nome ou parte dele.
