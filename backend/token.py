@@ -17,12 +17,10 @@ def token_required(f):
         auth_headers = request.headers.get('Authorization', '').split()
 
         invalid_msg = {
-            'message': 'Invalid token. Registeration and / or authentication required',
-            'authenticated': False
+            'message': 'Invalid token. Registeration and / or authentication required'
         }
         expired_msg = {
-            'message': 'Expired token. Reauthentication required.',
-            'authenticated': False
+            'message': 'Expired token. Reauthentication required.'
         }
 
         if len(auth_headers) != 2:

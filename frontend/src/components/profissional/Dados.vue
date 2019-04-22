@@ -313,6 +313,11 @@ import _ from 'lodash'
 
 var moment = require('moment')
 
+const HTTP = axios.create({
+  baseURL: API_URL,
+  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
+})
+
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
     required: 'Campo obrigatório',
@@ -418,7 +423,7 @@ export default {
         return
       }
       let vm = this
-      this.$http
+      HTTP
         .get(`${API_URL}profissional/nome-completo/${vm.tabProfissional.selected.nome}`, {
         })
       .then(function (response) {
@@ -449,7 +454,7 @@ export default {
     },
     perfilProfissional () {
       let vm = this
-      this.$http
+      HTTP
         .get(`${API_URL}profissional/perfil`, {
         })
       .then(function (response) {
@@ -459,7 +464,7 @@ export default {
     },
     situacaoProfissional () {
       let vm = this
-      this.$http
+      HTTP
         .get(`${API_URL}profissional/situacao`, {
         })
       .then(function (response) {
@@ -474,7 +479,7 @@ export default {
       }
       let vm = this
       vm.tabProfissional.isLoading = true
-      this.$http
+      HTTP
         .get(`${API_URL}profissional/nome/${vm.form.nome}`, {
         })
       .then(function (response) {
@@ -501,7 +506,7 @@ export default {
         return
       }
       let vm = this
-      this.$http
+      HTTP
         .get(`${API_URL}profissional/cpf/${vm.form.cpf}`, {
         })
         .then(function (response) {
@@ -686,7 +691,7 @@ export default {
       }
       let vm = this
 
-      this.$http
+      HTTP
       .post(`${API_URL}profissional/reset-senha`, data)
       .then(function (response) {
         console.log(response)

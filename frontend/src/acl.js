@@ -17,7 +17,7 @@ export default new AclCreate({
     isFonoaudiologo: new AclRule('Fonoaudiologo'),
     isNeurologista: new AclRule('Neurologista'),
     isCoordenador_Agendas: new AclRule('Coordenador_Agendas'),
-    isAdministracao: new AclRule('Administracao').or('Psicologo'),
+    isAdministracao: new AclRule('Administracao').or('Psicologo').or('Recepcao'),
     isPublico: new AclRule('Publico')
   }
 })

@@ -327,6 +327,11 @@ import _ from 'lodash'
 
 var moment = require('moment')
 
+const HTTP = axios.create({
+  baseURL: API_URL,
+  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
+})
+
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
     required: 'Campo obrigatório',
@@ -437,7 +442,7 @@ export default {
         return
       }
       let vm = this
-      this.$http
+      HTTP
         .get(`${API_URL}paciente/nome-completo/${vm.tabPaciente.selected.nome}`, {
         })
       .then(function (response) {
@@ -474,7 +479,7 @@ export default {
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('-', '')
-      this.$http
+      HTTP
         .get(`${API_URL}paciente/cpf/${cpf}`, {
         })
         .then(function (response) {
@@ -585,7 +590,7 @@ export default {
       }
       let vm = this
       vm.tabPaciente.isLoading = true
-      this.$http
+      HTTP
         .get(`${API_URL}paciente/nome/${vm.form.nome}`, {
         })
       .then(function (response) {
@@ -661,7 +666,7 @@ export default {
 
       console.log(JSON.stringify(data))
 
-      this.$http
+      HTTP
       .post(`${API_URL}paciente/${this.form.cpf}`, data)
       .then(function (response) {
         console.log(response)

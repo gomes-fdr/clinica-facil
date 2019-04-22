@@ -50,6 +50,12 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 import { API_URL, eBus } from '../../main'
+import axios from 'axios'
+
+const HTTP = axios.create({
+  baseURL: API_URL,
+  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
+})
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -93,7 +99,7 @@ export default {
         .then(function (success) {
           if (success) {
             console.log(data)
-            vm.$http
+            HTTP
             .post(`${API_URL}profissional/reset-senha`, data)
             .then(function (response) {
               console.log(response)
