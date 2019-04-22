@@ -9,7 +9,7 @@ bp_prontuario = Blueprint('prontuario', __name__)
 
 # TODO: Revisar sistema de tokens
 
-@bp_prontuario.route('/api/v1/prontuario-legado/paciente/<paciente_id>', methods=['GET'])
+@bp_prontuario.route('/api/v1/paciente/prontuario-legado/<paciente_id>', methods=['GET'])
 @token_required
 def prontuario_leg_paciente(paciente_id):
     """
@@ -17,7 +17,7 @@ def prontuario_leg_paciente(paciente_id):
     """
     prontuario = ProntuarioLegado.query.filter_by(paciente_id = paciente_id).first()
 
-    if not prontuario:
+    if not prontuario.conteudo:
         return jsonify({'message': 'Prontuario Not Found'}), 404
 
     return ProntuarioLegadoSchema().jsonify(prontuario), 200

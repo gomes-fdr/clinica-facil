@@ -321,7 +321,7 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 import auth from '../../auth'
-import { API_URL } from '../../main'
+import { API_URL, eBus } from '../../main'
 import axios from 'axios'
 import _ from 'lodash'
 
@@ -363,7 +363,7 @@ export default {
       form: {
         nome: '',
         email: '',
-        dt_nascimento: '',
+        dt_nascimento: '',        
         rg: '',
         cpf: '',
         filiacao: '',
@@ -406,7 +406,7 @@ export default {
         .length(11)
     },
     'form.filiacao': function (value) {
-      return Validator.value(value).required()
+      return Validator.value(value)
     },
     'form.responsavel': function (value) {
       if (this.form.adultoInapto) {
@@ -443,8 +443,7 @@ export default {
       }
       let vm = this
       HTTP
-        .get(`${API_URL}paciente/nome-completo/${vm.tabPaciente.selected.nome}`, {
-        })
+      .get(`${API_URL}paciente/nome-completo/${vm.tabPaciente.selected.nome}`)
       .then(function (response) {
         // console.log(response)
         let tmp = response.data
@@ -454,6 +453,12 @@ export default {
         vm.form = tmp
         vm.bNovo = true
         vm.bAtualizar = false
+        let data = {
+          id: vm.form.id,
+          nome: vm.form.nome,
+          dt_nascimento: vm.form.dt_nascimento
+        }
+        eBus.$emit('PACIENTE_ID', data)
       })
       .catch(function (error) {
         // console.log(error)
@@ -494,7 +499,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response.status)
+          // console.log(error.response.status)
 
           if (error.response.status === 440) {
             this.$toast.open({
@@ -618,13 +623,13 @@ export default {
 
       this.$validate()
       .then(function (response) {
-        console.log(response)
+        // console.log(response)
         if (response === true) {
           data = {...vm.form}
           delete data.id
           let dtTmp = moment(vm.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
-          console.log(JSON.stringify(data))
+          // console.log(JSON.stringify(data))
           vm.$http
           .post(`${API_URL}paciente`, data)
           .then(function (response) {
@@ -636,7 +641,7 @@ export default {
             })
           })
           .catch(function (error) {
-            console.log(error)
+            // console.log(error)
             vm.$toast.open({
               message:
                 'FALHA ao inserir novo PACIENTE!',
@@ -664,12 +669,12 @@ export default {
       let dtTmp = moment.utc(data.dt_nascimento, 'DD/MM/YYYY')
       data.dt_nascimento = dtTmp
 
-      console.log(JSON.stringify(data))
+      // console.log(JSON.stringify(data))
 
       HTTP
       .post(`${API_URL}paciente/${this.form.cpf}`, data)
       .then(function (response) {
-        console.log(response)
+        // console.log(response)
         vm.$toast.open({
           message: 'SUCESSO! Dados atualizados.',
           type: 'is-success',
