@@ -14,16 +14,17 @@
              :class="{'is-danger': true}"
              type="text"
              placeholder="Plano de Saude"
+             v-model="form.ps"
             >
           </p>
             <div class="control">
-              <a class="button" :disabled="true">
+              <a class="button" :disabled="modal.isAddPSActive" @click.prevent="addPS">
                 <i class="fas fa-plus"></i>
               </a>
             </div>
             <div class="control">
               <a class="button" >
-                <i class="fas fa-search"></i>
+                <i class="fas fa-search" @click.prevent="pesquisarPlano"></i>
               </a>
             </div>
         </div>
@@ -76,9 +77,29 @@
       <span>Apagar</span>
     </button>
   </div>
+  <b-modal :active.sync="modal.isImageModalActive">
+    <b-table 
+    :data="modal.data"
+    :loading="modal.isLoading"
+    :columns="modal.columns"
+    :selected.sync="modal.selected"
+    @dblclick="copiaPS"
+    >
+    
+    </b-table>
+
+  </b-modal>
 </div>
 </template>
 <script>
+import { API_URL, eBus } from '../../main'
+import axios from 'axios'
+
+const HTTP = axios.create({
+  baseURL: API_URL,
+  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
+})
+
 export default {
   name: 'Convenios',
   beforeCreate () {
@@ -88,8 +109,22 @@ export default {
   },
   data () {
     return {
+      modal: {
+        data: [],
+        columns: [
+          {
+            field: 'descricao',
+            label: 'Descrição'
+          }
+        ],
+        isLoading: false,
+        selected: null,
+        isImageModalActive: false,
+        isAddPSActive: true
+      },
       form: {
-        dt_validade: ''
+        dt_validade: '',
+        ps: ''
       },
       data: [
         {'plano_saude': 'Particular', 'numero_carteira': '', 'data_validade': '12/12/2008'},
@@ -115,6 +150,39 @@ export default {
   methods: {
     pesquisarPlano () {
       console.log('Consulta planos de saude')
+
+      let vm = this
+      this.modal.isImageModalActive = true
+      this.modal.isAddPSActive = false
+
+      HTTP
+      .get(`${API_URL}ps`, {})
+      .then(function (response) {
+        // console.log(response)
+        vm.modal.data = response.data
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    copiaPS () {
+      console.log('Copia planos de saude')
+    },
+    addPS () {
+      console.log('Adiciona plano de saude novo')
+
+      let vm = this
+      this.modal.isAddPSActive = true
+
+      HTTP
+      .post(`${API_URL}ps/${vm.form.ps}`)
+      .then(function (response) {
+        console.log(response)
+        // vm.modal.data = response.data
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     }
   }
 }

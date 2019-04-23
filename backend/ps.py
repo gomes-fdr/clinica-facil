@@ -41,3 +41,12 @@ def post_ps(descricao):
 
     return PlanoSaudeSchema().jsonify(ps), 201
 
+
+@bp_ps.route('/api/v1/ps-paciente', methods=['POST'])
+def post_ps_paciente():
+    """
+    Insere um plano de saúde para um paciente
+    """
+    data = request.json
+    print(data)
+    return jsonify(data), 201
