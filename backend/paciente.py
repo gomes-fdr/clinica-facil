@@ -7,8 +7,6 @@ from backend.models.paciente import Paciente
 
 bp_paciente = Blueprint('paciente', __name__)
 
-# TODO: Revisar sistema de tokens
-
 @bp_paciente.route('/api/v1/paciente', methods=['POST'])
 @token_required
 def paciente_novo():

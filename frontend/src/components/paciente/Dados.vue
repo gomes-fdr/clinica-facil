@@ -363,7 +363,7 @@ export default {
       form: {
         nome: '',
         email: '',
-        dt_nascimento: '',        
+        dt_nascimento: '',
         rg: '',
         cpf: '',
         filiacao: '',

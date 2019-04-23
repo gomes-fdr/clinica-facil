@@ -11,6 +11,7 @@ from backend.serealizer import configure as config_ma
 from backend.token import bp_token
 from backend.user import bp_user
 from backend.prontuario import bp_prontuario
+from backend.ps import bp_ps
 
 app = Flask(__name__,
             static_folder = "./dist/static",
@@ -30,6 +31,7 @@ app.register_blueprint(bp_token)
 app.register_blueprint(bp_paciente)
 app.register_blueprint(bp_profissional)
 app.register_blueprint(bp_prontuario)
+app.register_blueprint(bp_ps)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

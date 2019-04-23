@@ -108,7 +108,10 @@ export default {
   },
   methods: {
     getProntuarioLegado () {
-      if (!this.form.id) return
+      if (!this.form.id) {
+        console.log('ID de paciente em branco')
+        return
+      }
       console.log('Prontuário legado')
       let vm = this
       HTTP

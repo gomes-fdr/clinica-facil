@@ -6,6 +6,7 @@ from backend.models.paciente import Paciente
 from backend.models.profissional import User
 from backend.models.profissional import Profissional, Perfil, Situacao
 from backend.models.prontuario import ProntuarioLegado
+from backend.models.ps import PlanoSaude, PlanoSaudePaciente
 
 ma = Marshmallow()
 
@@ -58,3 +59,15 @@ class ProntuarioLegadoSchema(ma.ModelSchema):
 
     class Meta:
         model = ProntuarioLegado
+
+class PlanoSaudeSchema(ma.ModelSchema):
+    class Meta:
+        model = PlanoSaude
+
+
+class PlanoSaudePacienteSchema(ma.ModelSchema):
+    paciente = fields.Nested(PacienteSchema)
+    ps = fields.Nested(PlanoSaudeSchema)
+
+    class Meta:
+        model = PlanoSaudePaciente

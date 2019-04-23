@@ -9,7 +9,7 @@
         <b-tab-item label="Dados">
           <dados/>
         </b-tab-item>
-        <b-tab-item label="Convênios" v-if="false">
+        <b-tab-item label="Convênios" v-if="true">
           <convenios/>
         </b-tab-item>
         <b-tab-item label="Prontuário" v-if="$acl.check('isAdministracao')">

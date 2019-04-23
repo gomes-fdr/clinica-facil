@@ -17,7 +17,12 @@
             >
           </p>
             <div class="control">
-              <a class="button is-right" >
+              <a class="button" :disabled="true">
+                <i class="fas fa-plus"></i>
+              </a>
+            </div>
+            <div class="control">
+              <a class="button" >
                 <i class="fas fa-search"></i>
               </a>
             </div>
