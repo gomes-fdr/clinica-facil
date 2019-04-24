@@ -26,6 +26,12 @@ class PacienteSchema(ma.ModelSchema):
         model = Paciente
 
 
+class PacienteSchema2(ma.ModelSchema):
+    class Meta:
+        model = Paciente
+        fields = [('nome')]
+
+
 
 class PerfilSchema(ma.ModelSchema):
     id = fields.Integer(dump_only=True)
@@ -64,10 +70,16 @@ class PlanoSaudeSchema(ma.ModelSchema):
     class Meta:
         model = PlanoSaude
 
+class PlanoSaudeSchema2(ma.ModelSchema):
+    class Meta:
+        model = PlanoSaude
+        fields = [('descricao')]
+
 
 class PlanoSaudePacienteSchema(ma.ModelSchema):
-    paciente = fields.Nested(PacienteSchema)
-    ps = fields.Nested(PlanoSaudeSchema)
+    paciente = fields.Nested(PacienteSchema2)
+    ps = fields.Nested(PlanoSaudeSchema2)
 
     class Meta:
         model = PlanoSaudePaciente
+        fields = ('id','no_carteira', 'dt_validade', 'ps', 'paciente')
