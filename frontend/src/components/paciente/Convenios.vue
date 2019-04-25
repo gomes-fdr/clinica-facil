@@ -300,8 +300,6 @@ export default {
         .get(`${API_URL}ps-paciente/delete/${vm.table.checkedRows[p].id}`, {})
         .then(function (response) {
           // console.log(response)
-          
-          // vm.modal.data = response.data
         })
         .catch(function (error) {
           console.log(error)
