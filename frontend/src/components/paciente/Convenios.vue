@@ -189,7 +189,7 @@ export default {
   methods: {
     getPSPaciente (pacienteID) {
       console.log('Busca planos de saude de um paciente')
-      // if (!this.form.paciente_id) return
+      if (!this.form.paciente_id) return
       let vm = this
 
       HTTP
@@ -211,6 +211,7 @@ export default {
       })
       .catch(function (error) {
         // console.log(error)
+        vm.table.data = []
       })
     },
     pesquisarPlano () {
@@ -289,7 +290,7 @@ export default {
     },
     deletePS () {
       console.log('Apagar PS paciente')
-      console.log(this.table.checkedRows)
+      // console.log(this.table.checkedRows)
       let vm = this
 
       // Fazer um laço no vetor de linhas da tabela
@@ -298,14 +299,15 @@ export default {
         HTTP
         .get(`${API_URL}ps-paciente/delete/${vm.table.checkedRows[p].id}`, {})
         .then(function (response) {
-          console.log(response)
-          vm.getPSPaciente(vm.form.paciente_id)
+          // console.log(response)
+          
           // vm.modal.data = response.data
         })
         .catch(function (error) {
           console.log(error)
         })
       }
+      this.getPSPaciente(this.form.paciente_id)
     }
   }
 }
