@@ -8,8 +8,19 @@ import 'v-calendar-scheduler/lib/main.css'
 import acl from './acl'
 
 Vue.config.productionTip = false
-Vue.use(VueScheduler)
 Vue.use(VueMask)
+Vue.use(VueScheduler, {
+  locale: 'pt-br',
+  labels: {
+    today: 'Hoje',
+    back: 'Anterior',
+    next: 'Próximo',
+    month: 'Mês',
+    week: 'Semana',
+    day: 'Dia',
+    all_day: 'Todo o dia'
+  }
+})
 
 export const API_URL = 'http://localhost:5000/api/v1/'
 export const eBus = new Vue()
