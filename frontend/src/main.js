@@ -19,7 +19,8 @@ Vue.use(VueScheduler, {
     week: 'Semana',
     day: 'Dia',
     all_day: 'Todo o dia'
-  }
+  },
+  timeRange: [8, 20]
 })
 
 export const API_URL = 'http://localhost:5000/api/v1/'
