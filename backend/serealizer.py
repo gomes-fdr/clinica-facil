@@ -7,6 +7,7 @@ from backend.models.profissional import User
 from backend.models.profissional import Profissional, Perfil, Situacao
 from backend.models.prontuario import ProntuarioLegado
 from backend.models.ps import PlanoSaude, PlanoSaudePaciente
+from backend.models.agenda import (Local, Horario, Consulta)
 
 ma = Marshmallow()
 
@@ -83,3 +84,18 @@ class PlanoSaudePacienteSchema(ma.ModelSchema):
     class Meta:
         model = PlanoSaudePaciente
         fields = ('id','no_carteira', 'dt_validade', 'ps', 'paciente')
+
+
+class LocalSchema(ma.ModelSchema):
+    class Meta:
+        model = Local
+
+
+class HorarioSchema(ma.ModelSchema):
+    class Meta:
+        model = Horario
+
+
+class ConsultaSchema(ma.ModelSchema):
+    class Meta:
+        model = Consulta

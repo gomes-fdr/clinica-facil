@@ -12,6 +12,7 @@ from backend.token import bp_token
 from backend.user import bp_user
 from backend.prontuario import bp_prontuario
 from backend.ps import bp_ps
+from backend.agenda import bp_agenda
 
 app = Flask(__name__,
             static_folder = "./dist/static",
@@ -32,6 +33,7 @@ app.register_blueprint(bp_paciente)
 app.register_blueprint(bp_profissional)
 app.register_blueprint(bp_prontuario)
 app.register_blueprint(bp_ps)
+app.register_blueprint(bp_agenda)
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

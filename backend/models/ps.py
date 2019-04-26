@@ -32,8 +32,8 @@ class PlanoSaudePaciente(db.Model):
     paciente_id = db.Column(db.Integer, db.ForeignKey('paciente.id'))
     ps_id = db.Column(db.Integer, db.ForeignKey('plano_saude.id'))
 
-    paciente = db.relationship("Paciente", backref=db.backref("paciente", lazy="dynamic"))
-    ps = db.relationship("PlanoSaude", backref=db.backref("plano_saude", lazy="dynamic"))
+    paciente = db.relationship('Paciente', backref='paciente')
+    ps = db.relationship('PlanoSaude', backref='plano_saude')
 
 
     
