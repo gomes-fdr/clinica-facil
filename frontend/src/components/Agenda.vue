@@ -4,7 +4,7 @@
     <section class="hero is-link is-fullheight-with-navbar">
       <div class="hero-body">
         <div class="container">
-          <vue-scheduler/>
+          <tabs/>
         </div>
       </div>
       <roda-pe/>
@@ -15,12 +15,16 @@
 <script>
 import Navegacao from './Navegacao'
 import RodaPe from './RodaPe'
+import Tabs from './agenda/Tabs'
+
+// <vue-scheduler/>
 
 export default {
   name: 'App',
   components: {
     Navegacao,
-    RodaPe
+    RodaPe,
+    Tabs
   }
 }
 </script>

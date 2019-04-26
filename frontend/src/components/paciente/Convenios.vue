@@ -1,6 +1,6 @@
 <template>
 <div>
-    <h4 class="title is-4 has-text-black has-text-centered">{{form.nome}}</h4>
+  <h4 class="title is-4 has-text-black has-text-centered">{{form.nome}}</h4>
   <form>
     <div class="field is-horizontal">
       <div class="field-label is-normal">
