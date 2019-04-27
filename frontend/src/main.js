@@ -11,6 +11,7 @@ Vue.config.productionTip = false
 Vue.use(VueMask)
 Vue.use(VueScheduler, {
   locale: 'pt-br',
+  initialView: 'week',
   labels: {
     today: 'Hoje',
     back: 'Anterior',

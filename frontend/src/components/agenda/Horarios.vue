@@ -1,5 +1,6 @@
 <template>
 <div>
+  <h4 class="title is-4 has-text-black has-text-centered">Sala: Profissional:</h4>
   <form>
     <div class="section">
 
@@ -49,43 +50,52 @@
       </div>
         <div class="field is-grouped is-grouped-right">
           <p class="control">
-            <a class="button is-info" >Selecionar</a>
+            <a class="button is-info" @click.prevent="eventCalendar">Montar Calendário</a>
           </p>
         </div>
     </div>
   </form>
-  <vue-scheduler
-    :events="events"
-    :event-dialog-config="dialogConfig"
-    event-display="name"
-    @event-clicked="eventClicked"
-  >
 
-  </vue-scheduler>
+<b-modal :width="1024" :active.sync="modal.isCalendarActive">
+    <vue-scheduler
+      :events="events"
+      :event-dialog-config="dialogConfig"
+      event-display="name"
+      @event-clicked="eventClicked"
+      :key="componentKey"
+    >
+    </vue-scheduler>
+</b-modal>
+
+
 </div>
 </template>
 <script>
+import _ from 'lodash'
+
 export default {
   name: 'Horarios',
   data () {
     return {
+      componentKey: 0,
+      modal: {
+        isCalendarActive: false
+      },
       dialogConfig: {
         title: 'Novo Horário',
         createButtonLabel: 'Adciona Horário',
-        enableTimeInputs: false,
+        enableTimeInputs: true,
         fields: [
           {
             fields: [
               {
                 name: 'hora',
                 label: 'Hora',
-                type: 'time',
-                required: true
+                type: 'time'
               },
               {
                 name: 'duracao',
-                label: 'Duração',
-                required: true
+                label: 'Duração'
               }
             ]
           },
@@ -100,13 +110,11 @@ export default {
             fields: [
               {
                 name: 'sala',
-                label: 'Sala',
-                required: true
+                label: 'Sala'
               },
               {
                 name: 'profissional',
-                label: 'Profissional',
-                required: true
+                label: 'Profissional'
               }
             ]
           }
@@ -118,7 +126,21 @@ export default {
   methods: {
     eventClicked (event) {
       console.log('Evento selecionado')
-      console.log(event)
+      _.remove(this.events, event)
+
+      // Para forçar a renderização do calendário
+      this.componentKey += 1
+    },
+    eventCalendar () {
+      console.log('Calendario de eventos')
+      this.modal.isCalendarActive = true
+    },
+    forceRerender () {
+      this.componentKey += 1
+    }
+  },
+  computed:{
+    removeEvent (event) {
     }
   }
 }
