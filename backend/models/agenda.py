@@ -13,7 +13,9 @@ class Horario(db.Model):
     Horarios de profissionais em suas salas
     """
     id = db.Column(db.Integer, primary_key=True)
-    dt_inicio = db.Column(db.DateTime)
+    dt_dia = db.Column(db.DateTime)
+    hora_ini = db.Column(db.String(5))
+    hora_fim = db.Column(db.String(5))
     duracao = db.Column(db.Integer)
     livre = db.Column(db.Boolean, default=True)
 

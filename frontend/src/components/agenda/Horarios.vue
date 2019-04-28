@@ -1,6 +1,7 @@
 <template>
 <div>
-  <h4 class="title is-4 has-text-black has-text-centered">Sala: Profissional:</h4>
+  <p class=" has-text-black has-text-centered">Sala: {{formHorario.local}}</p>
+  <p class=" has-text-black has-text-centered">Profissional: {{formHorario.profissional}}</p>
   <form>
     <div class="section">
 
@@ -14,57 +15,110 @@
             <p class="control is-expanded">
               <input
               class="input"
+              :class="{'is-danger': validation.hasError('formHorario.local') }"
               type="text"
               placeholder="Onde? (Sala)"
+              v-model="formHorario.local"
+              :readonly="modal.local.isAdd"
               >
             </p>
               <div class="control">
-                <a class="button">
-                  <i class="fas fa-plus"></i>
+                <a class="button" :disabled="modal.local.isAdd">
+                  <i class="fas fa-plus" @click.prevent="addSala" ></i>
                 </a>
               </div>
               <div class="control">
                 <a class="button" >
-                  <i class="fas fa-question"></i>
+                  <i class="fas fa-question" @click.prevent="pequisaSala"></i>
                 </a>
               </div>
           </div>
+          <p v-show="validation.hasError('formHorario.local')" class="help is-danger">{{ validation.firstError('formHorario.local') }}</p>
           </div>
           <div class="field">
             <div class="field has-addons">
               <p class="control is-expanded">
                 <input
                 class="input"
+                :class="{'is-danger': validation.hasError('formHorario.profissional') }"
                 type="text"
                 placeholder="Quem? (Profissional)"
+                v-model="formHorario.profissional"
                 >
               </p>
               <div class="control">
                 <a class="button">
-                  <i class="fas fa-search"></i>
+                  <i class="fas fa-search" @click.prevent="pesquisaProfissional"></i>
                 </a>
               </div>
             </div>
+            <p v-show="validation.hasError('formHorario.profissional')" class="help is-danger">{{ validation.firstError('formHorario.profissional') }}</p>
+          </div>
+          <div class="field">
+            <div class="field has-addons">
+              <p class="control is-expanded">
+                <input
+                class="input"
+                :class="{'is-danger': validation.hasError('formHorario.duracao') }"
+                type="text"
+                placeholder="Duração (Minutos)"
+                v-model="formHorario.duracao"
+                >
+              </p>
+            </div>
+            <p v-show="validation.hasError('formHorario.duracao')" class="help is-danger">{{ validation.firstError('formHorario.duracao') }}</p>
           </div>
         </div>
       </div>
         <div class="field is-grouped is-grouped-right">
           <p class="control">
-            <a class="button is-info" @click.prevent="eventCalendar">Montar Calendário</a>
+            <a class="button is-info" :disabled="hasEvent" :key="componentKey" @click.prevent="salvarAgenda">Salvar Agenda</a>
+            <a class="button is-danger" :disabled="hasEvent" @click.prevent="apagarAgenda">Apagar Agenda</a>
+            <a class="button is-info" @click.prevent="eventCalendar">Montar Agenda</a>
           </p>
         </div>
     </div>
   </form>
 
-<b-modal :width="1024" :active.sync="modal.isCalendarActive">
+<b-modal :active.sync="modal.calendar.isActive">
     <vue-scheduler
       :events="events"
       :event-dialog-config="dialogConfig"
       event-display="name"
       @event-clicked="eventClicked"
+      @time-clicked="timeClicked"
       :key="componentKey"
+      :disable-dialog="true"
     >
     </vue-scheduler>
+</b-modal>
+
+<b-modal :active.sync="modalNovoEvento.isAddEventActive">
+  <novo-evento v-bind="modalNovoEvento.form"></novo-evento>
+</b-modal>
+
+<b-modal :active.sync="modal.local.isActive">
+  <b-table 
+    :data="modal.local.data"
+    :loading="modal.local.isLoading"
+    :columns="modal.local.columns"
+    :selected.sync="modal.local.selected"
+    @dblclick="copiaSala"
+    >
+    </b-table>
+</b-modal>
+
+<b-modal :active.sync="modal.profissional.isActive">
+  <b-table 
+  :data="modal.profissional.data"
+  :loading="modal.profissional.isLoading"
+  :columns="modal.profissional.columns"
+  :selected.sync="modal.profissional.selected"
+  @dblclick="copiaProfissional"
+  >
+  
+  </b-table>
+
 </b-modal>
 
 
@@ -72,14 +126,94 @@
 </template>
 <script>
 import _ from 'lodash'
+import { API_URL } from '../../main'
+import NovoEvento from './NovoEvento'
+import SimpleVueValidation from 'simple-vue-validator'
+import axios from 'axios'
+
+const Validator = SimpleVueValidation.Validator.create({
+  templates: {
+    required: 'Campo obrigatório',
+    integer: 'Somente numeros',
+    between: 'Valores entre 1 e 60'
+  }
+})
+
+const HTTP = axios.create({
+  baseURL: API_URL,
+  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
+})
 
 export default {
   name: 'Horarios',
+  components: {
+    NovoEvento
+  },
+  validators: {
+    'formHorario.local': function (value) {
+      return Validator.value(value).required()
+    },
+    'formHorario.profissional': function (value) {
+      return Validator.value(value).required()
+    },
+    'formHorario.duracao': function (value) {
+      return Validator.value(value).required()
+      .integer()
+      .between(1, 60)
+    }
+  },
   data () {
     return {
+      formHorario: {
+        local: '',
+        profissional: '',
+        duracao: ''
+      },
       componentKey: 0,
       modal: {
-        isCalendarActive: false
+        calendar: {
+          isActive: false
+        },
+        local: {
+          isActive: false,
+          isLoading: false,
+          isAdd: true,
+          data: [],
+          columns: [
+            {
+              field: 'descricao',
+              label: 'Descricao'
+            }
+          ],
+          selected: null
+        },
+        profissional: {
+          isLoading: false,
+          isActive: false,
+          isAdd: true,
+          data: [],
+          columns: [
+            {
+              field: 'nome',
+              label: 'Nome'
+            },
+            {
+              field: 'cpf',
+              label: 'CPF'
+            }
+          ],
+          selected: null
+        }
+      },
+      modalNovoEvento: {
+        isAddEventActive: false,
+        form: {
+          dt_inicio: null,
+          dt_fim: null,
+          livre: true,
+          local: null,
+          profissional: null
+        }
       },
       dialogConfig: {
         title: 'Novo Horário',
@@ -120,7 +254,8 @@ export default {
           }
         ]
       },
-      events: []
+      events: [],
+      bEnviarAgenda: true
     }
   },
   methods: {
@@ -131,16 +266,152 @@ export default {
       // Para forçar a renderização do calendário
       this.componentKey += 1
     },
+    eventCreated (event) {
+      console.log('Event created')
+      console.log(event)
+    },
+    timeClicked (dateWithTime) {
+      console.log('Time clicked')
+      console.log('Date: ' + dateWithTime.date)
+      console.log('Time: ' + dateWithTime.time)
+
+      this.modalNovoEvento.form.profissional = 'Gudi Lack'
+
+      let dtDia = dateWithTime.date
+      let horaIni = `${dateWithTime.time}:00`
+      let horaFim = null
+      let livre = true
+      let local = null
+      // let profissional = null
+      let duracao = 45
+      let event = null
+
+      if (duracao < 60) {
+        horaFim = `${dateWithTime.time}:${duracao}`
+      } else if (duracao === 60) {
+        horaFim = `${dateWithTime.time + 1}:00`
+      } else {
+        return
+      }
+      if (dateWithTime.time === null) {
+        console.log('O dia inteiro')
+      } else {
+        event = {
+          date: dtDia,
+          startTime: horaIni,
+          endTime: horaFim,
+          livre: livre,
+          local: local,
+          name: 'profissional'
+        }
+        this.events.push(event)
+      }
+
+      // this.modalNovoEvento.isAddEventActive = true
+
+    },
     eventCalendar () {
-      console.log('Calendario de eventos')
-      this.modal.isCalendarActive = true
+      let vm = this
+      this.$validate()
+      .then(function (response) {
+        if (response) {
+          console.log('Calendario de eventos')
+          vm.modal.calendar.isActive = true
+        }
+      })
+      .catch(function (error) {})
     },
     forceRerender () {
       this.componentKey += 1
+    },
+    salvarAgenda () {
+      console.log('Salva agenda no banco')
+      console.log(this.events)
+      this.apagarAgenda()
+    },
+    apagarAgenda () {
+      console.log('Apaga agenda local')
+      this.events = []
+    },
+    pequisaSala () {
+      console.log('Pesquisa Sala')
+      let vm = this
+      this.modal.local.isActive = true
+      this.modal.local.isAdd = false
+
+      HTTP
+      .get(`${API_URL}agenda/sala`, {})
+      .then(function (response) {
+        // console.log(response)
+        vm.modal.local.data = response.data
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+
+    },
+    addSala () {
+      if (!this.formHorario.local) return
+      console.log('Adiciona sala')
+      let vm = this
+
+      HTTP
+      .post(`${API_URL}agenda/sala/${vm.formHorario.local}`)
+      .then(function (response) {
+        // console.log(response)
+        // vm.reset()
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    copiaSala () {
+      console.log('Copia sala')
+      this.modal.local.isActive = false
+      this.modal.local.isAdd = true
+      this.formHorario.local = this.modal.local.selected.descricao
+    },
+    pesquisaProfissional () {
+      console.log('Pesquisa profissional')
+      if (!this.formHorario.profissional) return
+      let vm = this
+
+      this.modal.profissional.isActive = true
+
+      HTTP
+        .get(`${API_URL}profissional/nome/${vm.formHorario.profissional}`, {
+        })
+      .then(function (response) {
+        console.log(response)
+        vm.modal.profissional.data = response.data
+        // vm.isImageModalActive = true
+      })
+      .catch(function (error) {
+        // console.log(error)
+        vm.$toast.open({
+          message:
+            'NENHUM PROFISSIONAL encontrado com esse nome.',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      })
+    },
+    copiaProfissional () {
+      console.log('Copia profissional')
+      if (!this.modal.profissional.selected.nome) {
+        return
+      }
+      this.formHorario.profissional = this.modal.profissional.selected.nome
+      this.modal.profissional.isActive = false
     }
   },
-  computed:{
-    removeEvent (event) {
+  computed: {
+    hasEvent () {
+      this.componentKey += 1
+      if (this.events.length) {
+        return false
+      }
+      return true
     }
   }
 }

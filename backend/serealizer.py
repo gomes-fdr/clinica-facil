@@ -89,6 +89,7 @@ class PlanoSaudePacienteSchema(ma.ModelSchema):
 class LocalSchema(ma.ModelSchema):
     class Meta:
         model = Local
+        fields = ('id', 'descricao')
 
 
 class HorarioSchema(ma.ModelSchema):

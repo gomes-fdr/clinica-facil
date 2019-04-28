@@ -2,7 +2,7 @@
   <section>
     <div class="card">
       <header class="card-header">
-        <p class="card-header-title">Informações do paciente</p>
+        <p class="card-header-title">Agenda de atendimento</p>
       </header>
       <br>
       <b-tabs position="is-centered"  type="is-toggle-rounded" v-model="activeTab">
