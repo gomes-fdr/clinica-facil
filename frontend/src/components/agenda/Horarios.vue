@@ -1,7 +1,7 @@
 <template>
 <div>
-  <p class=" has-text-black has-text-centered">Sala: {{formHorario.local}}</p>
-  <p class=" has-text-black has-text-centered">Profissional: {{formHorario.profissional}}</p>
+  <p class=" has-text-black has-text-centered">Sala: {{formHorario.local.descricao}}</p>
+  <p class=" has-text-black has-text-centered">Profissional: {{formHorario.profissional.nome}}</p>
   <form>
     <div class="section">
 
@@ -15,10 +15,10 @@
             <p class="control is-expanded">
               <input
               class="input"
-              :class="{'is-danger': validation.hasError('formHorario.local') }"
+              :class="{'is-danger': validation.hasError('formHorario.local.descricao') }"
               type="text"
               placeholder="Onde? (Sala)"
-              v-model="formHorario.local"
+              v-model="formHorario.local.descricao"
               :readonly="modal.local.isAdd"
               >
             </p>
@@ -33,17 +33,17 @@
                 </a>
               </div>
           </div>
-          <p v-show="validation.hasError('formHorario.local')" class="help is-danger">{{ validation.firstError('formHorario.local') }}</p>
+          <p v-show="validation.hasError('formHorario.local.descricao')" class="help is-danger">{{ validation.firstError('formHorario.local.descricao') }}</p>
           </div>
           <div class="field">
             <div class="field has-addons">
               <p class="control is-expanded">
                 <input
                 class="input"
-                :class="{'is-danger': validation.hasError('formHorario.profissional') }"
+                :class="{'is-danger': validation.hasError('formHorario.profissional.nome') }"
                 type="text"
                 placeholder="Quem? (Profissional)"
-                v-model="formHorario.profissional"
+                v-model="formHorario.profissional.nome"
                 >
               </p>
               <div class="control">
@@ -52,7 +52,7 @@
                 </a>
               </div>
             </div>
-            <p v-show="validation.hasError('formHorario.profissional')" class="help is-danger">{{ validation.firstError('formHorario.profissional') }}</p>
+            <p v-show="validation.hasError('formHorario.profissional.nome')" class="help is-danger">{{ validation.firstError('formHorario.profissional.nome') }}</p>
           </div>
           <div class="field">
             <div class="field has-addons">
@@ -150,10 +150,10 @@ export default {
     NovoEvento
   },
   validators: {
-    'formHorario.local': function (value) {
+    'formHorario.local.descricao': function (value) {
       return Validator.value(value).required()
     },
-    'formHorario.profissional': function (value) {
+    'formHorario.profissional.nome': function (value) {
       return Validator.value(value).required()
     },
     'formHorario.duracao': function (value) {
@@ -165,8 +165,8 @@ export default {
   data () {
     return {
       formHorario: {
-        local: '',
-        profissional: '',
+        local: {},
+        profissional: {},
         duracao: ''
       },
       componentKey: 0,
@@ -272,8 +272,8 @@ export default {
     },
     timeClicked (dateWithTime) {
       console.log('Time clicked')
-      console.log('Date: ' + dateWithTime.date)
-      console.log('Time: ' + dateWithTime.time)
+      // console.log('Date: ' + dateWithTime.date)
+      // console.log('Time: ' + dateWithTime.time)
 
       this.modalNovoEvento.form.profissional = 'Gudi Lack'
 
@@ -281,10 +281,12 @@ export default {
       let horaIni = `${dateWithTime.time}:00`
       let horaFim = null
       let livre = true
-      let local = null
-      // let profissional = null
-      let duracao = 45
+      let local = this.formHorario.local.id
+      let profissional = this.formHorario.profissional
+      let duracao = Number(this.formHorario.duracao)
       let event = null
+
+      console.log(typeof duracao)
 
       if (duracao < 60) {
         horaFim = `${dateWithTime.time}:${duracao}`
@@ -302,7 +304,8 @@ export default {
           endTime: horaFim,
           livre: livre,
           local: local,
-          name: 'profissional'
+          name: profissional.nome,
+          profissional_id: profissional.id
         }
         this.events.push(event)
       }
@@ -369,7 +372,7 @@ export default {
       console.log('Copia sala')
       this.modal.local.isActive = false
       this.modal.local.isAdd = true
-      this.formHorario.local = this.modal.local.selected.descricao
+      this.formHorario.local = this.modal.local.selected
     },
     pesquisaProfissional () {
       console.log('Pesquisa profissional')
@@ -379,7 +382,7 @@ export default {
       this.modal.profissional.isActive = true
 
       HTTP
-        .get(`${API_URL}profissional/nome/${vm.formHorario.profissional}`, {
+        .get(`${API_URL}profissional/nome/${vm.formHorario.profissional.nome}`, {
         })
       .then(function (response) {
         console.log(response)
@@ -398,10 +401,10 @@ export default {
     },
     copiaProfissional () {
       console.log('Copia profissional')
-      if (!this.modal.profissional.selected.nome) {
+      if (!this.modal.profissional.selected) {
         return
       }
-      this.formHorario.profissional = this.modal.profissional.selected.nome
+      this.formHorario.profissional = this.modal.profissional.selected
       this.modal.profissional.isActive = false
     }
   },
