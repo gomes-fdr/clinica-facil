@@ -72,7 +72,7 @@
       </div>
         <div class="field is-grouped is-grouped-right">
           <p class="control">
-            <a class="button is-info" :disabled="hasEvent" :key="componentKey" @click.prevent="salvarAgenda">Salvar Agenda</a>
+            <a class="button is-info" :disabled="hasEvent" :key="componentKey" @click.prevent="salvarAgendas">Salvar Agenda</a>
             <a class="button is-danger" :disabled="hasEvent" @click.prevent="apagarAgenda">Apagar Agenda</a>
             <a class="button is-info" @click.prevent="eventCalendar">Montar Agenda</a>
           </p>
@@ -121,11 +121,22 @@
 
 </b-modal>
 
+ <b-notification :closable="false">
+    <b-loading :is-full-page="true" :active.sync="espera.isLoading" :can-cancel="true">
+        <b-icon
+            pack="fas"
+            icon="sync-alt"
+            size="is-large"
+            custom-class="fa-spin">
+        </b-icon>
+    </b-loading>
+</b-notification>
+
 
 </div>
 </template>
 <script>
-import _ from 'lodash'
+import { remove, debounce } from 'lodash'
 import { API_URL } from '../../main'
 import NovoEvento from './NovoEvento'
 import SimpleVueValidation from 'simple-vue-validator'
@@ -164,6 +175,9 @@ export default {
   },
   data () {
     return {
+      espera: {
+        isLoading: false
+      },
       formHorario: {
         local: {},
         profissional: {},
@@ -261,7 +275,7 @@ export default {
   methods: {
     eventClicked (event) {
       console.log('Evento selecionado')
-      _.remove(this.events, event)
+      remove(this.events, event)
 
       // Para forçar a renderização do calendário
       this.componentKey += 1
@@ -303,9 +317,10 @@ export default {
           startTime: horaIni,
           endTime: horaFim,
           livre: livre,
-          local: local,
+          local_id: local,
           name: profissional.nome,
-          profissional_id: profissional.id
+          profissional_id: profissional.id,
+          duracao: duracao
         }
         this.events.push(event)
       }
@@ -327,9 +342,22 @@ export default {
     forceRerender () {
       this.componentKey += 1
     },
-    salvarAgenda () {
+    salvarAgenda (event) {
       console.log('Salva agenda no banco')
-      console.log(this.events)
+      HTTP
+      .post(`${API_URL}agenda/horario`, event)
+      .then(function (response) {
+        console.log(response)
+        // vm.modal.local.data = response.data
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    salvarAgendas () {
+      this.events.forEach((event) => {
+        this.salvarAgenda(event)
+      })
       this.apagarAgenda()
     },
     apagarAgenda () {
