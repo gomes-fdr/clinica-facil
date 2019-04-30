@@ -65,9 +65,6 @@ def post_horario():
     }
     """
 
-    for d in data:
-        print(data)
-
     local = Local.query.filter_by(id = data['local_id']).first()
     profissional = Profissional.query.filter_by(id = data['profissional_id']).first()
 
@@ -105,3 +102,13 @@ def post_horario():
         return jsonify({'message': 'Fail to add Horaio'}), 400
 
     return HorarioSchema().jsonify(horario), 201
+
+
+@bp_agenda.route('/api/v1/agenda/horario/profissional', methods=['GET'])
+def get_horario_profissional():
+    """
+    Busca Horarios de um profissional, por intervalo de datas para atendimento
+    """
+    return jsonify({'message': 'Horario already exists'}), 405
+
+    

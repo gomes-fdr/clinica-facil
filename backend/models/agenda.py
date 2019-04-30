@@ -13,7 +13,7 @@ class Horario(db.Model):
     Horarios de profissionais em suas salas
     """
     id = db.Column(db.Integer, primary_key=True)
-    dt_dia = db.Column(db.DateTime)
+    dt_dia = db.Column(db.Date)
     hora_ini = db.Column(db.String(5))
     hora_fim = db.Column(db.String(5))
     duracao = db.Column(db.Integer)
@@ -31,7 +31,7 @@ class Consulta(db.Model):
     Consulta de Pacientes em tratamento na clinica
     """
     id = db.Column(db.Integer, primary_key=True)
-    dt_marcacao = db.Column(db.DateTime)
+    dt_marcacao = db.Column(db.Date)
     compareceu = db.Column(db.Boolean, default=False)
     confirmacao_consulta_sms = db.Column(db.Boolean, default=False)
 
