@@ -22,6 +22,7 @@ export default {
         localStorage.setItem('perfil', data.profile)
         localStorage.setItem('nome', data.nome)
         localStorage.setItem('situacao', data.situacao)
+        localStorage.setItem('profissional_id', data.profissional_id)
         if (cb) cb(true)
         this.onChange(true)
       } else {
@@ -42,6 +43,7 @@ export default {
     delete localStorage.perfil
     delete localStorage.nome
     delete localStorage.situacao
+    delete localStorage.profissional_id
     location.reload()
   },
 

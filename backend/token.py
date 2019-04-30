@@ -86,6 +86,7 @@ def token():
         'exp': datetime.utcnow() + timedelta(minutes=(60*4)),
         'nome': profissional.nome,
         'profile': perfil.descricao,
+        'profissional_id': profissional.id,
         'situacao': situacao.descricao
         }, os.environ['SALT_TOKEN'])
         return jsonify({'token': token.decode('UTF-8')}), 200

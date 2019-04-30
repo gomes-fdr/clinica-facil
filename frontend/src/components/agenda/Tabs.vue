@@ -7,6 +7,7 @@
       <br>
       <b-tabs position="is-centered"  type="is-toggle-rounded" v-model="activeTab">
         <b-tab-item label="Consulta">
+          <consulta/>
         </b-tab-item>
         <b-tab-item label="Horários" v-if="true">
           <horarios/>
@@ -17,11 +18,13 @@
 </template>
 <script>
 import Horarios from './Horarios'
+import Consulta from './Consulta'
 
 export default {
   name: 'Tabs',
   components: {
-    Horarios
+    Horarios,
+    Consulta
   },
   data () {
     return {

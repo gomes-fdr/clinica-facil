@@ -136,7 +136,7 @@
 </div>
 </template>
 <script>
-import { remove, debounce } from 'lodash'
+import { remove } from 'lodash'
 import { API_URL } from '../../main'
 import NovoEvento from './NovoEvento'
 import SimpleVueValidation from 'simple-vue-validator'

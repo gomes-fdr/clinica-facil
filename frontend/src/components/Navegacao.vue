@@ -18,7 +18,7 @@
          <router-link class="navbar-item" to="/agenda">Agenda</router-link>
          <router-link class="navbar-item" to="/paciente">Paciente</router-link>
          <router-link class="navbar-item" to="/profissional">Profissional</router-link>
-        <a class="navbar-item">
+        <a class="navbar-item" v-show="false">
           Ajuda
         </a>
       </div>
