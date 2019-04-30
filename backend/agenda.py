@@ -111,4 +111,17 @@ def get_horario_profissional():
     """
     return jsonify({'message': 'Horario already exists'}), 405
 
+    """
+    from datetime import date
+    d1 = date(day=4, month=5, year=2019)
+    d2 = date(day=5, month=5, year=2019)
+    hoario = Horario.query.filter(Horario.dt_dia >= d1, Horario.dt_dia <= d2).all()
+    resultado ::: [<Horario 28>, <Horario 29>, <Horario 30>, <Horario 31>, <Horario 32>]
+
+    date = datetime.strptime(d, '%b %d %Y %I:%M%p')
+    from datetime import datetime
+    d5 = datetime.strptime('2019-05-06', '%Y-%m-%d')
+    horario = Horario.query.filter(Horario.dt_dia >= d1, Horario.dt_dia <= d5).all()
+    """
+
     
