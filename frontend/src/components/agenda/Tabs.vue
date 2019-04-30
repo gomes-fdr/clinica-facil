@@ -9,7 +9,7 @@
         <b-tab-item label="Consulta">
           <consulta/>
         </b-tab-item>
-        <b-tab-item label="Horários" v-if="true">
+        <b-tab-item label="Horários" v-if="!formControl.isHorarioDisabled">
           <horarios/>
         </b-tab-item>
       </b-tabs>
@@ -28,8 +28,32 @@ export default {
   },
   data () {
     return {
-      activeTab: 0
+      activeTab: 0,
+      formControl: {
+        isHorarioDisabled: false
+      }
     }
+  },
+  methods: {
+    initApp () {
+      let perfil = localStorage.getItem('perfil')
+
+      switch (perfil) {
+        case 'Psicologo':
+        case 'Psiquiatra':
+        case 'Nutricionista':
+        case 'Fonoaudiologo':
+        case 'Neurologista':
+        case 'Recepcao':
+          this.formControl.isHorarioDisabled = true
+          break
+        default:
+          break
+      }
+    }
+  },
+  mounted () {
+    this.initApp()
   },
   computed: {
     loadConvenios () {
