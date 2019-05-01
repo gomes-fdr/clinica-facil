@@ -93,8 +93,15 @@ class LocalSchema(ma.ModelSchema):
 
 
 class HorarioSchema(ma.ModelSchema):
+    # Necessário para sobrepor o 'backref' em models
+    # Serve tb para alterar o nome do atributo na saida do json
+    profissional_id = fields.Number(attribute="profissional_id")
+    local_id = fields.Number(attribute="local_id")
+
     class Meta:
         model = Horario
+        fields = ('livre', 'profissional_id',  'local_id', 'profissional_id', 'hora_fim', 'duracao', 'dt_dia', 'id', 'hora_ini')
+
 
 
 class ConsultaSchema(ma.ModelSchema):

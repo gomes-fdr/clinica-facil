@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, current_app, jsonify, request
 from .token import token_required
 from backend.models.agenda import Local, Horario
@@ -44,6 +45,7 @@ def post_sala(descricao):
 
 
 @bp_agenda.route('/api/v1/agenda/horario', methods=['POST'])
+@token_required
 def post_horario():
     """
     Adicona um Horário para atendimento
@@ -105,23 +107,27 @@ def post_horario():
 
 
 @bp_agenda.route('/api/v1/agenda/horario/profissional', methods=['GET'])
+@token_required
 def get_horario_profissional():
     """
     Busca Horarios de um profissional, por intervalo de datas para atendimento
+    {
+    "dt_dia": "2019-05-04T13:12:21.759000",
+    "hora_fim": "11:45",
+    "local_id": 1,
+    "livre": true,
+    "id": 31,
+    "duracao": 45,
+    "hora_ini": "11:00",
+    "profissional_id": 264
+    }
     """
-    return jsonify({'message': 'Horario already exists'}), 405
+    dt_inicio = datetime.strptime('30/04/2019', '%d/%m/%Y')
+    dt_fim = datetime.strptime('06/05/2019', '%d/%m/%Y')
 
-    """
-    from datetime import date
-    d1 = date(day=4, month=5, year=2019)
-    d2 = date(day=5, month=5, year=2019)
-    hoario = Horario.query.filter(Horario.dt_dia >= d1, Horario.dt_dia <= d2).all()
-    resultado ::: [<Horario 28>, <Horario 29>, <Horario 30>, <Horario 31>, <Horario 32>]
+    horario = Horario.query.filter(Horario.dt_dia >= dt_inicio, Horario.dt_dia <= dt_fim).all()
 
-    date = datetime.strptime(d, '%b %d %Y %I:%M%p')
-    from datetime import datetime
-    d5 = datetime.strptime('2019-05-06', '%Y-%m-%d')
-    horario = Horario.query.filter(Horario.dt_dia >= d1, Horario.dt_dia <= d5).all()
-    """
+    if not horario:
+        return jsonify({'message': 'Horario not found'}), 404
 
-    
+    return HorarioSchema(many=True).jsonify(horario), 200
