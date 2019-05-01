@@ -22,8 +22,8 @@ class Horario(db.Model):
     local_id = db.Column(db.Integer, db.ForeignKey('local.id'))
     profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'))
 
-    profissionais = db.relationship('Profissional', backref='profissional')
-    locais = db.relationship('Local', backref='local')
+    profissional = db.relationship('Profissional', backref='profissional')
+    local = db.relationship('Local', backref='local')
 
 
 class Consulta(db.Model):
@@ -42,5 +42,5 @@ class Consulta(db.Model):
 
     pacientes = db.relationship('Paciente', backref='pacientes')
     profissionais = db.relationship('Profissional', backref='profissionais')
-    horarios = db.relationship('Horario', backref='horario')
-    convenios = db.relationship('PlanoSaudePaciente', backref='plano_saude_paciente')
+    horario = db.relationship('Horario', backref='horario')
+    plano_saude_paciente = db.relationship('PlanoSaudePaciente', backref='plano_saude_paciente')

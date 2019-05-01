@@ -107,7 +107,6 @@ def post_horario():
 
 
 @bp_agenda.route('/api/v1/agenda/horario/profissional', methods=['GET'])
-@token_required
 def get_horario_profissional():
     """
     Busca Horarios de um profissional, por intervalo de datas para atendimento
@@ -122,10 +121,11 @@ def get_horario_profissional():
     "profissional_id": 264
     }
     """
-    dt_inicio = datetime.strptime('30/04/2019', '%d/%m/%Y')
-    dt_fim = datetime.strptime('06/05/2019', '%d/%m/%Y')
+    dt_inicio = datetime.strptime(request.args['dt_inicio'], '%d/%m/%Y')
+    dt_fim = datetime.strptime(request.args['dt_fim'], '%d/%m/%Y')
+    livre = request.args['livre'] == 'true'
 
-    horario = Horario.query.filter(Horario.dt_dia >= dt_inicio, Horario.dt_dia <= dt_fim).all()
+    horario = Horario.query.filter(Horario.dt_dia >= dt_inicio, Horario.dt_dia <= dt_fim, Horario.livre == livre).all()
 
     if not horario:
         return jsonify({'message': 'Horario not found'}), 404

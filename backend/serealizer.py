@@ -61,6 +61,15 @@ class ProfissionalSchema(ma.ModelSchema):
         model = Profissional
 
 
+class ProfissionalSchema2(ma.ModelSchema):
+    perfil = fields.Nested(PerfilSchema)
+    situacao = fields.Nested(SituacaoSchema)
+
+    class Meta:
+        model = Profissional
+        fields=('id', 'nome')
+
+
 class ProntuarioLegadoSchema(ma.ModelSchema):
     paciente = fields.Nested(PacienteSchema)
 
@@ -95,12 +104,14 @@ class LocalSchema(ma.ModelSchema):
 class HorarioSchema(ma.ModelSchema):
     # Necessário para sobrepor o 'backref' em models
     # Serve tb para alterar o nome do atributo na saida do json
-    profissional_id = fields.Number(attribute="profissional_id")
-    local_id = fields.Number(attribute="local_id")
+    # profissional_id = fields.Number(attribute="profissional_id")
+    # local_id = fields.Number(attribute="local_id")
+    profissional = fields.Nested(ProfissionalSchema2)
+    local = fields.Nested(LocalSchema)
 
     class Meta:
         model = Horario
-        fields = ('livre', 'profissional_id',  'local_id', 'profissional_id', 'hora_fim', 'duracao', 'dt_dia', 'id', 'hora_ini')
+        # fields = ('livre', 'profissional_id',  'local_id', 'profissional_id', 'hora_fim', 'duracao', 'dt_dia', 'id', 'hora_ini')
 
 
 

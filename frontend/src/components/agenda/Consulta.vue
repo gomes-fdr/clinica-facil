@@ -35,24 +35,28 @@
           <p class="control">
             <input 
              class="input"
+             :class="{'is-danger': validation.hasError('formData.dt_inicio') }"
              type="text"
              placeholder="Inicio"
              v-mask="'##/##/####'"
              v-model="formData.dt_inicio"
             >
           </p>
+        <p v-show="validation.hasError('formData.dt_inicio')" class="help is-danger">{{ validation.firstError('formData.dt_inicio') }}</p>
         </div>
         
         <div class="field">
           <p class="control">
             <input 
              class="input"
+             :class="{'is-danger': validation.hasError('formData.dt_fim') }"
              type="text"
              placeholder="Fim"
              v-mask="'##/##/####'"
              v-model="formData.dt_fim"
             >
           </p>
+          <p v-show="validation.hasError('formData.dt_fim')" class="help is-danger">{{ validation.firstError('formData.dt_fim') }}</p>
         </div>
       </div>
     </div>
@@ -67,8 +71,10 @@
             <p class="control is-expanded">
               <input
               class="input"
+              :class="{'is-danger': validation.hasError('formData.nomePaciente') }"
               type="text"
               placeholder="Paciente"
+              v-model="formData.nomePaciente"
               >
             </p>
             <div class="control">
@@ -77,12 +83,14 @@
               </a>
             </div>
           </div>
+          <p v-show="validation.hasError('formData.nomePaciente')" class="help is-danger">{{ validation.firstError('formData.nomePaciente') }}</p>
         </div>
         <div class="field" v-if="formControl.radio == 'Profissional'">
           <div class="field has-addons">
             <p class="control is-expanded">
               <input
               class="input"
+              :class="{'is-danger': validation.hasError('formData.nomeProfissional') }"
               type="text"
               placeholder="Profissional"
               :readonly="formControl.isProfissionalDisabled"
@@ -95,6 +103,7 @@
               </a>
             </div>
           </div>
+          <p v-show="validation.hasError('formData.nomeProfissional')" class="help is-danger">{{ validation.firstError('formData.nomeProfissional') }}</p>
         </div>
       </div>
     </div>
@@ -106,25 +115,52 @@
 
   </form>
   
-  <b-modal :active.sync="modal.isActive">
+  <b-modal :active.sync="modal.calendario.isActive">
     <vue-scheduler
-      :events="formData.events"
+      :events="events"
       event-display="name"
-      :disable-dialog="true"
+      @event-clicked="eventClicked"
     >
     </vue-scheduler>
   </b-modal>
+
+  <b-modal :active.sync="modal.agenda.isActive">
+    <controle-consulta></controle-consulta>
+  </b-modal>
 </div>
 </template>
+
 <script>
+import SimpleVueValidation from 'simple-vue-validator'
+import { API_URL } from '../../main'
+import axios from 'axios'
+import ControleConsulta from './ControleConsulta'
+
+const Validator = SimpleVueValidation.Validator.create({
+  templates: {
+    required: 'Campo obrigatório'
+  }
+})
+const HTTP = axios.create({
+  baseURL: API_URL,
+  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
+})
 var moment = require('moment')
 
 export default {
   name: 'Consulta',
+  components: {
+    ControleConsulta
+  },
   data () {
     return {
       modal: {
-        isActive: false
+        calendario: {
+          isActive: false
+        },
+        agenda: {
+          isActive: false
+        }
       },
       formControl: {
         radio: 'TodosProfissionais',
@@ -133,17 +169,36 @@ export default {
       formData: {
         dt_inicio: '',
         dt_fim: '',
-        events: [],
-        nomeProfissional: ''
+        nomeProfissional: '',
+        nomePaciente: ''
+      },
+      events: []
+    }
+  },
+  validators: {
+    'formData.dt_inicio': function (value) {
+      return Validator.value(value).required()
+    },
+    'formData.dt_fim': function (value) {
+      return Validator.value(value).required()
+    },
+    'formData.nomeProfissional': function (value) {
+      if (this.formControl.radio === 'Profissional') {
+        return Validator.value(value).required()
+      }
+    },
+    'formData.nomePaciente': function (value) {
+      if (this.formControl.radio === 'Paciente') {
+        return Validator.value(value).required()
       }
     }
   },
   methods: {
     initApp () {
       let tmp = new Date()
-      let t = moment.utc(tmp).format('DD/MM/YYYY')
-      this.formData.dt_inicio = t
-      this.formData.dt_fim = t
+      let tmp2 = moment.utc(tmp, 'DD/MM/YYYY').add(1, 'days')
+      this.formData.dt_inicio = moment.utc(tmp).format('DD/MM/YYYY')
+      this.formData.dt_fim = moment.utc(tmp2).format('DD/MM/YYYY')
 
       // let profissional_id = localStorage.getItem('profissional_id')
       let profissional = localStorage.getItem('nome')
@@ -168,7 +223,55 @@ export default {
       // localStorage.getItem('token')
     },
     showCalendar () {
-      this.modal.isActive = true
+      let vm = this
+      vm.events = []
+
+      this.$validate()
+      .then(function (response) {
+        if (response) {
+          console.log('Calendario de eventos')
+          HTTP
+          .get(`${API_URL}agenda/horario/profissional?dt_inicio=${vm.formData.dt_inicio}&dt_fim=${vm.formData.dt_fim}&livre=true`, {})
+          .then(function (response) {
+            let data = response.data
+            data.forEach(e => {
+              let event = {
+                date: null,
+                startTime: '',
+                endTime: '',
+                name: null,
+                id: null
+              }
+              event.date = e.dt_dia
+              event.startTime = e.hora_ini
+              event.endTime = e.hora_fim
+              event.name = e.profissional.nome
+              event.id = e.id
+              vm.events.push(event)
+            })
+            // console.log(vm.events)
+            vm.modal.calendario.isActive = true
+          })
+          .catch(function (error) {
+            console.log(error.response.status)
+            if (error.response.status === 404) {
+              vm.$toast.open({
+                message:
+                  'NENHUM HORARIO encontrado',
+                type: 'is-danger',
+                position: 'is-bottom'
+              })
+            }
+          })
+        }
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
+    },
+    eventClicked (event) {
+      console.log(event)
+      this.modal.agenda.isActive = true
     }
   },
   mounted () {

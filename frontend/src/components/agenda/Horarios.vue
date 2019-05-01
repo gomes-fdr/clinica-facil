@@ -93,10 +93,6 @@
     </vue-scheduler>
 </b-modal>
 
-<b-modal :active.sync="modalNovoEvento.isAddEventActive">
-  <novo-evento v-bind="modalNovoEvento.form"></novo-evento>
-</b-modal>
-
 <b-modal :active.sync="modal.local.isActive">
   <b-table 
     :data="modal.local.data"
@@ -138,7 +134,6 @@
 <script>
 import { remove } from 'lodash'
 import { API_URL } from '../../main'
-import NovoEvento from './NovoEvento'
 import SimpleVueValidation from 'simple-vue-validator'
 import axios from 'axios'
 
@@ -157,9 +152,6 @@ const HTTP = axios.create({
 
 export default {
   name: 'Horarios',
-  components: {
-    NovoEvento
-  },
   validators: {
     'formHorario.local.descricao': function (value) {
       return Validator.value(value).required()
@@ -410,8 +402,8 @@ export default {
       this.modal.profissional.isActive = true
 
       HTTP
-        .get(`${API_URL}profissional/nome/${vm.formHorario.profissional.nome}`, {
-        })
+      .get(`${API_URL}profissional/nome/${vm.formHorario.profissional.nome}`, {
+      })
       .then(function (response) {
         console.log(response)
         vm.modal.profissional.data = response.data
