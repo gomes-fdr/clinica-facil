@@ -12,7 +12,7 @@ Vue.use(VueMask)
 Vue.use(VueScheduler, {
   locale: 'pt-br',
   initialView: 'week',
-  availableViews: ['week'],
+  availableViews: ['week', 'day'],
   labels: {
     today: 'Hoje',
     back: 'Anterior',

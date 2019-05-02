@@ -9,17 +9,10 @@
                 native-value="Profissional">
                 Profissional
             </b-radio>
-            <b-radio v-model="formControl.radio"
-                native-value="Paciente">
-                Paciente
-            </b-radio>
+            
             <b-radio v-model="formControl.radio" :disabled="formControl.isProfissionalDisabled"
                 native-value="TodosProfissionais">
                 Todos os profissionais
-            </b-radio>
-            <b-radio v-model="formControl.radio"
-                native-value="TodosPacientes">
-                Todos os pacientes
             </b-radio>
         </div>
       </div>
@@ -109,7 +102,10 @@
     </div>
     <div class="field is-grouped is-grouped-right">
       <p class="control">
-        <a class="button is-info" @click.prevent="showCalendar">Mostar Agenda</a>
+        <a class="button is-info" >Agenda Atendimento</a>
+      </p>
+      <p class="control">
+        <a class="button is-info" @click.prevent="showCalendar">Horários Vagos</a>
       </p>
     </div>
 
@@ -120,12 +116,16 @@
       :events="events"
       event-display="name"
       @event-clicked="eventClicked"
+      :disable-dialog="true"
     >
     </vue-scheduler>
   </b-modal>
 
   <b-modal :active.sync="modal.agenda.isActive">
-    <controle-consulta></controle-consulta>
+    <controle-consulta
+      :event="event"
+    >
+    </controle-consulta>
   </b-modal>
 </div>
 </template>
@@ -172,7 +172,15 @@ export default {
         nomeProfissional: '',
         nomePaciente: ''
       },
-      events: []
+      events: [],
+      event: {
+        date: null,
+        startTime: '',
+        endTime: '',
+        name: null,
+        horario_id: null,
+        profissional_id: null
+      }
     }
   },
   validators: {
@@ -240,13 +248,15 @@ export default {
                 startTime: '',
                 endTime: '',
                 name: null,
-                id: null
+                horario_id: null,
+                profissional_id: null
               }
               event.date = e.dt_dia
               event.startTime = e.hora_ini
               event.endTime = e.hora_fim
               event.name = e.profissional.nome
-              event.id = e.id
+              event.profissional_id = e.profissional.id
+              event.horario_id = e.id
               vm.events.push(event)
             })
             // console.log(vm.events)
@@ -270,7 +280,8 @@ export default {
       })
     },
     eventClicked (event) {
-      console.log(event)
+      // console.log(event)
+      this.event = event
       this.modal.agenda.isActive = true
     }
   },
