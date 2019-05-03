@@ -25,7 +25,8 @@ Vue.use(VueScheduler, {
   timeRange: [8, 20]
 })
 
-export const API_URL = 'http://localhost:5000/api/v1/'
+// export const API_URL = 'http://localhost:5000/api/v1/'
+export const API_URL = 'http://sistema-darmas.com.br:5000/api/v1/'
 export const eBus = new Vue()
 
 /* eslint-disable no-new */
