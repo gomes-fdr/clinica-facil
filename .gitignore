@@ -107,4 +107,4 @@ venv.bak/
 requirements-dev.txt
 node_modules/
 
-migrations/
+
