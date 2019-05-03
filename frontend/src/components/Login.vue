@@ -68,7 +68,7 @@ export default {
   data () {
     return {
       form: {
-        email: 'recepcao@clinicadarmas.com.br',
+        email: '',
         password: ''
       }
     }
