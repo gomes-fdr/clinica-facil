@@ -637,13 +637,14 @@ export default {
     atualizarProfissional () {
       console.log('Atualizar profissional')
       let vm = this
-      let data = {}
+      let data = {...this.form}
 
       this.$validate()
       .then(function (response) {
         console.log(response)
         if (response) {
-          data = {...vm.form}
+          // data = {...vm.form}
+          // data = vm.form
           delete data.id
           let dtTmp = moment.utc(vm.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
@@ -654,7 +655,7 @@ export default {
             data.no_conselho = null
           }
           console.log(JSON.stringify(data))
-          vm.$http
+          HTTP
           .post(`${API_URL}profissional/${vm.form.nome}`, data)
           .then(function (response) {
             // console.log(response)
