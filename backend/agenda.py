@@ -1,9 +1,9 @@
 from datetime import datetime
 from flask import Blueprint, current_app, jsonify, request
 from .token import token_required
-from backend.models.agenda import Local, Horario
+from backend.models.agenda import Local, Horario, Consulta
 from backend.models.profissional import Profissional
-from .serealizer import LocalSchema, HorarioSchema
+from .serealizer import LocalSchema, HorarioSchema, ConsultaSchema
 
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -107,6 +107,7 @@ def post_horario():
 
 
 @bp_agenda.route('/api/v1/agenda/horario/profissional', methods=['GET'])
+@token_required
 def get_horario_profissional():
     """
     Busca Horarios de um profissional, por intervalo de datas para atendimento
@@ -131,3 +132,70 @@ def get_horario_profissional():
         return jsonify({'message': 'Horario not found'}), 404
 
     return HorarioSchema(many=True).jsonify(horario), 200
+
+
+@bp_agenda.route('/api/v1/agenda/consulta', methods=['POST'])
+@token_required
+def post_consulta():
+    """
+    Adiciona uma consulta
+    {
+        'dataMarcacao': '2019-05-03T00:20:03.364Z',
+        'confirmacao_consulta_sms': False,
+        'compareceu': False,
+        'paciente': {
+            'id': 422876,
+            'nome': 'Bianca D ´Armas Ferraz'
+        },
+        'quem_marcou_id': 266,
+        'horario_id': 34,
+        'convenio': {
+            'id': 32,
+            'descricao': 'Particular'}
+    }
+    TODO: Atualizar o horario para ocupado.
+
+    """
+
+    data = request.json
+    print(data)
+    
+    if not data:
+        return jsonify({'message': 'Fail do add Consulta'}), 404
+
+    consulta = Consulta.query.filter_by(
+        dt_marcacao = data['dataMarcacao'],
+        compareceu = data['compareceu'],
+        confirmacao_consulta_sms = data['confirmacao_consulta_sms'],
+        paciente_id = data['paciente']['id'],
+        profissional_id = data['quem_marcou_id'],
+        horario_id = data['horario_id'],
+        convenio_id = data['convenio']['id']
+    ).first()
+
+    if not consulta:
+        consulta = Consulta(
+            dt_marcacao = data['dataMarcacao'],
+            compareceu = data['compareceu'],
+            confirmacao_consulta_sms = data['confirmacao_consulta_sms'],
+            paciente_id = data['paciente']['id'],
+            profissional_id = data['quem_marcou_id'],
+            horario_id = data['horario_id'],
+            convenio_id = data['convenio']['id']
+        )
+    else:
+        return jsonify({'message': 'Consulta already exists'}), 409
+
+    horario = Horario.query.filter_by(id = data['horario_id']).first()
+    horario.livre = False
+
+    try:
+        current_app.db.session.add(consulta)
+        current_app.db.session.commit()
+    except SQLAlchemyError as e:
+        print(e)
+        return jsonify({'message': 'Fail to add consulta'}), 400
+
+    return ConsultaSchema().jsonify(consulta), 201
+
+

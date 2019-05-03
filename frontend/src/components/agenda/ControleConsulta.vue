@@ -40,17 +40,17 @@
               <b-select 
               placeholder="Convênio"
               expanded
-              v-model="form.convenios"
+              v-model="form.convenio"
               >
                 <option
                 v-for="c in apiConvenios"
-                :value="c.descricao"
+                :value="c"
                 :key="c.id"
                 >
                 {{ c.descricao }}
                 </option>
               </b-select>
-              <p v-show="validation.hasError('form.convenios')" class="help is-danger">{{ validation.firstError('form.convenios') }}</p>
+              <p v-show="validation.hasError('form.convenio')" class="help is-danger">{{ validation.firstError('form.convenio') }}</p>
             </div>
           </div>
         </div>
@@ -105,11 +105,16 @@ export default {
       date: '',
       apiConvenios: [],
       form: {
+        dataMarcacao: null,
+        confirmacao_consulta_sms: false,
+        compareceu: false,
         paciente: {
           id: '',
           nome: ''
         },
-        convenios: []
+        quem_marcou_id: '',
+        horario_id: '',
+        convenio: []
       },
       modal: {
         isLoading: false,
@@ -133,7 +138,7 @@ export default {
     'form.paciente.nome': function (value) {
       return Validator.value(value).required()
     },
-    'form.convenios': function (value) {
+    'form.convenio': function (value) {
       return Validator.value(value).required()
     }
   },
@@ -143,6 +148,8 @@ export default {
   methods: {
     initApp () {
       this.date = `${moment.utc(this.event.date).format('dddd, DD MMMM YYYY')} das ${this.event.startTime} as ${this.event.endTime}`
+      this.form.horario_id = this.event.horario_id
+      this.form.quem_marcou_id = localStorage.getItem('profissional_id')
     },
     salvarConsulta () {
       console.log('Salvar NOVA consulta')
@@ -150,8 +157,41 @@ export default {
       // TODO: SALVAR CONSULTA NO BANCO
       // TODO: Enviar SMS para o paciente, se o celular estiver preenchido
 
+      let vm = this
       this.$validate()
-      .then(response => {})
+      .then(response => {
+        if (response) {
+          let data = this.form
+          data.dataMarcacao = new Date()
+          HTTP
+          .post(`${API_URL}agenda/consulta`, data)
+        .then(function (response) {
+          // console.log(response)
+          if (response) {
+            // console.log(response.data)
+            vm.$toast.open({
+              message:
+                'CONSULTA salav com sucesso',
+              type: 'is-success',
+              position: 'is-bottom'
+            })
+            vm.$parent.close()
+          }
+        })
+        .catch(function (error) {
+          // console.log(error)
+          vm.$toast.open({
+            message:
+              'FALHA ao gravar uma CONSULTA',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        })
+        .finally(function () {
+          // vm.modal.isLoading = false
+        })
+        }
+      })
       .catch(error => {})
     },
     pesquisaPaciente () {
@@ -223,7 +263,7 @@ export default {
       HTTP
       .get(`${API_URL}ps-paciente/${pacienteID}`, {})
       .then(function (response) {
-        // console.log(response.data)
+        console.log(response.data)
         let convenios = response.data
 
         convenios.forEach(c => {
