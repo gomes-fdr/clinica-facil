@@ -35,10 +35,10 @@
       <button type="reset" class="button" @click.prevent="getProntuarioLegado">Visualizar Legado</button>
     </p>
     <p class="control">
-      <a class="button" :disabled="bGravar" @click.prevent="visualizarHistorico(form.id)">Visualizar Histórico</a>
+      <a class="button" :disabled="true" @click.prevent="visualizarHistorico(form.id)">Visualizar Histórico</a>
     </p>
     <p class="control">
-      <button class="button" :disabled="submitted" @click.prevent="salavrEvolucao(form.id)">Salvar Evolução</button>
+      <button class="button" :disabled="true" @click.prevent="salavrEvolucao(form.id)">Salvar Evolução</button>
     </p>
   </div>
 

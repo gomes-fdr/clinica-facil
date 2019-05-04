@@ -102,7 +102,7 @@
     </div>
     <div class="field is-grouped is-grouped-right">
       <p class="control">
-        <a class="button is-info" >Agenda Atendimento</a>
+        <a class="button is-info" :disabled="true">Agenda Atendimento</a>
       </p>
       <p class="control">
         <a class="button is-info" @click.prevent="showCalendar">Horários Vagos</a>

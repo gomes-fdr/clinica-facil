@@ -117,17 +117,7 @@
 
 </b-modal>
 
- <b-notification :closable="false">
-    <b-loading :is-full-page="true" :active.sync="espera.isLoading" :can-cancel="true">
-        <b-icon
-            pack="fas"
-            icon="sync-alt"
-            size="is-large"
-            custom-class="fa-spin">
-        </b-icon>
-    </b-loading>
-</b-notification>
-
+ 
 
 </div>
 </template>
@@ -171,8 +161,12 @@ export default {
         isLoading: false
       },
       formHorario: {
-        local: {},
-        profissional: {},
+        local: {
+          descricao: ''
+        },
+        profissional: {
+          nome: ''
+        },
         duracao: ''
       },
       componentKey: 0,
