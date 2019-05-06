@@ -31,6 +31,7 @@ class Perfil(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     descricao = db.Column(db.String(100))
     permissao = db.Column(db.Integer)
+    is_especialista = db.Column(db.Boolean, default=True)
 
     profissionais = db.relationship('Profissional', backref='perfil', lazy='dynamic')
 

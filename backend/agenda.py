@@ -2,8 +2,8 @@ from datetime import datetime
 from flask import Blueprint, current_app, jsonify, request
 from .token import token_required
 from backend.models.agenda import Local, Horario, Consulta
-from backend.models.profissional import Profissional
-from .serealizer import LocalSchema, HorarioSchema, ConsultaSchema
+from backend.models.profissional import Profissional, Perfil
+from .serealizer import LocalSchema, HorarioSchema, ConsultaSchema, PerfilSchema
 
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -198,4 +198,18 @@ def post_consulta():
 
     return ConsultaSchema().jsonify(consulta), 201
 
+
+@bp_agenda.route('/api/v1/agenda/especialidades', methods=['GET'])
+@token_required
+def get_especialidades():
+    """
+    Busca especialidades disponiveis para atendimento
+    """
+
+    especialidades = Perfil.query.filter_by(is_especialista = True).all()
+
+    if not especialidades:
+        return jsonify({'message': 'Especialidades not found'}), 404
+
+    return PerfilSchema(many=True).jsonify(especialidades), 200
 

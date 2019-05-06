@@ -6,13 +6,16 @@
       <div class="level-item has-text-centered">
         <div class="block">
             <b-radio v-model="formControl.radio"
-                native-value="Profissional">
-                Profissional
+                native-value="Especialidade">
+                Por Especialidade
             </b-radio>
-            
             <b-radio v-model="formControl.radio" :disabled="formControl.isProfissionalDisabled"
                 native-value="TodosProfissionais">
                 Todos os profissionais
+            </b-radio>
+            <b-radio v-model="formControl.radio"
+                native-value="Profissional">
+                Profissional
             </b-radio>
         </div>
       </div>
@@ -54,7 +57,7 @@
       </div>
     </div>
     <div class="field is-horizontal">
-      <div class="field-label is-normal" v-show="(formControl.radio == 'Paciente') || (formControl.radio == 'Profissional')">
+      <div class="field-label is-normal" v-show="(formControl.radio == 'Especialidade') || (formControl.radio == 'Profissional')">
         <label class="label">Horários</label>
       </div>
       <div class="field-body">
@@ -77,6 +80,20 @@
             </div>
           </div>
           <p v-show="validation.hasError('formData.nomePaciente')" class="help is-danger">{{ validation.firstError('formData.nomePaciente') }}</p>
+        </div>
+        <div class="field" v-if="formControl.radio == 'Especialidade'">
+          <b-select 
+          placeholder="Especialidade"
+          expanded
+          >
+            <option
+            v-for="e in apiEspecialidade"
+            :value="e.id"
+            :key="e.id"
+            >
+              {{e.descricao}}
+            </option>
+          </b-select>
         </div>
         <div class="field" v-if="formControl.radio == 'Profissional'">
           <div class="field has-addons">
@@ -102,7 +119,7 @@
     </div>
     <div class="field is-grouped is-grouped-right">
       <p class="control">
-        <a class="button is-info" :disabled="true">Agenda Atendimento</a>
+        <a class="button is-info" :disabled="true">Horários Preenchidos</a>
       </p>
       <p class="control">
         <a class="button is-info" @click.prevent="showCalendar">Horários Vagos</a>
@@ -154,6 +171,7 @@ export default {
   },
   data () {
     return {
+      apiEspecialidade: [],
       modal: {
         calendario: {
           isActive: false
@@ -163,7 +181,7 @@ export default {
         }
       },
       formControl: {
-        radio: 'TodosProfissionais',
+        radio: 'Especialidade',
         isProfissionalDisabled: false
       },
       formData: {
@@ -283,10 +301,22 @@ export default {
       // console.log(event)
       this.event = event
       this.modal.agenda.isActive = true
+    },
+    carregaEspecialidades () {
+      console.log('Carregando as especialidades...')
+      HTTP
+      .get(`${API_URL}agenda/especialidades`)
+      .then(response => {
+        this.apiEspecialidade = response.data
+      })
+      .catch(error => {})
     }
   },
   mounted () {
     this.initApp()
+  },
+  created () {
+    this.carregaEspecialidades()
   }
 }
 </script>
