@@ -86,6 +86,7 @@ export default {
   methods: {
     login () {
       var vm = this
+      console.log(process.env.API_URL)
       this.$validate().then(function (success) {
         if (success) {
 

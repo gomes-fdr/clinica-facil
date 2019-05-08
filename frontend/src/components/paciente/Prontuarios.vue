@@ -66,13 +66,13 @@
 </template>
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
-import { API_URL, eBus } from '../../main'
+import { eBus } from '../../main'
 import axios from 'axios'
 
 var moment = require('moment')
 
 const HTTP = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.API_URL,
   headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 
@@ -115,7 +115,7 @@ export default {
       console.log('Prontuário legado')
       let vm = this
       HTTP
-        .get(`${API_URL}paciente/prontuario-legado/${vm.form.id}`, {
+        .get(`${process.env.API_URL}paciente/prontuario-legado/${vm.form.id}`, {
         })
         .then(function (response) {
           // console.log(response.data)

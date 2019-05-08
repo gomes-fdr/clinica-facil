@@ -307,14 +307,14 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
-import { API_URL, eBus } from '../../main'
+import { eBus } from '../../main'
 import axios from 'axios'
 import _ from 'lodash'
 
 var moment = require('moment')
 
 const HTTP = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.API_URL,
   headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 
@@ -424,7 +424,7 @@ export default {
       }
       let vm = this
       HTTP
-        .get(`${API_URL}profissional/nome-completo/${vm.tabProfissional.selected.nome}`, {
+        .get(`${process.env.API_URL}profissional/nome-completo/${vm.tabProfissional.selected.nome}`, {
         })
       .then(function (response) {
         // console.log(response)
@@ -455,7 +455,7 @@ export default {
     perfilProfissional () {
       let vm = this
       HTTP
-        .get(`${API_URL}profissional/perfil`, {
+        .get(`${process.env.API_URL}profissional/perfil`, {
         })
       .then(function (response) {
         // console.log(response.data)
@@ -465,7 +465,7 @@ export default {
     situacaoProfissional () {
       let vm = this
       HTTP
-        .get(`${API_URL}profissional/situacao`, {
+        .get(`${process.env.API_URL}profissional/situacao`, {
         })
       .then(function (response) {
         // console.log(response.data)
@@ -480,7 +480,7 @@ export default {
       let vm = this
       vm.tabProfissional.isLoading = true
       HTTP
-        .get(`${API_URL}profissional/nome/${vm.form.nome}`, {
+        .get(`${process.env.API_URL}profissional/nome/${vm.form.nome}`, {
         })
       .then(function (response) {
         // console.log(response)
@@ -507,7 +507,7 @@ export default {
       }
       let vm = this
       HTTP
-        .get(`${API_URL}profissional/cpf/${vm.form.cpf}`, {
+        .get(`${process.env.API_URL}profissional/cpf/${vm.form.cpf}`, {
         })
         .then(function (response) {
           let tmp = response.data
@@ -547,7 +547,7 @@ export default {
           data.dt_nascimento = dtTmp
           // console.log(JSON.stringify(data))
           vm.$http
-          .post(`${API_URL}profissional`, data)
+          .post(`${process.env.API_URL}profissional`, data)
           .then(function (response) {
             // console.log(response)
             vm.$toast.open({
@@ -656,7 +656,7 @@ export default {
           }
           console.log(JSON.stringify(data))
           HTTP
-          .post(`${API_URL}profissional/${vm.form.nome}`, data)
+          .post(`${process.env.API_URL}profissional/${vm.form.nome}`, data)
           .then(function (response) {
             // console.log(response)
             vm.$toast.open({
@@ -693,7 +693,7 @@ export default {
       let vm = this
 
       HTTP
-      .post(`${API_URL}profissional/reset-senha`, data)
+      .post(`${process.env.API_URL}profissional/reset-senha`, data)
       .then(function (response) {
         console.log(response)
         vm.$toast.open({

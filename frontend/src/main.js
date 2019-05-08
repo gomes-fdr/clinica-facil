@@ -8,6 +8,10 @@ import 'v-calendar-scheduler/lib/main.css'
 import acl from './acl'
 
 Vue.config.productionTip = true
+Vue.config.errorHandler = err => {
+  console.log('Exception: ', err)
+}
+
 Vue.use(VueMask)
 Vue.use(VueScheduler, {
   locale: 'pt-br',
@@ -25,8 +29,6 @@ Vue.use(VueScheduler, {
   timeRange: [8, 20]
 })
 
-// export const API_URL = 'http://localhost:5000/api/v1/'
-export const API_URL = 'https://sistema-darmas.com.br/api/v1/'
 export const eBus = new Vue()
 
 /* eslint-disable no-new */

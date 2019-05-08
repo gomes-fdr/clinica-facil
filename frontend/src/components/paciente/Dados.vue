@@ -321,14 +321,14 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 import auth from '../../auth'
-import { API_URL, eBus } from '../../main'
+import { eBus } from '../../main'
 import axios from 'axios'
 import _ from 'lodash'
 
 var moment = require('moment')
 
 const HTTP = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.API_URL,
   headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 
@@ -443,7 +443,7 @@ export default {
       }
       let vm = this
       HTTP
-      .get(`${API_URL}paciente/nome-completo/${vm.tabPaciente.selected.nome}`)
+      .get(`${process.env.API_URL}paciente/nome-completo/${vm.tabPaciente.selected.nome}`)
       .then(function (response) {
         // console.log(response)
         let tmp = response.data
@@ -485,7 +485,7 @@ export default {
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('-', '')
       HTTP
-        .get(`${API_URL}paciente/cpf/${cpf}`, {
+        .get(`${process.env.API_URL}paciente/cpf/${cpf}`, {
         })
         .then(function (response) {
           if (response.data) {
@@ -596,7 +596,7 @@ export default {
       let vm = this
       vm.tabPaciente.isLoading = true
       HTTP
-        .get(`${API_URL}paciente/nome/${vm.form.nome}`, {
+        .get(`${process.env.API_URL}paciente/nome/${vm.form.nome}`, {
         })
       .then(function (response) {
         // console.log(response)
@@ -631,7 +631,7 @@ export default {
           data.dt_nascimento = dtTmp
           // console.log(JSON.stringify(data))
           vm.$http
-          .post(`${API_URL}paciente`, data)
+          .post(`${process.env.API_URL}paciente`, data)
           .then(function (response) {
             console.log(response)
             vm.$toast.open({
@@ -672,7 +672,7 @@ export default {
       // console.log(JSON.stringify(data))
 
       HTTP
-      .post(`${API_URL}paciente/${this.form.cpf}`, data)
+      .post(`${process.env.API_URL}paciente/${this.form.cpf}`, data)
       .then(function (response) {
         // console.log(response)
         vm.$toast.open({

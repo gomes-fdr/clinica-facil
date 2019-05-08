@@ -49,11 +49,11 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
-import { API_URL, eBus } from '../../main'
+import { eBus } from '../../main'
 import axios from 'axios'
 
 const HTTP = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.API_URL,
   headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 
@@ -100,7 +100,7 @@ export default {
           if (success) {
             console.log(data)
             HTTP
-            .post(`${API_URL}profissional/reset-senha`, data)
+            .post(`${process.env.API_URL}profissional/reset-senha`, data)
             .then(function (response) {
               console.log(response)
               vm.$toast.open({

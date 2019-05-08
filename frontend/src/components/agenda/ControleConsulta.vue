@@ -82,13 +82,12 @@
 </template>
 <script>
 import axios from 'axios'
-import { API_URL } from '../../main'
 import SimpleVueValidation from 'simple-vue-validator'
 
 var moment = require('moment')
 
 const HTTP = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.API_URL,
   headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 const Validator = SimpleVueValidation.Validator.create({
@@ -164,7 +163,7 @@ export default {
           let data = this.form
           data.dataMarcacao = new Date()
           HTTP
-          .post(`${API_URL}agenda/consulta`, data)
+          .post(`${process.env.API_URL}agenda/consulta`, data)
         .then(function (response) {
           // console.log(response)
           if (response) {
@@ -202,7 +201,7 @@ export default {
 
       let vm = this
       HTTP
-        .get(`${API_URL}paciente/nome/${vm.form.paciente.nome}`, {
+        .get(`${process.env.API_URL}paciente/nome/${vm.form.paciente.nome}`, {
         })
       .then(function (response) {
         // console.log(response)
@@ -228,7 +227,7 @@ export default {
       console.log('Copia paciente')
       let vm = this
       HTTP
-      .get(`${API_URL}paciente/nome-completo/${vm.modal.selected.nome}`)
+      .get(`${process.env.API_URL}paciente/nome-completo/${vm.modal.selected.nome}`)
       .then(function (response) {
         // console.log(response)
         let paciente = response.data
@@ -261,7 +260,7 @@ export default {
       let vm = this
 
       HTTP
-      .get(`${API_URL}ps-paciente/${pacienteID}`, {})
+      .get(`${process.env.API_URL}ps-paciente/${pacienteID}`, {})
       .then(function (response) {
         console.log(response.data)
         let convenios = response.data

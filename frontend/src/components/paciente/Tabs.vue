@@ -46,6 +46,9 @@ export default {
       if (this.activeTab === 1) {
         console.log('Carregando convênios...')
       }
+    },
+    isEnable () {
+      // Para habilitar/desabilitar tabs Convênios e prontuários
     }
   }
 }

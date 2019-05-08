@@ -119,7 +119,7 @@
     </div>
     <div class="field is-grouped is-grouped-right">
       <p class="control">
-        <a class="button is-info" :disabled="true">Horários Preenchidos</a>
+        <a class="button is-info" :disabled="false" >Horários Preenchidos</a>
       </p>
       <p class="control">
         <a class="button is-info" @click.prevent="showCalendar">Horários Vagos</a>
@@ -134,6 +134,7 @@
       event-display="name"
       @event-clicked="eventClicked"
       :disable-dialog="true"
+      :initialDate = "dataInicial"
     >
     </vue-scheduler>
   </b-modal>
@@ -149,7 +150,6 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
-import { API_URL } from '../../main'
 import axios from 'axios'
 import ControleConsulta from './ControleConsulta'
 
@@ -159,9 +159,10 @@ const Validator = SimpleVueValidation.Validator.create({
   }
 })
 const HTTP = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.API_URL,
   headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
+
 var moment = require('moment')
 
 export default {
@@ -257,7 +258,7 @@ export default {
         if (response) {
           console.log('Calendario de eventos')
           HTTP
-          .get(`${API_URL}agenda/horario/profissional?dt_inicio=${vm.formData.dt_inicio}&dt_fim=${vm.formData.dt_fim}&livre=true`, {})
+          .get(`${process.env.API_URL}agenda/horario/profissional?dt_inicio=${vm.formData.dt_inicio}&dt_fim=${vm.formData.dt_fim}&livre=true`, {})
           .then(function (response) {
             let data = response.data
             data.forEach(e => {
@@ -305,11 +306,53 @@ export default {
     carregaEspecialidades () {
       console.log('Carregando as especialidades...')
       HTTP
-      .get(`${API_URL}agenda/especialidades`)
+      .get(`${process.env.API_URL}agenda/especialidades`)
       .then(response => {
         this.apiEspecialidade = response.data
       })
       .catch(error => {})
+    },
+    enviaSMS () {
+      console.log('Envia SMS')
+
+      const msg = {
+        sendSmsRequest: {
+          from: 'Fargos Sistemas',
+          to: '5551995489581',
+          schedule: '2019-05-08T11:43:00',
+          msg: 'Sistema darmas sabe mandar SMS',
+          callbackOption: 'NONE',
+          id: '004',
+          aggregateId: '49548',
+          flashSms: false
+        }
+      }
+
+      // msg.sendSmsRequest.schedule = moment.utc()
+
+      let ZENVIA = axios.create({
+        baseURL: 'https://api-rest.zenvia.com/services',
+        auth: {
+          username: 'fdrgomes.smsonline',
+          password: 'O6m9MzWkQG'
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'CrossDomain': true
+        }
+      })
+
+      // console.log(JSON.stringify(msg))
+
+      ZENVIA
+      .post('/send-sms', msg)
+      .then(response => {
+        console.log(response.data)
+      })
+      .catch(error => {
+        // console.log(error)
+      })
     }
   },
   mounted () {
@@ -317,6 +360,12 @@ export default {
   },
   created () {
     this.carregaEspecialidades()
+  },
+  computed: {
+    dataInicial () {
+      let dtTmp = moment.utc(this.formData.dt_inicio, 'DD/MM/YYYY')
+      return dtTmp
+    }
   }
 }
 </script>

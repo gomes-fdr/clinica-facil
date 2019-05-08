@@ -97,14 +97,14 @@
 </div>
 </template>
 <script>
-import { API_URL, eBus } from '../../main'
+import { eBus } from '../../main'
 import axios from 'axios'
 import SimpleVueValidation from 'simple-vue-validator'
 
 var moment = require('moment')
 
 const HTTP = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.API_URL,
   headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 
@@ -193,7 +193,7 @@ export default {
       let vm = this
 
       HTTP
-      .get(`${API_URL}ps-paciente/${pacienteID}`, {})
+      .get(`${process.env.API_URL}ps-paciente/${pacienteID}`, {})
       .then(function (response) {
         // console.log(response)
         let data = response.data
@@ -222,7 +222,7 @@ export default {
       this.modal.isAddPSActive = false
 
       HTTP
-      .get(`${API_URL}ps`, {})
+      .get(`${process.env.API_URL}ps`, {})
       .then(function (response) {
         // console.log(response)
         vm.modal.data = response.data
@@ -245,7 +245,7 @@ export default {
       let vm = this
 
       HTTP
-      .post(`${API_URL}ps/${vm.form.ps.descricao}`)
+      .post(`${process.env.API_URL}ps/${vm.form.ps.descricao}`)
       .then(function (response) {
         // console.log(response)
         vm.reset()
@@ -266,7 +266,7 @@ export default {
         if (response) {
           // console.log(data)
           HTTP
-          .post(`${API_URL}ps-paciente`, data)
+          .post(`${process.env.API_URL}ps-paciente`, data)
           .then(function (response) {
             // console.log(response)
             vm.reset()
@@ -297,7 +297,7 @@ export default {
       let p = {}
       for (p in this.table.checkedRows) {
         HTTP
-        .get(`${API_URL}ps-paciente/delete/${vm.table.checkedRows[p].id}`, {})
+        .get(`${process.env.API_URL}ps-paciente/delete/${vm.table.checkedRows[p].id}`, {})
         .then(function (response) {
           // console.log(response)
         })

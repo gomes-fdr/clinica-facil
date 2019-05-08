@@ -2,7 +2,6 @@
 /* globals localStorage */
 
 import axios from 'axios'
-import { API_URL } from './main'
 
 export default {
 
@@ -72,7 +71,7 @@ function pretendRequest (email, pass, cb) {
   setTimeout(() => {
     axios({
       method: 'post',
-      url: API_URL + 'token',
+      url: process.env.API_URL + 'token',
       data: {
         email: email,
         password: pass

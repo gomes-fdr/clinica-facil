@@ -123,7 +123,6 @@
 </template>
 <script>
 import { remove } from 'lodash'
-import { API_URL } from '../../main'
 import SimpleVueValidation from 'simple-vue-validator'
 import axios from 'axios'
 
@@ -136,7 +135,7 @@ const Validator = SimpleVueValidation.Validator.create({
 })
 
 const HTTP = axios.create({
-  baseURL: API_URL,
+  baseURL: process.env.API_URL,
   headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 
@@ -330,8 +329,9 @@ export default {
     },
     salvarAgenda (event) {
       console.log('Salva agenda no banco')
+      // let data = event
       HTTP
-      .post(`${API_URL}agenda/horario`, event)
+      .post('agenda/horario', event)
       .then(function (response) {
         console.log(response)
         // vm.modal.local.data = response.data
@@ -357,13 +357,13 @@ export default {
       this.modal.local.isAdd = false
 
       HTTP
-      .get(`${API_URL}agenda/sala`, {})
+      .get(`${process.env.API_URL}agenda/sala`, {})
       .then(function (response) {
         // console.log(response)
         vm.modal.local.data = response.data
       })
       .catch(function (error) {
-        console.log(error)
+        console.log(error.response)
       })
 
     },
@@ -373,7 +373,7 @@ export default {
       let vm = this
 
       HTTP
-      .post(`${API_URL}agenda/sala/${vm.formHorario.local}`)
+      .post(`${process.env.API_URL}agenda/sala/${vm.formHorario.local.descricao}`)
       .then(function (response) {
         // console.log(response)
         // vm.reset()
@@ -396,10 +396,10 @@ export default {
       this.modal.profissional.isActive = true
 
       HTTP
-      .get(`${API_URL}profissional/nome/${vm.formHorario.profissional.nome}`, {
+      .get(`${process.env.API_URL}profissional/nome/${vm.formHorario.profissional.nome}`, {
       })
       .then(function (response) {
-        console.log(response)
+        // console.log(response)
         vm.modal.profissional.data = response.data
         // vm.isImageModalActive = true
       })
