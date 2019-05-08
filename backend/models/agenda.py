@@ -18,6 +18,7 @@ class Horario(db.Model):
     hora_fim = db.Column(db.String(5))
     duracao = db.Column(db.Integer)
     livre = db.Column(db.Boolean, default=True)
+    is_encaixe = db.Column(db.Boolean, default=False)
 
     local_id = db.Column(db.Integer, db.ForeignKey('local.id'))
     profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'))

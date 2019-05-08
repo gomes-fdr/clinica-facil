@@ -8,6 +8,7 @@ from backend.models.profissional import Profissional, Perfil, Situacao
 from backend.models.prontuario import ProntuarioLegado
 from backend.models.ps import PlanoSaude, PlanoSaudePaciente
 from backend.models.agenda import (Local, Horario, Consulta)
+from backend.models.cid import Cid
 
 ma = Marshmallow()
 
@@ -118,3 +119,8 @@ class HorarioSchema(ma.ModelSchema):
 class ConsultaSchema(ma.ModelSchema):
     class Meta:
         model = Consulta
+
+
+class CidSchema(ma.ModelSchema):
+    class Meta:
+        model = Cid
