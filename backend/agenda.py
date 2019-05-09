@@ -111,6 +111,7 @@ def post_horario():
 def get_horario_profissional():
     """
     Busca Horarios de um profissional, por intervalo de datas para atendimento
+    Retorna:
     {
     "dt_dia": "2019-05-04T13:12:21.759000",
     "hora_fim": "11:45",
@@ -122,16 +123,43 @@ def get_horario_profissional():
     "profissional_id": 264
     }
     """
+    print(request.args)
+    selecao = request.args['selecao']
     dt_inicio = datetime.strptime(request.args['dt_inicio'], '%d/%m/%Y')
     dt_fim = datetime.strptime(request.args['dt_fim'], '%d/%m/%Y')
     livre = request.args['livre'] == 'true'
 
-    horario = Horario.query.filter(Horario.dt_dia >= dt_inicio, Horario.dt_dia <= dt_fim, Horario.livre == livre).all()
+    if selecao == 'profissional':
+        profissional_id = request.args['profissional_id']
+        if not profissional_id:
+            return jsonify({'message': 'profissional_id is empty'}), 409
 
-    if not horario:
-        return jsonify({'message': 'Horario not found'}), 404
+        if profissional_id == '*':
+            horarios = Horario.query.filter(Horario.dt_dia >= dt_inicio, Horario.dt_dia <= dt_fim, Horario.livre == livre).all()
+        else:
+            horarios = Horario.query.filter(Horario.dt_dia >= dt_inicio,
+                                        Horario.dt_dia <= dt_fim,
+                                        Horario.livre == livre,
+                                        Horario.profissional_id == profissional_id).all()
+    elif selecao == 'especialidade':
+        especialidade = request.args['especialdade_id']
+        if not especialidade:
+            return jsonify({'message': 'especialidade is empty'}), 409
+        else:
+            perfil = Perfil.query.filter_by(id = especialidade).first()
+            profissionais = Profissional.query.filter_by(perfil_id = perfil.id).all()
+            horarios = Horario.query.filter(Horario.dt_dia >= dt_inicio,
+                                        Horario.dt_dia <= dt_fim,
+                                        Horario.livre == livre,
+                                        Horario.profissional_id.in_(( p.id for p in profissionais ))).all()
+    else:
+        return jsonify({'message': 'Invalid parameters'}), 409
 
-    return HorarioSchema(many=True).jsonify(horario), 200
+
+    if not horarios:
+        return jsonify({'message': 'Horario(s) not found'}), 404
+
+    return HorarioSchema(many=True).jsonify(horarios), 200
 
 
 @bp_agenda.route('/api/v1/agenda/consulta', methods=['POST'])
@@ -153,15 +181,13 @@ def post_consulta():
             'id': 32,
             'descricao': 'Particular'}
     }
-    TODO: Atualizar o horario para ocupado.
-
     """
 
     data = request.json
     print(data)
     
     if not data:
-        return jsonify({'message': 'Fail do add Consulta'}), 404
+        return jsonify({'message': 'Fail to add Consulta'}), 404
 
     consulta = Consulta.query.filter_by(
         dt_marcacao = data['dataMarcacao'],

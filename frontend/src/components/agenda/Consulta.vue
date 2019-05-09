@@ -85,6 +85,7 @@
           <b-select 
           placeholder="Especialidade"
           expanded
+          v-model="formData.especialidade"
           >
             <option
             v-for="e in apiEspecialidade"
@@ -189,7 +190,8 @@ export default {
         dt_inicio: '',
         dt_fim: '',
         nomeProfissional: '',
-        nomePaciente: ''
+        nomePaciente: '',
+        especialidade: ''
       },
       events: [],
       event: {
@@ -251,14 +253,29 @@ export default {
     },
     showCalendar () {
       let vm = this
+      let selecao = ''
+      let profissionalID = ''
+      let especialidadeID = ''
+      let url = ''
       vm.events = []
+
+      if ((vm.formControl.radio === 'TodosProfissionais') || (vm.formControl.radio === 'Profissionais')) {
+        selecao = 'profissional'
+        if (vm.formControl.radio === 'TodosProfissionais') profissionalID = '*'
+        else if (vm.formControl.radio === 'Profissionais') profissionalID = localStorage.getItem('profissional_id')
+        url = `agenda/horario/profissional?selecao=${selecao}&profissional_id=${profissionalID}&dt_inicio=${vm.formData.dt_inicio}&dt_fim=${vm.formData.dt_fim}&livre=true`
+      } if (vm.formControl.radio === 'Especialidade') {
+        selecao = 'especialidade'
+        especialidadeID = vm.formData.especialidade
+        url = `agenda/horario/profissional?selecao=${selecao}&especialdade_id=${especialidadeID}&dt_inicio=${vm.formData.dt_inicio}&dt_fim=${vm.formData.dt_fim}&livre=true`
+      }
 
       this.$validate()
       .then(function (response) {
         if (response) {
           console.log('Calendario de eventos')
           HTTP
-          .get(`${process.env.API_URL}agenda/horario/profissional?dt_inicio=${vm.formData.dt_inicio}&dt_fim=${vm.formData.dt_fim}&livre=true`, {})
+          .get(`${process.env.API_URL}${url}`, {})
           .then(function (response) {
             let data = response.data
             data.forEach(e => {
@@ -270,7 +287,9 @@ export default {
                 horario_id: null,
                 profissional_id: null
               }
-              event.date = e.dt_dia
+              // console.log('data do evento: ' + e.dt_dia.split('T')[0])
+              // console.log(typeof e.dt_dia)
+              event.date = moment(e.dt_dia.split('T')[0], 'YYYY-MM-DD').toDate()
               event.startTime = e.hora_ini
               event.endTime = e.hora_fim
               event.name = e.profissional.nome
@@ -278,12 +297,13 @@ export default {
               event.horario_id = e.id
               vm.events.push(event)
             })
-            // console.log(vm.events)
             vm.modal.calendario.isActive = true
+            // console.log(vm.events)
           })
           .catch(function (error) {
-            console.log(error.response.status)
-            if (error.response.status === 404) {
+            // console.log(error.response.status)
+            // if (error.response.status === 404) {
+            if (error) {
               vm.$toast.open({
                 message:
                   'NENHUM HORARIO encontrado',
@@ -363,7 +383,7 @@ export default {
   },
   computed: {
     dataInicial () {
-      let dtTmp = moment.utc(this.formData.dt_inicio, 'DD/MM/YYYY')
+      let dtTmp = moment.utc(this.formData.dt_inicio, 'DD/MM/YYYY').toDate()
       return dtTmp
     }
   }
