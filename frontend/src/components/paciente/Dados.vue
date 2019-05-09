@@ -266,6 +266,7 @@
       </div>
     </div>
 
+
      <div class="field is-horizontal">
       <div class="field-label is-normal">
         <label class="label">Observações</label>
@@ -283,6 +284,19 @@
         </div>
       </div>
     </div>
+
+     <div class="field is-horizontal">
+       <div class="field-label is-normal">
+        <label class="label">CID Associada</label>
+      </div>
+      <div class="field-body">
+        <div class="field ">
+          <p class="is-size-5">
+            <button type="button" :disabled="true" class="button is-rounded is-warning" @click.prevent="cidAssociada">Visualizar</button>
+          </p>
+        </div>
+      </div>
+     </div>
 
     <div class="field is-grouped is-grouped-right">
       <div class="control is-grouped-right">
@@ -713,6 +727,9 @@ export default {
         }
         return false
       })
+    },
+    cidAssociada () {
+      console.log('Mostra CID Associada ao paciente')
     }
   },
   computed: {

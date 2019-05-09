@@ -59,6 +59,23 @@
         </div>
       </div>
     </div>
+
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Consultas</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <input class="input" placeholder="Permitidas">
+        </div>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <input class="input" placeholder="Realizdas">
+        </div>
+      </div>
+    </div>
+
     <div class="field is-grouped is-grouped-right">
       <p class="control">
         <a class="button is-info" @click.prevent="gravaPSPaciente">Adicionar Convênio</a>

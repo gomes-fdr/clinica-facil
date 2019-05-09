@@ -8,9 +8,6 @@ import 'v-calendar-scheduler/lib/main.css'
 import acl from './acl'
 
 Vue.config.productionTip = true
-Vue.config.errorHandler = err => {
-  console.log('Exception: ', err)
-}
 
 Vue.use(VueMask)
 Vue.use(VueScheduler, {
