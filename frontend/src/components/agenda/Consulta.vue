@@ -5,7 +5,7 @@
     <section class="level">
       <div class="level-item has-text-centered">
         <div class="block">
-            <b-radio v-model="formControl.radio"
+            <b-radio v-model="formControl.radio" :disabled="formControl.isProfissionalDisabled"
                 native-value="Especialidade">
                 Por Especialidade
             </b-radio>
@@ -118,9 +118,10 @@
         </div>
       </div>
     </div>
+    <hr>
     <div class="field is-grouped is-grouped-right">
       <p class="control">
-        <a class="button is-info" :disabled="false" >Horários Preenchidos</a>
+        <a class="button is-info" :disabled="false" @click.prevent="consultasMarcadas">Consultas Marcadas</a>
       </p>
       <p class="control">
         <a class="button is-info" @click.prevent="showCalendar">Horários Vagos</a>
@@ -318,6 +319,9 @@ export default {
         console.log(error)
       })
     },
+    consultasMarcadas () {
+      console.log('Consultas Marcadas')
+    },
     eventClicked (event) {
       // console.log(event)
       this.event = event
@@ -339,7 +343,7 @@ export default {
         sendSmsRequest: {
           from: 'Fargos Sistemas',
           to: '5551995489581',
-          schedule: '2019-05-08T11:43:00',
+          schedule: '2019-05-09T20:49:00',
           msg: 'Sistema darmas sabe mandar SMS',
           callbackOption: 'NONE',
           id: '004',

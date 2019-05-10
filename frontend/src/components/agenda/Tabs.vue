@@ -6,10 +6,10 @@
       </header>
       <br>
       <b-tabs position="is-centered"  type="is-toggle-rounded" v-model="activeTab">
-        <b-tab-item label="Consulta">
+        <b-tab-item label="Marcar Consulta">
           <consulta/>
         </b-tab-item>
-        <b-tab-item label="Horários" v-if="!formControl.isHorarioDisabled">
+        <b-tab-item label="Disponibilizar Horários" v-if="!formControl.isHorarioDisabled">
           <horarios/>
         </b-tab-item>
       </b-tabs>

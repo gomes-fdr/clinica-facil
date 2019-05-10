@@ -3,7 +3,6 @@
   <p class=" has-text-black has-text-centered">Sala: {{formHorario.local.descricao}}</p>
   <p class=" has-text-black has-text-centered">Profissional: {{formHorario.profissional.nome}}</p>
   <form>
-    <div class="section">
 
       <div class="field is-horizontal">
         <div class="field-label is-normal">
@@ -70,14 +69,18 @@
           </div>
         </div>
       </div>
+      <hr>
         <div class="field is-grouped is-grouped-right">
           <p class="control">
             <a class="button is-info" :disabled="hasEvent" :key="componentKey" @click.prevent="salvarAgendas">Salvar Agenda</a>
+          </p>
+          <p class="control">
             <a class="button is-danger" :disabled="hasEvent" @click.prevent="apagarAgenda">Apagar Agenda</a>
+          </p>
+          <p class="control">
             <a class="button is-info" @click.prevent="eventCalendar">Montar Agenda</a>
           </p>
         </div>
-    </div>
   </form>
 
 <b-modal :active.sync="modal.calendar.isActive">
