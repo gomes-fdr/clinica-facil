@@ -13,19 +13,13 @@ export default {
     }
   },
   beforeCreate () {
-
+    if (!this.$session.exists()) {
+      this.$router.push('/login')
+    }
   },
   created () {
-    // if (auth.isValidJwt(auth.getToken()) === false) {
-    //   router.push('login')
-    // }
   },
   mounted () {
-    // this.timer = setInterval(function () {
-    //   if (auth.isValidJwt(auth.getToken()) === false) {
-    //     auth.logout()
-    //   }
-    // }, 1000 * 60 * 30)
   }
 }
 </script>

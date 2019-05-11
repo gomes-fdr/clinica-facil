@@ -109,7 +109,7 @@ export default {
               this.$session.set('profissional_id', data.identity.profissional_id)
 
               this.$http.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
-              this.$acl.change('Administracao')
+              this.$acl.change(this.$session.get('perfil'))
               this.$router.replace(this.$route.query.redirect || '/')
             }
           })

@@ -17,7 +17,14 @@ export default new AclCreate({
     isFonoaudiologo: new AclRule('Fonoaudiologo'),
     isNeurologista: new AclRule('Neurologista'),
     isCoordenador_Agendas: new AclRule('Coordenador_Agendas'),
-    isAdministracao: new AclRule('Administracao').or('Psicologo').or('Recepcao'),
+    isAdministracao: new AclRule('Administracao')
+    .or('Psicologo')
+    .or('Recepcao')
+    .or('Psiquiatra')
+    .or('Nutricionista')
+    .or('Fonoaudiologo')
+    .or('Neurologista')
+    .or('Coordenador_Agendas'),
     isPublico: new AclRule('Publico')
   }
 })
