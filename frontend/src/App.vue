@@ -5,9 +5,6 @@
 </template>
 
 <script>
-import auth from './auth'
-import router from './router'
-
 export default {
   name: 'app',
   data () {
@@ -15,17 +12,20 @@ export default {
       timer: ''
     }
   },
-  created () {
-    if (auth.isValidJwt(auth.getToken()) === false) {
-      router.push('login')
-    }
+  beforeCreate () {
+
   },
-  mounted: function () {
-    this.timer = setInterval(function () {
-      if (auth.isValidJwt(auth.getToken()) === false) {
-        auth.logout()
-      }
-    }, 1000 * 60 * 30)
+  created () {
+    // if (auth.isValidJwt(auth.getToken()) === false) {
+    //   router.push('login')
+    // }
+  },
+  mounted () {
+    // this.timer = setInterval(function () {
+    //   if (auth.isValidJwt(auth.getToken()) === false) {
+    //     auth.logout()
+    //   }
+    // }, 1000 * 60 * 30)
   }
 }
 </script>

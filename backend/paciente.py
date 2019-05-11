@@ -1,14 +1,14 @@
 from flask import Blueprint, current_app, jsonify, request
 from sqlalchemy.exc import SQLAlchemyError
 
-from .token import token_required
+from flask_jwt_extended import jwt_required
 from .serealizer import PacienteSchema
 from backend.models.paciente import Paciente
 
 bp_paciente = Blueprint('paciente', __name__)
 
 @bp_paciente.route('/api/v1/paciente', methods=['POST'])
-@token_required
+@jwt_required
 def paciente_novo():
     """
     Insere um novo paciente no sistema.
@@ -30,7 +30,7 @@ def paciente_novo():
 
 
 @bp_paciente.route('/api/v1/paciente/<cpf>', methods=['POST'])
-@token_required
+@jwt_required
 def paciente_atualizar(cpf):
     """
     Atualiza um paciente no sistema.
@@ -67,7 +67,7 @@ def paciente_atualizar(cpf):
 
 
 @bp_paciente.route('/api/v1/paciente/cpf/<cpf>', methods=['GET'])
-@token_required
+@jwt_required
 def paciente_cpf(cpf):
     """
     Busca um paciente pelo CPF.
@@ -82,12 +82,12 @@ def paciente_cpf(cpf):
     
 
 @bp_paciente.route('/api/v1/paciente/nome/<nome>', methods=['GET'])
-@token_required
+@jwt_required
 def paciente_nome(nome):
     """
     Busca um paciente pelo nome ou parte dele.
     """
-
+    print('NOmeeee: ' + nome)
     # pacientes = Paiente.query.filter(Paciente.nome.ilike('%' +nome+ '%')).all()
     pacientes = current_app.db.session.query(Paciente.nome, Paciente.cpf).filter(Paciente.nome.ilike('%' +nome+ '%')).all()
 
@@ -98,7 +98,7 @@ def paciente_nome(nome):
 
 
 @bp_paciente.route('/api/v1/paciente/nome-completo/<nome>', methods=['GET'])
-@token_required
+@jwt_required
 def paciente_nome_completo(nome):
     """
     Busca um paciente pelo nome ou parte dele.

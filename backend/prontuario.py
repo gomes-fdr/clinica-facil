@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, jsonify, request
 from sqlalchemy.exc import SQLAlchemyError
 
-from .token import token_required
+from flask_jwt_extended import jwt_required
 from .serealizer import ProntuarioLegadoSchema
 from backend.models.prontuario import ProntuarioLegado
 
@@ -10,7 +10,7 @@ bp_prontuario = Blueprint('prontuario', __name__)
 # TODO: Revisar sistema de tokens
 
 @bp_prontuario.route('/api/v1/paciente/prontuario-legado/<paciente_id>', methods=['GET'])
-@token_required
+@jwt_required
 def prontuario_leg_paciente(paciente_id):
     """
     Busca prontuario legado, por ID de paciente

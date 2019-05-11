@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import Blueprint, current_app, jsonify, request
-from .token import token_required
+from flask_jwt_extended import jwt_required
 from backend.models.agenda import Local, Horario, Consulta
 from backend.models.profissional import Profissional, Perfil
 from .serealizer import LocalSchema, HorarioSchema, ConsultaSchema, PerfilSchema
@@ -10,7 +10,7 @@ from sqlalchemy.exc import SQLAlchemyError
 bp_agenda = Blueprint('agenda', __name__)
 
 @bp_agenda.route('/api/v1/agenda/sala', methods=['GET'])
-@token_required
+@jwt_required
 def get_sala():
     """
     Busca sala(s) para atendimento
@@ -23,7 +23,7 @@ def get_sala():
 
 
 @bp_agenda.route('/api/v1/agenda/sala/<descricao>', methods=['POST'])
-@token_required
+@jwt_required
 def post_sala(descricao):
     """
     Adiciona sala para atendimento
@@ -45,7 +45,7 @@ def post_sala(descricao):
 
 
 @bp_agenda.route('/api/v1/agenda/horario', methods=['POST'])
-@token_required
+@jwt_required
 def post_horario():
     """
     Adicona um Horário para atendimento
@@ -107,7 +107,7 @@ def post_horario():
 
 
 @bp_agenda.route('/api/v1/agenda/horario/profissional', methods=['GET'])
-@token_required
+@jwt_required
 def get_horario_profissional():
     """
     Busca Horarios de um profissional, por intervalo de datas para atendimento
@@ -163,7 +163,7 @@ def get_horario_profissional():
 
 
 @bp_agenda.route('/api/v1/agenda/consulta', methods=['POST'])
-@token_required
+@jwt_required
 def post_consulta():
     """
     Adiciona uma consulta
@@ -226,7 +226,7 @@ def post_consulta():
 
 
 @bp_agenda.route('/api/v1/agenda/especialidades', methods=['GET'])
-@token_required
+@jwt_required
 def get_especialidades():
     """
     Busca especialidades disponiveis para atendimento

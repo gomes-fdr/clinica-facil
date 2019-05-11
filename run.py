@@ -14,6 +14,8 @@ from backend.prontuario import bp_prontuario
 from backend.ps import bp_ps
 from backend.agenda import bp_agenda
 
+from flask_jwt_extended import JWTManager
+
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
@@ -21,11 +23,13 @@ app = Flask(__name__,
 app.config['JSON_SORT_KEYS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_SECRET_KEY'] = 'Batatinhas voadoras são melhores que eu'
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 config_db(app)
 config_ma(app)
 Migrate(app, app.db)
+JWTManager(app)
 
 app.register_blueprint(bp_user)
 app.register_blueprint(bp_token)

@@ -53,7 +53,8 @@
 </template>
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
-import auth from '../auth'
+import axios from 'axios'
+// import auth from '../auth'
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -85,25 +86,43 @@ export default {
   },
   methods: {
     login () {
-      var vm = this
       console.log(process.env.API_URL)
-      this.$validate().then(function (success) {
+      this.$validate()
+      .then(success => {
         if (success) {
-
-          auth.login(vm.form.email, vm.form.password, loggedIn => {
-            if (loggedIn) {
-              vm.$acl.change(localStorage.getItem('perfil'))
-              vm.$router.replace(vm.$route.query.redirect || '/')
-            } else {
-              vm.$toast.open({
-                message: 'Usuário ou senha INVÁLIDOS',
-                type: 'is-danger',
-                position: 'is-bottom'
-              })
+          axios({
+            method: 'post',
+            url: process.env.API_URL + 'token',
+            data: {
+              email: this.form.email,
+              password: this.form.password
             }
           })
+          .then(response => {
+            if (response.status === 200 && 'token' in response.data) {
+              this.$session.start()
+              this.$session.set('jwt', response.data.token)
+              const data = JSON.parse(atob(response.data.token.split('.')[1]))
+              this.$session.set('perfil', data.identity.profile)
+              this.$session.set('nome', data.identity.nome)
+              this.$session.set('situacao', data.identity.situacao)
+              this.$session.set('profissional_id', data.identity.profissional_id)
+
+              this.$http.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.token
+              this.$acl.change('Administracao')
+              this.$router.replace(this.$route.query.redirect || '/')
+            }
+          })
+          .catch(error => {
+            this.$toast.open({
+              message: 'Usuário ou senha INVÁLIDOS',
+              type: 'is-danger',
+              position: 'is-bottom'
+            })
+          })
+
         } else {
-          vm.$toast.open({
+          this.$toast.open({
             message:
               'Formulário inválido! Verifique o preenchimento dos campos',
             type: 'is-danger',

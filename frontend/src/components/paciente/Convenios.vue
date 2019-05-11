@@ -115,15 +115,9 @@
 </template>
 <script>
 import { eBus } from '../../main'
-import axios from 'axios'
 import SimpleVueValidation from 'simple-vue-validator'
 
 var moment = require('moment')
-
-const HTTP = axios.create({
-  baseURL: process.env.API_URL,
-  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
-})
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -195,22 +189,20 @@ export default {
     }
   },
   mounted () {
-    let vm = this
-    eBus.$on('PACIENTE_ID', function (paciente) {
+    eBus.$on('PACIENTE_ID', paciente => {
       if (!paciente) return
-      vm.form.paciente_id = paciente.id
-      vm.form.nome = paciente.nome
-      vm.getPSPaciente(paciente.id)
+      this.form.paciente_id = paciente.id
+      this.form.nome = paciente.nome
+      this.getPSPaciente(paciente.id)
     })
   },
   methods: {
     getPSPaciente (pacienteID) {
       console.log('Busca planos de saude de um paciente')
       if (!this.form.paciente_id) return
-      let vm = this
 
-      HTTP
-      .get(`${process.env.API_URL}ps-paciente/${pacienteID}`, {})
+      this.$http
+      .get(`${process.env.API_URL}ps-paciente/${pacienteID}`)
       .then(function (response) {
         // console.log(response)
         let data = response.data
@@ -224,25 +216,24 @@ export default {
             id: data[p].id
           })
         }
-        vm.table.data = tabData
+        this.table.data = tabData
       })
       .catch(function (error) {
         // console.log(error)
-        vm.table.data = []
+        this.table.data = []
       })
     },
     pesquisarPlano () {
       console.log('Consulta planos de saude')
 
-      let vm = this
       this.modal.isImageModalActive = true
       this.modal.isAddPSActive = false
 
-      HTTP
-      .get(`${process.env.API_URL}ps`, {})
+      this.$http
+      .get(`${process.env.API_URL}ps`)
       .then(function (response) {
         // console.log(response)
-        vm.modal.data = response.data
+        this.modal.data = response.data
       })
       .catch(function (error) {
         console.log(error)
@@ -259,13 +250,11 @@ export default {
       if (!this.form.ps.descricao) return
       console.log('Adiciona plano de saude novo')
 
-      let vm = this
-
-      HTTP
-      .post(`${process.env.API_URL}ps/${vm.form.ps.descricao}`)
-      .then(function (response) {
+      this.$http
+      .post(`${process.env.API_URL}ps/${this.form.ps.descricao}`)
+      .then(response => {
         // console.log(response)
-        vm.reset()
+        this.reset()
       })
       .catch(function (error) {
         console.log(error)
@@ -273,28 +262,27 @@ export default {
     },
     gravaPSPaciente () {
       console.log('Grava PS para paciente')
-      let vm = this
       let data = {...this.form}
       let dtTmp = moment.utc(data.dt_validade, 'DD/MM/YYYY')
       data.dt_validade = dtTmp
 
       this.$validate()
-      .then(function (response) {
+      .then(response => {
         if (response) {
           // console.log(data)
-          HTTP
+          this.$http
           .post(`${process.env.API_URL}ps-paciente`, data)
           .then(function (response) {
             // console.log(response)
-            vm.reset()
-            vm.getPSPaciente(vm.form.paciente_id)
+            this.reset()
+            this.getPSPaciente(this.form.paciente_id)
           })
-          .catch(function (error) {
+          .catch(error => {
             console.log(error)
           })
         }
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
     },
@@ -307,18 +295,15 @@ export default {
     },
     deletePS () {
       console.log('Apagar PS paciente')
-      // console.log(this.table.checkedRows)
-      let vm = this
-
       // Fazer um laço no vetor de linhas da tabela
       let p = {}
       for (p in this.table.checkedRows) {
-        HTTP
-        .get(`${process.env.API_URL}ps-paciente/delete/${vm.table.checkedRows[p].id}`, {})
-        .then(function (response) {
+        this.$http
+        .get(`${process.env.API_URL}ps-paciente/delete/${this.table.checkedRows[p].id}`)
+        .then(response => {
           // console.log(response)
         })
-        .catch(function (error) {
+        .catch(error => {
           console.log(error)
         })
       }

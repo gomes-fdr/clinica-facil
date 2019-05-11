@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, jsonify, request
 from sqlalchemy.exc import SQLAlchemyError
 
-from .token import token_required
+from flask_jwt_extended import jwt_required
 from backend.models.paciente import Paciente
 from backend.models.ps import PlanoSaude, PlanoSaudePaciente
 from .serealizer import PlanoSaudeSchema, PlanoSaudePacienteSchema
@@ -9,7 +9,7 @@ from .serealizer import PlanoSaudeSchema, PlanoSaudePacienteSchema
 bp_ps = Blueprint('plano_saude', __name__)
 
 @bp_ps.route('/api/v1/ps', methods=['GET'])
-@token_required
+@jwt_required
 def get_ps():
     """
     Busca planos de saúde
@@ -23,7 +23,7 @@ def get_ps():
 
 
 @bp_ps.route('/api/v1/ps/<descricao>', methods=['POST'])
-@token_required
+@jwt_required
 def post_ps(descricao):
     """
     Insere novo plano de saúde
@@ -44,6 +44,7 @@ def post_ps(descricao):
 
 
 @bp_ps.route('/api/v1/ps-paciente', methods=['POST'])
+@jwt_required
 def post_ps_paciente():
     """
     Insere um plano de saúde para um paciente
@@ -75,6 +76,7 @@ def post_ps_paciente():
 
 
 @bp_ps.route('/api/v1/ps-paciente/<paciente_id>', methods=['GET'])
+@jwt_required
 def get_ps_paciente(paciente_id):
     """
     Busca planos de saúde de um paciente
@@ -88,6 +90,7 @@ def get_ps_paciente(paciente_id):
 
 
 @bp_ps.route('/api/v1/ps-paciente/delete/<id>', methods=['GET'])
+@jwt_required
 def delete_ps_paciente(id):
     """
     Apaga um plano de saude de um paciente

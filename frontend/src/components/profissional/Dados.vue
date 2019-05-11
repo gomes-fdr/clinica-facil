@@ -309,14 +309,8 @@
 import SimpleVueValidation from 'simple-vue-validator'
 import { eBus } from '../../main'
 import axios from 'axios'
-import _ from 'lodash'
 
 var moment = require('moment')
-
-const HTTP = axios.create({
-  baseURL: process.env.API_URL,
-  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
-})
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -417,148 +411,131 @@ export default {
   methods: {
     copiaProfissional () {
       console.log('Copia Profissional')
-      // this.form.cpf = `${this.tabProfissional.selected.cpf}`
-      // this.isImageModalActive = false
       if (!this.tabProfissional.selected.nome) {
         return
       }
-      let vm = this
-      HTTP
-        .get(`${process.env.API_URL}profissional/nome-completo/${vm.tabProfissional.selected.nome}`, {
-        })
-      .then(function (response) {
+      this.$http
+      .get(`${process.env.API_URL}profissional/nome-completo/${this.tabProfissional.selected.nome}`)
+      .then(response => {
         // console.log(response)
         let tmp = response.data
         let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
         tmp.dt_nascimento = t
         // console.log(tmp)
-        vm.form = tmp
-        vm.bNovo = true
-        vm.bSenha = false
-        vm.bAtualizar = false
-        eBus.$emit('PROFISSIONAL_ID', vm.form.id)
+        this.form = tmp
+        this.bNovo = true
+        this.bSenha = false
+        this.bAtualizar = false
+        eBus.$emit('PROFISSIONAL_ID', this.form.id)
       })
-      .catch(function (error) {
+      .catch(error => {
         // console.log(error)
-        vm.$toast.open({
+        this.$toast.open({
           message:
             'NENHUM PROFISSIONAL encontrado.',
           type: 'is-danger',
           position: 'is-bottom'
         })
       })
-      .finally(function () {
-        vm.tabProfissional.isLoading = false
+      .finally(() => {
+        this.tabProfissional.isLoading = false
       })
       this.isImageModalActive = false
     },
     perfilProfissional () {
-      let vm = this
-      HTTP
-        .get(`${process.env.API_URL}profissional/perfil`, {
-        })
-      .then(function (response) {
-        // console.log(response.data)
-        vm.perfilAPI = response.data
+      this.$http
+      .get(`${process.env.API_URL}profissional/perfil`)
+      .then(response => {
+        this.perfilAPI = response.data
       })
     },
     situacaoProfissional () {
-      let vm = this
-      HTTP
-        .get(`${process.env.API_URL}profissional/situacao`, {
-        })
-      .then(function (response) {
+      this.$http
+      .get(`${process.env.API_URL}profissional/situacao`)
+      .then(response => {
         // console.log(response.data)
-        vm.situacaoAPI = response.data
+        this.situacaoAPI = response.data
       })
     },
-    pesquisarNome: _.debounce(function () {
+    pesquisarNome () {
       console.log('Pesquisar paciente')
       if (!this.form.nome.length) {
         return
       }
-      let vm = this
-      vm.tabProfissional.isLoading = true
-      HTTP
-        .get(`${process.env.API_URL}profissional/nome/${vm.form.nome}`, {
-        })
-      .then(function (response) {
-        // console.log(response)
-        vm.tabProfissional.data = response.data
-        vm.isImageModalActive = true
+      this.tabProfissional.isLoading = true
+      this.$http
+      .get(`${process.env.API_URL}profissional/nome/${this.form.nome}`)
+      .then(response => {
+        this.tabProfissional.data = response.data
+        this.isImageModalActive = true
       })
-      .catch(function (error) {
-        // console.log(error)
-        vm.$toast.open({
+      .catch(error => {
+        this.$toast.open({
           message:
             'NENHUM PROFISSIONAL encontrado com esse nome.',
           type: 'is-danger',
           position: 'is-bottom'
         })
       })
-      .finally(function () {
-        vm.tabProfissional.isLoading = false
+      .finally(() => {
+        this.tabProfissional.isLoading = false
       })
-    }, 500),
+    },
     pesquisarCPF () {
       console.log('Pesquisar CPF')
       if (!this.form.cpf.length) {
         return
       }
-      let vm = this
-      HTTP
-        .get(`${process.env.API_URL}profissional/cpf/${vm.form.cpf}`, {
+      this.$http
+      .get(`${process.env.API_URL}profissional/cpf/${this.form.cpf}`)
+      .then(response => {
+        let tmp = response.data
+        let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
+        tmp.dt_nascimento = t
+        // console.log(tmp)
+        this.form = tmp
+        this.bAtualizar = false
+        this.bSenha = false
+        this.bNovo = true
+      })
+      .catch(error => {
+        // console.log(error)
+        this.$toast.open({
+          duration: 5000,
+          message: 'PACIENTE não encontrado',
+          type: 'is-warning',
+          position: 'is-bottom'
         })
-        .then(function (response) {
-          let tmp = response.data
-          let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
-          tmp.dt_nascimento = t
-          // console.log(tmp)
-          vm.form = tmp
-          vm.bAtualizar = false
-          vm.bSenha = false
-          vm.bNovo = true
-        })
-        .catch(error => {
-          // console.log(error)
-          this.$toast.open({
-            duration: 5000,
-            message: 'PACIENTE não encontrado',
-            type: 'is-warning',
-            position: 'is-bottom'
-          })
-          vm.bNovo = false
-          vm.bSenha = false
-          vm.bAtualizar = true
-        })
+        this.bNovo = false
+        this.bSenha = false
+        this.bAtualizar = true
+      })
     },
     novoProfissional () {
       console.log('Novo Profissional')
-      let vm = this
       let data = {}
 
       this.$validate()
-      .then(function (response) {
+      .then(response => {
         // console.log(response)
         if (response) {
-          data = {...vm.form}
+          data = {...this.form}
           delete data.id
-          let dtTmp = moment.utc(vm.form.dt_nascimento, 'DD/MM/YYYY')
+          let dtTmp = moment.utc(this.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
           // console.log(JSON.stringify(data))
-          vm.$http
+          this.$http
           .post(`${process.env.API_URL}profissional`, data)
-          .then(function (response) {
-            // console.log(response)
-            vm.$toast.open({
+          .then(response => {
+            this.$toast.open({
               message: 'SUCESSO! PACIENTE gravado.',
               type: 'is-success',
               position: 'is-bottom'
             })
           })
-          .catch(function (error) {
+          .catch(error => {
             // console.log(error)
-            vm.$toast.open({
+            this.$toast.open({
               message:
                 'FALHA ao inserir novo PACIENTE!',
               type: 'is-danger',
@@ -566,7 +543,7 @@ export default {
             })
           })
         } else {
-          vm.$toast.open({
+          this.$toast.open({
             message:
               'FORMULÁRIO INCOMPLETO',
             type: 'is-danger',
@@ -600,7 +577,6 @@ export default {
       this.validation.reset()
     },
     pesquisarCEP () {
-      var vm = this
       if (!this.form.cep.length) {
         this.data = []
         console.log('Nada enviado...')
@@ -614,16 +590,16 @@ export default {
 
       instance
         .get(`https://viacep.com.br/ws/${cep}/json`)
-        .then(function (response) {
+        .then(response => {
           if (response.data) {
             // console.log(response.body);
-            vm.form.rua = response.data.logradouro
-            vm.form.cidade = response.data.localidade
-            vm.form.estado = response.data.uf
+            this.form.rua = response.data.logradouro
+            this.form.cidade = response.data.localidade
+            this.form.estado = response.data.uf
           }
         })
-        .catch(function (error) {
-          vm.erroCep()
+        .catch(error => {
+          this.erroCep()
         })
     },
     erroCep () {
@@ -636,17 +612,13 @@ export default {
     },
     atualizarProfissional () {
       console.log('Atualizar profissional')
-      let vm = this
       let data = {...this.form}
 
       this.$validate()
-      .then(function (response) {
-        console.log(response)
+      .then(response => {
         if (response) {
-          // data = {...vm.form}
-          // data = vm.form
           delete data.id
-          let dtTmp = moment.utc(vm.form.dt_nascimento, 'DD/MM/YYYY')
+          let dtTmp = moment.utc(this.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
           if (!data.faculdade) {
             data.faculdade = null
@@ -655,19 +627,19 @@ export default {
             data.no_conselho = null
           }
           console.log(JSON.stringify(data))
-          HTTP
-          .post(`${process.env.API_URL}profissional/${vm.form.nome}`, data)
-          .then(function (response) {
+          this.$http
+          .post(`${process.env.API_URL}profissional/${this.form.nome}`, data)
+          .then(response => {
             // console.log(response)
-            vm.$toast.open({
+            this.$toast.open({
               message: 'SUCESSO! PROFISSIONAL gravado.',
               type: 'is-success',
               position: 'is-bottom'
             })
           })
-          .catch(function (error) {
+          .catch(error => {
             // console.log(error)
-            vm.$toast.open({
+            this.$toast.open({
               message:
                 'FALHA ao inserir novo PROFISSIONAL!',
               type: 'is-danger',
@@ -675,7 +647,7 @@ export default {
             })
           })
         } else {
-          vm.$toast.open({
+          this.$toast.open({
             message:
               'FORMULÁRIO INCOMPLETO',
             type: 'is-danger',
@@ -690,21 +662,19 @@ export default {
         id_profissional: this.form.id,
         password: p
       }
-      let vm = this
 
-      HTTP
+      this.$http
       .post(`${process.env.API_URL}profissional/reset-senha`, data)
-      .then(function (response) {
-        console.log(response)
-        vm.$toast.open({
+      .then(response => {
+        this.$toast.open({
           message: 'SUCESSO! SENHA INICIALIZADA.',
           type: 'is-success',
           position: 'is-bottom'
         })
       })
-      .catch(function (error) {
+      .catch(error => {
         // console.log(error)
-        vm.$toast.open({
+        this.$toast.open({
           message:
             'FALHA ao INICIALIZAR senha!',
           type: 'is-danger',

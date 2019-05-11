@@ -127,7 +127,6 @@
 <script>
 import { remove } from 'lodash'
 import SimpleVueValidation from 'simple-vue-validator'
-import axios from 'axios'
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -135,11 +134,6 @@ const Validator = SimpleVueValidation.Validator.create({
     integer: 'Somente numeros',
     between: 'Valores entre 1 e 60'
   }
-})
-
-const HTTP = axios.create({
-  baseURL: process.env.API_URL,
-  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
 })
 
 export default {
@@ -317,12 +311,11 @@ export default {
 
     },
     eventCalendar () {
-      let vm = this
       this.$validate()
-      .then(function (response) {
+      .then(response => {
         if (response) {
           console.log('Calendario de eventos')
-          vm.modal.calendar.isActive = true
+          this.modal.calendar.isActive = true
         }
       })
       .catch(function (error) {})
@@ -333,13 +326,13 @@ export default {
     salvarAgenda (event) {
       console.log('Salva agenda no banco')
       // let data = event
-      HTTP
+      this.$http
       .post('agenda/horario', event)
-      .then(function (response) {
+      .then(response => {
         console.log(response)
-        // vm.modal.local.data = response.data
+        // this.modal.local.data = response.data
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
     },
@@ -355,17 +348,16 @@ export default {
     },
     pequisaSala () {
       console.log('Pesquisa Sala')
-      let vm = this
       this.modal.local.isActive = true
       this.modal.local.isAdd = false
 
-      HTTP
-      .get(`${process.env.API_URL}agenda/sala`, {})
-      .then(function (response) {
+      this.$http
+      .get(`${process.env.API_URL}agenda/sala`)
+      .then(response => {
         // console.log(response)
-        vm.modal.local.data = response.data
+        this.modal.local.data = response.data
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error.response)
       })
 
@@ -373,15 +365,12 @@ export default {
     addSala () {
       if (!this.formHorario.local) return
       console.log('Adiciona sala')
-      let vm = this
 
-      HTTP
-      .post(`${process.env.API_URL}agenda/sala/${vm.formHorario.local.descricao}`)
+      this.$http
+      .post(`${process.env.API_URL}agenda/sala/${this.formHorario.local.descricao}`)
       .then(function (response) {
-        // console.log(response)
-        // vm.reset()
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
     },
@@ -394,21 +383,18 @@ export default {
     pesquisaProfissional () {
       console.log('Pesquisa profissional')
       if (!this.formHorario.profissional) return
-      let vm = this
 
       this.modal.profissional.isActive = true
 
-      HTTP
-      .get(`${process.env.API_URL}profissional/nome/${vm.formHorario.profissional.nome}`, {
-      })
-      .then(function (response) {
+      this.$http
+      .get(`${process.env.API_URL}profissional/nome/${this.formHorario.profissional.nome}`)
+      .then(response => {
         // console.log(response)
-        vm.modal.profissional.data = response.data
-        // vm.isImageModalActive = true
+        this.modal.profissional.data = response.data
       })
-      .catch(function (error) {
+      .catch(error => {
         // console.log(error)
-        vm.$toast.open({
+        this.$toast.open({
           message:
             'NENHUM PROFISSIONAL encontrado com esse nome.',
           type: 'is-danger',

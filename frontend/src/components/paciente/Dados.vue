@@ -334,17 +334,10 @@
 
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
-import auth from '../../auth'
 import { eBus } from '../../main'
 import axios from 'axios'
-import _ from 'lodash'
 
 var moment = require('moment')
-
-const HTTP = axios.create({
-  baseURL: process.env.API_URL,
-  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
-})
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -455,36 +448,35 @@ export default {
       if (!this.tabPaciente.selected.nome) {
         return
       }
-      let vm = this
-      HTTP
-      .get(`${process.env.API_URL}paciente/nome-completo/${vm.tabPaciente.selected.nome}`)
-      .then(function (response) {
+      this.$http
+      .get(`${process.env.API_URL}paciente/nome-completo/${this.tabPaciente.selected.nome}`)
+      .then(response => {
         // console.log(response)
         let tmp = response.data
         let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
         tmp.dt_nascimento = t
         // console.log(tmp)
-        vm.form = tmp
-        vm.bNovo = true
-        vm.bAtualizar = false
+        this.form = tmp
+        this.bNovo = true
+        this.bAtualizar = false
         let data = {
-          id: vm.form.id,
-          nome: vm.form.nome,
-          dt_nascimento: vm.form.dt_nascimento
+          id: this.form.id,
+          nome: this.form.nome,
+          dt_nascimento: this.form.dt_nascimento
         }
         eBus.$emit('PACIENTE_ID', data)
       })
-      .catch(function (error) {
+      .catch(error => {
         // console.log(error)
-        vm.$toast.open({
+        this.$toast.open({
           message:
             'NENHUM PACIENTE encontrado.',
           type: 'is-danger',
           position: 'is-bottom'
         })
       })
-      .finally(function () {
-        vm.tabPaciente.isLoading = false
+      .finally(() => {
+        this.tabPaciente.isLoading = false
       })
       this.isImageModalActive = false
     },
@@ -493,58 +485,50 @@ export default {
       if (!this.form.cpf.length) {
         return
       }
-      var vm = this
       var cpf = this.form.cpf
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('.', '')
       cpf = cpf.replace('-', '')
-      HTTP
-        .get(`${process.env.API_URL}paciente/cpf/${cpf}`, {
-        })
-        .then(function (response) {
-          if (response.data) {
-            let tmp = response.data
-            let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
-            tmp.dt_nascimento = t
-            // console.log(tmp)
-            vm.form = tmp
-            vm.bAtualizar = false
-            vm.bNovo = true
-          }
-        })
-        .catch(error => {
-          // console.log(error.response.status)
-
-          if (error.response.status === 440) {
-            this.$toast.open({
-              duration: 5000,
-              message: 'SESSÃO expirou',
-              type: 'is-danger',
-              position: 'is-bottom'
-            })
-            setTimeout(function () {
-              auth.logout()
-            }, 5000)
-          } else {
-            this.$toast.open({
-              duration: 5000,
-              message: 'PACIENTE não encontrado',
-              type: 'is-warning',
-              position: 'is-bottom'
-            })
-          }
-          vm.bNovo = false
-          vm.bAtualizar = true
-        })
-        .finally(() => {
-          vm.isFetching = false
-        })
+      this.$http
+      .get(`${process.env.API_URL}paciente/cpf/${cpf}`)
+      .then(response => {
+        if (response.data) {
+          let tmp = response.data
+          let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
+          tmp.dt_nascimento = t
+          // console.log(tmp)
+          this.form = tmp
+          this.bAtualizar = false
+          this.bNovo = true
+        }
+      })
+      .catch(error => {
+        // console.log(error.response.status)
+        if (error.response.status === 440) {
+          this.$toast.open({
+            duration: 5000,
+            message: 'SESSÃO expirou',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        } else {
+          this.$toast.open({
+            duration: 5000,
+            message: 'PACIENTE não encontrado',
+            type: 'is-warning',
+            position: 'is-bottom'
+          })
+        }
+        this.bNovo = false
+        this.bAtualizar = true
+      })
+      .finally(() => {
+        this.isFetching = false
+      })
     },
     pesquisarCEP () {
-      var vm = this
       if (!this.form.cep.length) {
         this.data = []
-        console.log('Nada enviado...')
         return
       }
       var cep = this.form.cep
@@ -554,18 +538,18 @@ export default {
       const instance = axios
 
       instance
-        .get(`https://viacep.com.br/ws/${cep}/json`)
-        .then(function (response) {
-          if (response.data) {
-            // console.log(response.body);
-            vm.form.rua = response.data.logradouro
-            vm.form.cidade = response.data.localidade
-            vm.form.estado = response.data.uf
-          }
-        })
-        .catch(function (error) {
-          vm.erroCep()
-        })
+      .get(`https://viacep.com.br/ws/${cep}/json`)
+      .then(response => {
+        if (response.data) {
+          // console.log(response.body);
+          this.form.rua = response.data.logradouro
+          this.form.cidade = response.data.localidade
+          this.form.estado = response.data.uf
+        }
+      })
+      .catch(error => {
+        this.erroCep()
+      })
     },
     erroCep () {
       this.$toast.open({
@@ -602,61 +586,58 @@ export default {
       this.bAtualizar = true
       this.validation.reset()
     },
-    pesquisarNome: _.debounce(function () {
+    pesquisarNome () {
       console.log('Pesquisar paciente')
       if (!this.form.nome.length) {
         return
       }
-      let vm = this
-      vm.tabPaciente.isLoading = true
-      HTTP
-        .get(`${process.env.API_URL}paciente/nome/${vm.form.nome}`, {
-        })
-      .then(function (response) {
+      this.tabPaciente.isLoading = true
+      this.$http
+      .get(`${process.env.API_URL}paciente/nome/${this.form.nome}`)
+      .then(response => {
         // console.log(response)
-        vm.tabPaciente.data = response.data
-        vm.isImageModalActive = true
+        this.tabPaciente.data = response.data
+        this.isImageModalActive = true
       })
-      .catch(function (error) {
+      .catch(error => {
         // console.log(error)
-        vm.$toast.open({
+        this.$toast.open({
           message:
             'NENHUM PACIENTE encontrado.',
           type: 'is-danger',
           position: 'is-bottom'
         })
       })
-      .finally(function () {
-        vm.tabPaciente.isLoading = false
+      .finally(() => {
+        this.tabPaciente.isLoading = false
       })
-    }, 500),
+    },
     novoPaciente () {
       console.log('Novo Profissional')
-      let vm = this
       let data = {}
 
       this.$validate()
-      .then(function (response) {
+      .then(response => {
         // console.log(response)
         if (response === true) {
-          data = {...vm.form}
+          data = {...this.form}
           delete data.id
-          let dtTmp = moment(vm.form.dt_nascimento, 'DD/MM/YYYY')
+          let dtTmp = moment(this.form.dt_nascimento, 'DD/MM/YYYY')
           data.dt_nascimento = dtTmp
           // console.log(JSON.stringify(data))
-          vm.$http
+          this.$http
           .post(`${process.env.API_URL}paciente`, data)
-          .then(function (response) {
+          .then(response => {
             console.log(response)
-            vm.$toast.open({
+            this.$toast.open({
               message: 'SUCESSO! PACIENTE gravado.',
               type: 'is-success',
               position: 'is-bottom'
             })
           })
-          .catch(function (error) {
+          .catch(error => {
             // console.log(error)
-            vm.$toast.open({
+            this.$toast.open({
               message:
                 'FALHA ao inserir novo PACIENTE!',
               type: 'is-danger',
@@ -664,7 +645,7 @@ export default {
             })
           })
         } else {
-          vm.$toast.open({
+          this.$toast.open({
             message:
               'FORMULÁRIO INCOMPLETO',
             type: 'is-danger',
@@ -676,27 +657,23 @@ export default {
     atualizarPaciente () {
       if (this.validaForm() === false) return
       console.log('Atualizar Paciente')
-      let vm = this
-      // let data = this.form
 
       let data = {...this.form} // clonar objeto sem referencias
       let dtTmp = moment.utc(data.dt_nascimento, 'DD/MM/YYYY')
       data.dt_nascimento = dtTmp
 
-      // console.log(JSON.stringify(data))
-
-      HTTP
+      this.$http
       .post(`${process.env.API_URL}paciente/${this.form.cpf}`, data)
-      .then(function (response) {
+      .then(response => {
         // console.log(response)
-        vm.$toast.open({
+        this.$toast.open({
           message: 'SUCESSO! Dados atualizados.',
           type: 'is-success',
           position: 'is-bottom'
         })
       })
-      .catch(function (error) {
-        vm.$toast.open({
+      .catch(error => {
+        this.$toast.open({
           message:
             'FALHA ao atualizar PACIENTE!',
           type: 'is-danger',
@@ -705,20 +682,17 @@ export default {
       })
     },
     validaForm () {
-      var vm = this
-      // this.$bus.$emit('submit');
-      this.$validate().then(function (success) {
+      this.$validate()
+      .then(success => {
         if (success) {
-          // console.log('Validou, enviando...');
-          // console.log(JSON.stringify(vm.form));
-          vm.$toast.open({
+          this.$toast.open({
             message: 'Formulário preenchido com sucesso!',
             type: 'is-success',
             position: 'is-bottom'
           })
           return true
         } else {
-          vm.$toast.open({
+          this.$toast.open({
             message:
               'Formulário inválido! Verifique o preenchimento dos campos',
             type: 'is-danger',

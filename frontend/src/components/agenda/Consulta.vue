@@ -160,10 +160,6 @@ const Validator = SimpleVueValidation.Validator.create({
     required: 'Campo obrigatório'
   }
 })
-const HTTP = axios.create({
-  baseURL: process.env.API_URL,
-  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
-})
 
 var moment = require('moment')
 
@@ -253,31 +249,30 @@ export default {
       // localStorage.getItem('token')
     },
     showCalendar () {
-      let vm = this
       let selecao = ''
       let profissionalID = ''
       let especialidadeID = ''
       let url = ''
-      vm.events = []
+      this.events = []
 
-      if ((vm.formControl.radio === 'TodosProfissionais') || (vm.formControl.radio === 'Profissionais')) {
+      if ((this.formControl.radio === 'TodosProfissionais') || (this.formControl.radio === 'Profissionais')) {
         selecao = 'profissional'
-        if (vm.formControl.radio === 'TodosProfissionais') profissionalID = '*'
-        else if (vm.formControl.radio === 'Profissionais') profissionalID = localStorage.getItem('profissional_id')
-        url = `agenda/horario/profissional?selecao=${selecao}&profissional_id=${profissionalID}&dt_inicio=${vm.formData.dt_inicio}&dt_fim=${vm.formData.dt_fim}&livre=true`
-      } if (vm.formControl.radio === 'Especialidade') {
+        if (this.formControl.radio === 'TodosProfissionais') profissionalID = '*'
+        else if (this.formControl.radio === 'Profissionais') profissionalID = localStorage.getItem('profissional_id')
+        url = `agenda/horario/profissional?selecao=${selecao}&profissional_id=${profissionalID}&dt_inicio=${this.formData.dt_inicio}&dt_fim=${this.formData.dt_fim}&livre=true`
+      } if (this.formControl.radio === 'Especialidade') {
         selecao = 'especialidade'
-        especialidadeID = vm.formData.especialidade
-        url = `agenda/horario/profissional?selecao=${selecao}&especialdade_id=${especialidadeID}&dt_inicio=${vm.formData.dt_inicio}&dt_fim=${vm.formData.dt_fim}&livre=true`
+        especialidadeID = this.formData.especialidade
+        url = `agenda/horario/profissional?selecao=${selecao}&especialdade_id=${especialidadeID}&dt_inicio=${this.formData.dt_inicio}&dt_fim=${this.formData.dt_fim}&livre=true`
       }
 
       this.$validate()
       .then(function (response) {
         if (response) {
           console.log('Calendario de eventos')
-          HTTP
-          .get(`${process.env.API_URL}${url}`, {})
-          .then(function (response) {
+          this.$http
+          .get(`${process.env.API_URL}${url}`)
+          .then(response => {
             let data = response.data
             data.forEach(e => {
               let event = {
@@ -296,16 +291,15 @@ export default {
               event.name = e.profissional.nome
               event.profissional_id = e.profissional.id
               event.horario_id = e.id
-              vm.events.push(event)
+              this.events.push(event)
             })
-            vm.modal.calendario.isActive = true
-            // console.log(vm.events)
+            this.modal.calendario.isActive = true
           })
-          .catch(function (error) {
+          .catch(error => {
             // console.log(error.response.status)
             // if (error.response.status === 404) {
             if (error) {
-              vm.$toast.open({
+              this.$toast.open({
                 message:
                   'NENHUM HORARIO encontrado',
                 type: 'is-danger',
@@ -315,7 +309,7 @@ export default {
           })
         }
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
     },
@@ -329,7 +323,7 @@ export default {
     },
     carregaEspecialidades () {
       console.log('Carregando as especialidades...')
-      HTTP
+      this.$http
       .get(`${process.env.API_URL}agenda/especialidades`)
       .then(response => {
         this.apiEspecialidade = response.data

@@ -50,12 +50,6 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 import { eBus } from '../../main'
-import axios from 'axios'
-
-const HTTP = axios.create({
-  baseURL: process.env.API_URL,
-  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
-})
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -83,45 +77,44 @@ export default {
     }
   },
   mounted () {
-    let vm = this
-    eBus.$on('PROFISSIONAL_ID', function (id) {
-      vm.id = id
+    eBus.$on('PROFISSIONAL_ID', id => {
+      this.id = id
     })
   },
   methods: {
-    submit: function () {
-      let vm = this
+    submit () {
       let data = {
         id_profissional: this.id,
         password: this.password
       }
+      let vm = this
       this.$validate()
-        .then(function (success) {
-          if (success) {
-            console.log(data)
-            HTTP
-            .post(`${process.env.API_URL}profissional/reset-senha`, data)
-            .then(function (response) {
-              console.log(response)
-              vm.$toast.open({
-                message: 'SUCESSO! SENHA INICIALIZADA.',
-                type: 'is-success',
-                position: 'is-bottom'
-              })
+      .then(success => {
+        if (success) {
+          console.log(data)
+          this.$http
+          .post(`${process.env.API_URL}profissional/reset-senha`, data)
+          .then(function (response) {
+            console.log(response)
+            vm.$toast.open({
+              message: 'SUCESSO! SENHA INICIALIZADA.',
+              type: 'is-success',
+              position: 'is-bottom'
             })
-            .catch(function (error) {
-              // console.log(error)
-              vm.$toast.open({
-                message:
-                  'FALHA ao INICIALIZAR senha!',
-                type: 'is-danger',
-                position: 'is-bottom'
-              })
+          })
+          .catch(function (error) {
+            // console.log(error)
+            vm.$toast.open({
+              message:
+                'FALHA ao INICIALIZAR senha!',
+              type: 'is-danger',
+              position: 'is-bottom'
             })
-          }
-        })
+          })
+        }
+      })
     },
-    reset: function () {
+    reset () {
       this.password = ''
       this.repeat = ''
       this.validation.reset()

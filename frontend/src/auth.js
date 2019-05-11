@@ -7,8 +7,6 @@ export default {
 
   login (email, pass, cb) {
     cb = arguments[arguments.length - 1]
-    delete localStorage.token
-    delete localStorage.perfil
     if (localStorage.token) {
       if (cb) cb(true)
       this.onChange(true)
@@ -16,12 +14,6 @@ export default {
     }
     pretendRequest(email, pass, (res) => {
       if (res.authenticated) {
-        localStorage.token = res.token
-        const data = JSON.parse(atob(res.token.split('.')[1]))
-        localStorage.setItem('perfil', data.profile)
-        localStorage.setItem('nome', data.nome)
-        localStorage.setItem('situacao', data.situacao)
-        localStorage.setItem('profissional_id', data.profissional_id)
         if (cb) cb(true)
         this.onChange(true)
       } else {
@@ -30,22 +22,6 @@ export default {
       }
     })
   },
-
-  getToken () {
-    return localStorage.token
-  },
-
-  logout (cb) {
-    if (cb) cb()
-    this.onChange(false)
-    delete localStorage.token
-    delete localStorage.perfil
-    delete localStorage.nome
-    delete localStorage.situacao
-    delete localStorage.profissional_id
-    location.reload()
-  },
-
   loggedIn () {
     return localStorage.token
   },
@@ -56,10 +32,7 @@ export default {
     if (!jwt || jwt.split('.').length < 3) {
       return false
     }
-    const data = JSON.parse(atob(jwt.split('.')[1]))
-    const exp = new Date(data.exp * 1000) // JS deals with dates in milliseconds since epoch
-    const now = new Date()
-    return now < exp
+    return true
   },
 
   getProfile () {

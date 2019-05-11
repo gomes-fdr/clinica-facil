@@ -67,14 +67,8 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 import { eBus } from '../../main'
-import axios from 'axios'
 
 var moment = require('moment')
-
-const HTTP = axios.create({
-  baseURL: process.env.API_URL,
-  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
-})
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -113,26 +107,24 @@ export default {
         return
       }
       console.log('Prontuário legado')
-      let vm = this
-      HTTP
-        .get(`${process.env.API_URL}paciente/prontuario-legado/${vm.form.id}`, {
-        })
-        .then(function (response) {
-          // console.log(response.data)
-          vm.form.prontuarioLegado = response.data['conteudo']
-          vm.isCardModalActive = true
-        })
-      .catch(function (error) {
+      this.$http
+      .get(`${process.env.API_URL}paciente/prontuario-legado/${this.form.id}`)
+      .then(response => {
+        // console.log(response.data)
+        this.form.prontuarioLegado = response.data['conteudo']
+        this.isCardModalActive = true
+      })
+      .catch(error => {
         // console.log(error)
-        vm.$toast.open({
+        this.$toast.open({
           message:
             'NENHUM PRONTUÁRIO encontrado.',
           type: 'is-danger',
           position: 'is-bottom'
         })
       })
-      .finally(function () {
-        vm.isImageModalActive = false
+      .finally(() => {
+        this.isImageModalActive = false
       })
     },
     salavrEvolucao (pacienteID) {
@@ -145,15 +137,14 @@ export default {
     }
   },
   mounted () {
-    let vm = this
-    eBus.$on('PACIENTE_ID', function (paciente) {
+    eBus.$on('PACIENTE_ID', paciente => {
       if (!paciente) return
       let birthday = moment.utc(paciente.dt_nascimento, 'DD/MM/YYYY')
       let age = Math.abs(birthday.diff(moment(), 'years'))
-      vm.form.id = paciente.id
-      vm.form.nome = paciente.nome
-      vm.form.idade = age
-      vm.bGravar = false
+      this.form.id = paciente.id
+      this.form.nome = paciente.nome
+      this.form.idade = age
+      this.bGravar = false
     })
   }
 }

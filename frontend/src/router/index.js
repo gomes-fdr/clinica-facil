@@ -3,18 +3,11 @@ import Router from 'vue-router'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import SimpleVueValidation from 'simple-vue-validator'
-import auth from '../auth'
+// import auth from '../auth'
 // import { AclRule } from 'vue-acl'
 
 function requireAuth (to, from, next) {
-  if (!auth.loggedIn()) {
-    next({
-      path: '/login',
-      query: { redirect: to.fullPath }
-    })
-  } else {
-    next()
-  }
+  next()
 }
 
 const routerOptions = [

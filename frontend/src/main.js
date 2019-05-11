@@ -4,11 +4,15 @@ import router from './router'
 import VueMask from 'v-mask'
 import VueScheduler from 'v-calendar-scheduler'
 import 'v-calendar-scheduler/lib/main.css'
+import axios from 'axios'
 
 import acl from './acl'
+import VueSession from 'vue-session'
 
 Vue.config.productionTip = true
 
+Vue.prototype.$http = axios
+Vue.use(VueSession)
 Vue.use(VueMask)
 Vue.use(VueScheduler, {
   locale: 'pt-br',

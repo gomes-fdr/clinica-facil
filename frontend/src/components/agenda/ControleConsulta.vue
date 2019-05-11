@@ -81,15 +81,10 @@
 </div>
 </template>
 <script>
-import axios from 'axios'
 import SimpleVueValidation from 'simple-vue-validator'
 
 var moment = require('moment')
 
-const HTTP = axios.create({
-  baseURL: process.env.API_URL,
-  headers: { Authorization: `Bearer: ${localStorage.getItem('token')}` }
-})
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
     required: 'Campo obrigatório'
@@ -156,39 +151,33 @@ export default {
       // TODO: SALVAR CONSULTA NO BANCO
       // TODO: Enviar SMS para o paciente, se o celular estiver preenchido
 
-      let vm = this
       this.$validate()
       .then(response => {
         if (response) {
           let data = this.form
           data.dataMarcacao = new Date()
-          HTTP
+          this.$http
           .post(`${process.env.API_URL}agenda/consulta`, data)
-        .then(function (response) {
-          // console.log(response)
-          if (response) {
-            // console.log(response.data)
-            vm.$toast.open({
+          .then(response => {
+            if (response) {
+              this.$toast.open({
+                message:
+                  'CONSULTA salav com sucesso',
+                type: 'is-success',
+                position: 'is-bottom'
+              })
+              this.$parent.close()
+            }
+          })
+          .catch(error => {
+            // console.log(error)
+            this.$toast.open({
               message:
-                'CONSULTA salav com sucesso',
-              type: 'is-success',
+                'FALHA ao gravar uma CONSULTA',
+              type: 'is-danger',
               position: 'is-bottom'
             })
-            vm.$parent.close()
-          }
-        })
-        .catch(function (error) {
-          // console.log(error)
-          vm.$toast.open({
-            message:
-              'FALHA ao gravar uma CONSULTA',
-            type: 'is-danger',
-            position: 'is-bottom'
           })
-        })
-        .finally(function () {
-          // vm.modal.isLoading = false
-        })
         }
       })
       .catch(error => {})
@@ -199,69 +188,53 @@ export default {
         return
       }
 
-      let vm = this
-      HTTP
-        .get(`${process.env.API_URL}paciente/nome/${vm.form.paciente.nome}`, {
-        })
-      .then(function (response) {
+      this.$http
+      .get(`${process.env.API_URL}paciente/nome/${this.form.paciente.nome}`)
+      .then(response => {
         // console.log(response)
         if (response) {
-          vm.modal.data = response.data
-          vm.modal.isActive = true
+          this.modal.data = response.data
+          this.modal.isActive = true
         }
       })
-      .catch(function (error) {
+      .catch(error => {
         // console.log(error)
-        vm.$toast.open({
+        this.$toast.open({
           message:
             'NENHUM PACIENTE encontrado.',
           type: 'is-danger',
           position: 'is-bottom'
         })
       })
-      .finally(function () {
-        vm.modal.isLoading = false
+      .finally(() => {
+        this.modal.isLoading = false
       })
     },
     copiaPaciente () {
       console.log('Copia paciente')
-      let vm = this
-      HTTP
-      .get(`${process.env.API_URL}paciente/nome-completo/${vm.modal.selected.nome}`)
-      .then(function (response) {
+      this.$http
+      .get(`${process.env.API_URL}paciente/nome-completo/${this.modal.selected.nome}`)
+      .then(response => {
         // console.log(response)
         let paciente = response.data
-        // let t = moment.utc(tmp.dt_nascimento).format('DD/MM/YYYY')
-        // tmp.dt_nascimento = t
-        // console.log(tmp)
-        // vm.form = tmp
-        // vm.bNovo = true
-        // vm.bAtualizar = false
-        // let data = {
-        //   id: vm.form.id,
-        //   nome: vm.form.nome,
-        //   dt_nascimento: vm.form.dt_nascimento
-        // }
         // console.log(paciente)
-        vm.form.paciente.id = paciente.id
-        vm.form.paciente.nome = paciente.nome
-        vm.getPSPaciente(vm.form.paciente.id)
+        this.form.paciente.id = paciente.id
+        this.form.paciente.nome = paciente.nome
+        this.getPSPaciente(this.form.paciente.id)
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
-      .finally(function () {
-        vm.modal.isLoading = false
+      .finally(() => {
+        this.modal.isLoading = false
       })
       this.modal.isActive = false
     },
     getPSPaciente (pacienteID) {
       console.log('Busca planos de saude de um paciente')
-      let vm = this
-
-      HTTP
-      .get(`${process.env.API_URL}ps-paciente/${pacienteID}`, {})
-      .then(function (response) {
+      this.$http
+      .get(`${process.env.API_URL}ps-paciente/${pacienteID}`)
+      .then(response => {
         console.log(response.data)
         let convenios = response.data
 
@@ -272,7 +245,7 @@ export default {
           }
           convenio.id = c.id
           convenio.descricao = c.ps.descricao
-          vm.apiConvenios.push(convenio)
+          this.apiConvenios.push(convenio)
         })
       })
       .catch(function (error) {

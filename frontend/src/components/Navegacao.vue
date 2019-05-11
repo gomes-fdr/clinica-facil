@@ -40,18 +40,20 @@
 </template>
 
 <script>
-import auth from '../auth'
+// import auth from '../auth'
 
 export default {
   data () {
     return {
-      nome: localStorage.getItem('nome'),
-      perfil: localStorage.getItem('perfil')
+      nome: this.$session.get('nome'),
+      perfil: this.$session.get('perfil')
     }
   },
   methods: {
     logout () {
-      auth.logout()
+      this.$session.destroy()
+      // this.$router.push('/login') // Não faz o reload, para recarregar o css
+      location.reload()
     }
   }
 }

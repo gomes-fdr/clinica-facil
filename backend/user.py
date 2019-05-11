@@ -1,12 +1,12 @@
 from flask import Blueprint, current_app, jsonify, request
 
 from .serealizer import UserSchema
-from .token import token_required
+from flask_jwt_extended import jwt_required
 
 bp_user = Blueprint('user', __name__)
 
 @bp_user.route('/api/v1/create-user', methods=['POST'])
-@token_required
+@jwt_required
 def register():
     """
     Adiciona um usuário no sistema.

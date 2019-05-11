@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, jsonify, request
 from sqlalchemy.exc import SQLAlchemyError
 from backend.models.profissional import Profissional
 
-from .token import token_required
+from flask_jwt_extended import jwt_required
 from .serealizer import PacienteSchema, ProfissionalSchema, PerfilSchema, SituacaoSchema
 from backend.models.profissional import Profissional, Perfil, Situacao, User
 
@@ -16,6 +16,7 @@ bp_profissional = Blueprint('profissional', __name__)
 # TODO: Pesquisar Profissionais por nome
 
 @bp_profissional.route('/api/v1/profissional', methods=['POST'])
+@jwt_required
 def profissional():
     """
     Insere um novo profissional no sistema.
@@ -74,6 +75,7 @@ def profissional():
     return pa.jsonify(p), 201
 
 @bp_profissional.route('/api/v1/profissional/cpf/<cpf>', methods=['GET'])
+@jwt_required
 def profissional_cpf(cpf):
     """
     Busca um profissional pelo CPF.
@@ -88,6 +90,7 @@ def profissional_cpf(cpf):
 
 
 @bp_profissional.route('/api/v1/profissional/perfil', methods=['GET'])
+@jwt_required
 def perfil():
     """
     Retorna a lista de perfis do sistema
@@ -101,6 +104,7 @@ def perfil():
 
 
 @bp_profissional.route('/api/v1/profissional/situacao', methods=['GET'])
+@jwt_required
 def situacao():
     """
     Retorna a lista de perfis do sistema
@@ -114,7 +118,7 @@ def situacao():
 
 
 @bp_profissional.route('/api/v1/profissional/nome/<nome>', methods=['GET'])
-@token_required
+@jwt_required
 def profissional_nome(nome):
     """
     Busca um profissional pelo nome ou parte dele.
@@ -129,7 +133,7 @@ def profissional_nome(nome):
 
 
 @bp_profissional.route('/api/v1/profissional/<nome>', methods=['POST'])
-@token_required
+@jwt_required
 def profissional_atualizar(nome):
     """
     Atualiza um profissional no sistema.
@@ -167,7 +171,7 @@ def profissional_atualizar(nome):
 
 
 @bp_profissional.route('/api/v1/profissional/nome-completo/<nome>', methods=['GET'])
-@token_required
+@jwt_required
 def profissional_nome_completo(nome):
     """
     Busca um profissional pelo nome ou parte dele.
@@ -184,7 +188,7 @@ def profissional_nome_completo(nome):
 
 
 @bp_profissional.route('/api/v1/profissional/reset-senha', methods=['POST'])
-@token_required
+@jwt_required
 def profissional_reset_senha():
     """
     Inicializa Profissional com senha
