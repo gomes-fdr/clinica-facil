@@ -18,8 +18,19 @@ export default {
     }
   },
   created () {
+    this.logout()
   },
   mounted () {
+  },
+  methods: {
+    logout () {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        // Log out the user
+        this.$session.destroy()
+        location.reload()
+      }, 30 * 60 * 1000)
+    }
   }
 }
 </script>
