@@ -143,7 +143,7 @@ export default {
     initApp () {
       this.date = `${moment.utc(this.event.date).format('dddd, DD MMMM YYYY')} das ${this.event.startTime} as ${this.event.endTime}`
       this.form.horario_id = this.event.horario_id
-      this.form.quem_marcou_id = localStorage.getItem('profissional_id')
+      this.form.quem_marcou_id = this.$session.get('profissional_id')
     },
     salvarConsulta () {
       console.log('Salvar NOVA consulta')

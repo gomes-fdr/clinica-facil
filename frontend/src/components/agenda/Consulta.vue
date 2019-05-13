@@ -226,9 +226,9 @@ export default {
       this.formData.dt_inicio = moment.utc(tmp).format('DD/MM/YYYY')
       this.formData.dt_fim = moment.utc(tmp2).format('DD/MM/YYYY')
 
-      // let profissional_id = localStorage.getItem('profissional_id')
-      let profissional = localStorage.getItem('nome')
-      let perfil = localStorage.getItem('perfil')
+      // let profissional_id = this.$session.get('profissional_id')
+      let profissional = this.$session.get('nome')
+      let perfil = this.$session.get('perfil')
 
       switch (perfil) {
         case 'Psicologo':
@@ -254,7 +254,7 @@ export default {
       if ((this.formControl.radio === 'TodosProfissionais') || (this.formControl.radio === 'Profissionais')) {
         selecao = 'profissional'
         if (this.formControl.radio === 'TodosProfissionais') profissionalID = '*'
-        else if (this.formControl.radio === 'Profissionais') profissionalID = localStorage.getItem('profissional_id')
+        else if (this.formControl.radio === 'Profissionais') profissionalID = this.$session.get('profissional_id')
         url = `agenda/horario/profissional?selecao=${selecao}&profissional_id=${profissionalID}&dt_inicio=${this.formData.dt_inicio}&dt_fim=${this.formData.dt_fim}&livre=true`
       } if (this.formControl.radio === 'Especialidade') {
         selecao = 'especialidade'

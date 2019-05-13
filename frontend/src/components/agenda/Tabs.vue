@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     initApp () {
-      let perfil = localStorage.getItem('perfil')
+      let perfil = this.$session.get('perfil')
 
       switch (perfil) {
         case 'Psicologo':
