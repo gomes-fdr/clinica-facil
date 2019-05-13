@@ -243,10 +243,6 @@ export default {
         default:
           break
       }
-
-      // TODO: Se profissional de atendimento(ex. psicologo preencher o form automático)
-      // TODO: Se não, deixa selecionado 'Todos os profissionais'
-      // localStorage.getItem('token')
     },
     showCalendar () {
       let selecao = ''

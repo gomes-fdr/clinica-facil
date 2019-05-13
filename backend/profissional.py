@@ -10,10 +10,6 @@ from marshmallow import pprint
 
 bp_profissional = Blueprint('profissional', __name__)
 
-# TODO: Revisar sistema de tokens
-# TODO: Atualizar Profissionais
-# TODO: Atualizar senhas de usuários
-# TODO: Pesquisar Profissionais por nome
 
 @bp_profissional.route('/api/v1/profissional', methods=['POST'])
 @jwt_required
