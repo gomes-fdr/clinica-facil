@@ -457,7 +457,7 @@ export default {
       })
     },
     pesquisarNome () {
-      console.log('Pesquisar paciente')
+      console.log('Pesquisar profissional')
       if (!this.form.nome.length) {
         return
       }

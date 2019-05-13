@@ -75,7 +75,7 @@
             </p>
             <div class="control">
               <a class="button">
-                <i class="fas fa-search"></i>
+                <i class="fas fa-question"></i>
               </a>
             </div>
           </div>
@@ -109,7 +109,7 @@
               >
             </p>
             <div class="control">
-              <a class="button" :disabled="formControl.isProfissionalDisabled">
+              <a class="button" :disabled="formControl.isProfissionalDisabled" @click.prevent="pesquisarNome">
                 <i class="fas fa-search"></i>
               </a>
             </div>
@@ -147,6 +147,19 @@
     >
     </controle-consulta>
   </b-modal>
+
+  <b-modal :active.sync="modal.profissional.isActive">
+    <b-table 
+    :data="table.data"
+    :loading="table.isLoading"
+    :columns="table.columns"
+    :selected.sync="table.selected"
+    @dblclick="copiaProfissional"
+    >
+    
+    </b-table>
+
+  </b-modal>
 </div>
 </template>
 
@@ -177,7 +190,25 @@ export default {
         },
         agenda: {
           isActive: false
+        },
+        profissional: {
+          isActive: false
         }
+      },
+      table: {
+        isLoading: false,
+        data: [],
+        columns: [
+          {
+            field: 'nome',
+            label: 'Nome'
+          },
+          {
+            field: 'cpf',
+            label: 'CPF'
+          }
+        ],
+        selected: null
       },
       formControl: {
         radio: 'Especialidade',
@@ -188,7 +219,8 @@ export default {
         dt_fim: '',
         nomeProfissional: '',
         nomePaciente: '',
-        especialidade: ''
+        especialidade: '',
+        profissional_id: ''
       },
       events: [],
       event: {
@@ -244,6 +276,32 @@ export default {
           break
       }
     },
+    copiaProfissional () {
+      console.log('Copia Profissional')
+      if (!this.table.selected.nome) {
+        return
+      }
+      this.$http
+      .get(`${process.env.API_URL}profissional/nome-completo/${this.table.selected.nome}`)
+      .then(response => {
+        this.formData.profissional_id = response.data.id
+        this.formData.nomeProfissional = response.data.nome
+        this.showCalendar()
+      })
+      .catch(error => {
+        // console.log(error)
+        this.$toast.open({
+          message:
+            'NENHUM PROFISSIONAL encontrado.',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      })
+      .finally(() => {
+        this.table.isLoading = false
+      })
+      this.modal.profissional.isActive = false
+    },
     showCalendar () {
       let selecao = ''
       let profissionalID = ''
@@ -251,12 +309,19 @@ export default {
       let url = ''
       this.events = []
 
-      if ((this.formControl.radio === 'TodosProfissionais') || (this.formControl.radio === 'Profissionais')) {
+      if ((this.formControl.radio === 'TodosProfissionais') || (this.formControl.radio === 'Profissional')) {
         selecao = 'profissional'
-        if (this.formControl.radio === 'TodosProfissionais') profissionalID = '*'
-        else if (this.formControl.radio === 'Profissionais') profissionalID = this.$session.get('profissional_id')
+        if (this.formControl.radio === 'TodosProfissionais') {
+          profissionalID = '*'
+        } else if (this.formControl.radio === 'Profissional') {
+          if ((this.$session.get('perfil') === 'Administracao') || (this.$session.get('perfil') === 'Recepcao')) {
+            profissionalID = this.formData.profissional_id
+          } else {
+            profissionalID = this.$session.get('profissional_id')
+          }
+        }
         url = `agenda/horario/profissional?selecao=${selecao}&profissional_id=${profissionalID}&dt_inicio=${this.formData.dt_inicio}&dt_fim=${this.formData.dt_fim}&livre=true`
-      } if (this.formControl.radio === 'Especialidade') {
+      } else if (this.formControl.radio === 'Especialidade') {
         selecao = 'especialidade'
         especialidadeID = this.formData.especialidade
         url = `agenda/horario/profissional?selecao=${selecao}&especialdade_id=${especialidadeID}&dt_inicio=${this.formData.dt_inicio}&dt_fim=${this.formData.dt_fim}&livre=true`
@@ -325,6 +390,30 @@ export default {
         this.apiEspecialidade = response.data
       })
       .catch(error => {})
+    },
+    pesquisarNome () {
+      console.log('Pesquisa PROFISSIONAL por nome')
+      if (!this.formData.nomeProfissional.length) {
+        return
+      }
+      this.table.isLoading = true
+      this.$http
+      .get(`${process.env.API_URL}profissional/nome/${this.formData.nomeProfissional}`)
+      .then(response => {
+        this.table.data = response.data
+        this.modal.profissional.isActive = true
+      })
+      .catch(error => {
+        this.$toast.open({
+          message:
+            'NENHUM PROFISSIONAL encontrado com esse nome.',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      })
+      .finally(() => {
+        this.table.isLoading = false
+      })
     },
     enviaSMS () {
       console.log('Envia SMS')
