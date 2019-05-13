@@ -248,7 +248,7 @@ export default {
           this.apiConvenios.push(convenio)
         })
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
     }

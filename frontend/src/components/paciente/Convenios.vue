@@ -203,7 +203,7 @@ export default {
 
       this.$http
       .get(`${process.env.API_URL}ps-paciente/${pacienteID}`)
-      .then(function (response) {
+      .then(response => {
         // console.log(response)
         let data = response.data
         let p = {}
@@ -218,9 +218,9 @@ export default {
         }
         this.table.data = tabData
       })
-      .catch(function (error) {
+      .catch(error => {
         // console.log(error)
-        this.table.data = []
+        // this.table.data = []
       })
     },
     pesquisarPlano () {
@@ -231,11 +231,11 @@ export default {
 
       this.$http
       .get(`${process.env.API_URL}ps`)
-      .then(function (response) {
+      .then(response => {
         // console.log(response)
         this.modal.data = response.data
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
     },
@@ -256,7 +256,7 @@ export default {
         // console.log(response)
         this.reset()
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
     },
@@ -272,7 +272,7 @@ export default {
           // console.log(data)
           this.$http
           .post(`${process.env.API_URL}ps-paciente`, data)
-          .then(function (response) {
+          .then(response => {
             // console.log(response)
             this.reset()
             this.getPSPaciente(this.form.paciente_id)

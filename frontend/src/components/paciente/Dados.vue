@@ -335,7 +335,6 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 import { eBus } from '../../main'
-import axios from 'axios'
 
 var moment = require('moment')
 
@@ -535,9 +534,10 @@ export default {
       cep = cep.replace('.', '')
       cep = cep.replace('-', '')
 
-      const instance = axios
+      // Remove o cabeçalho de autorização, feio mas funciona
+      this.$http.defaults.headers.common = {}
 
-      instance
+      this.$http
       .get(`https://viacep.com.br/ws/${cep}/json`)
       .then(response => {
         if (response.data) {
@@ -549,6 +549,10 @@ export default {
       })
       .catch(error => {
         this.erroCep()
+      })
+      .finally(() => {
+        // Adiciona o cabeçãlho de autorização, feio ma funciona
+        this.$http.defaults.headers.common['Authorization'] = 'Bearer ' + this.$session.get('jwt')
       })
     },
     erroCep () {

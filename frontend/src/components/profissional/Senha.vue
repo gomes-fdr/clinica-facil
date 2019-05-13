@@ -69,7 +69,7 @@ export default {
     }
   },
   validators: {
-    'repeat, password': function (repeat, password) {
+    'repeat, password': (repeat, password) => {
       if (this.validation.isTouched('repeat')) {
         this.submitted = false
         return Validator.value(repeat).required().match(password)
@@ -87,24 +87,23 @@ export default {
         id_profissional: this.id,
         password: this.password
       }
-      let vm = this
       this.$validate()
       .then(success => {
         if (success) {
           console.log(data)
           this.$http
           .post(`${process.env.API_URL}profissional/reset-senha`, data)
-          .then(function (response) {
+          .then(response => {
             console.log(response)
-            vm.$toast.open({
+            this.$toast.open({
               message: 'SUCESSO! SENHA INICIALIZADA.',
               type: 'is-success',
               position: 'is-bottom'
             })
           })
-          .catch(function (error) {
+          .catch(error => {
             // console.log(error)
-            vm.$toast.open({
+            this.$toast.open({
               message:
                 'FALHA ao INICIALIZAR senha!',
               type: 'is-danger',

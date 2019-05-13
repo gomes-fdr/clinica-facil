@@ -267,7 +267,7 @@ export default {
       }
 
       this.$validate()
-      .then(function (response) {
+      .then(response => {
         if (response) {
           console.log('Calendario de eventos')
           this.$http

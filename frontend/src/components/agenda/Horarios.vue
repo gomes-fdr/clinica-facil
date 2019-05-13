@@ -318,7 +318,7 @@ export default {
           this.modal.calendar.isActive = true
         }
       })
-      .catch(function (error) {})
+      .catch(error => {})
     },
     forceRerender () {
       this.componentKey += 1
@@ -368,7 +368,7 @@ export default {
 
       this.$http
       .post(`${process.env.API_URL}agenda/sala/${this.formHorario.local.descricao}`)
-      .then(function (response) {
+      .then(response => {
       })
       .catch(error => {
         console.log(error)
