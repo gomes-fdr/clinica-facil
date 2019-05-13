@@ -304,7 +304,13 @@ export default {
           // console.log(response)
         })
         .catch(error => {
-          console.log(error)
+          // console.log(error)
+          this.$toast.open({
+            message:
+              'NÃO pode ser removido, em uso.',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
         })
       }
       this.getPSPaciente(this.form.paciente_id)

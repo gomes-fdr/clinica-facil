@@ -96,7 +96,10 @@ def delete_ps_paciente(id):
     Apaga um plano de saude de um paciente
     """
     print('ID: ' + str(id))
-    ps = PlanoSaudePaciente.query.filter_by(id = id).delete()
+    try:
+        ps = PlanoSaudePaciente.query.filter_by(id = id).delete()
+    except SQLAlchemyError as e:
+        return jsonify({'message': 'Fail to delete Plano de Saúde for Paciente'}), 400
 
     if not ps:
         return jsonify({'message': 'Plano de Saúde not found'}), 404
