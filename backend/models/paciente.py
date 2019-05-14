@@ -1,4 +1,5 @@
 from . import db
+from .profissional import Situacao
 from sqlalchemy.exc import SQLAlchemyError
 
 
@@ -27,6 +28,9 @@ class Paciente(db.Model):
     observacoes = db.Column(db.String(100))
     envioSMS = db.Column(db.Boolean, default=False)
     adultoInapto = db.Column(db.Boolean, default=False)
+
+    situacao_id = db.Column(db.Integer, db.ForeignKey('situacao.id'))
+    situacao = db.relationship("Situacao", backref=db.backref("situacao_paciente", lazy="dynamic"))
 
 
 # Versão com controle de campos nulos
