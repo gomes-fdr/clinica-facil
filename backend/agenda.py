@@ -239,3 +239,68 @@ def get_especialidades():
 
     return PerfilSchema(many=True).jsonify(especialidades), 200
 
+
+
+@bp_agenda.route('/api/v1/agenda/consulta', methods=['GET'])
+def get_consulta_profissional():
+    """
+    Busca Consultas de um profissional, por intervalo de datas para atendimento
+    Retorna:
+    {
+        id:	6
+        profissionais:	264
+        dt_marcacao:	2019-05-03T01:10:53.901000
+        horario:	32
+        compareceu:	false
+        confirmacao_consulta_sms:	false
+        plano_saude_paciente: 32
+        pacientes: 422876
+    }
+    
+    """
+
+    selecao = request.args['selecao']
+    dt_ini = datetime.strptime(request.args['dt_ini'], '%d/%m/%Y')
+    dt_fim = datetime.strptime(request.args['dt_fim'], '%d/%m/%Y')
+
+    if selecao == 'especialidade':
+        especialidade_id = request.args['especialidade_id']
+        if not especialidade_id:
+            return jsonify({'message': 'Especialidade is empty'}), 409
+        else:
+            perfil = Perfil.query.filter_by(id = especialidade_id).first()
+            profissionais = Profissional.query.filter_by(perfil_id = perfil.id).all()
+            horarios = Horario.query.filter(
+                Horario.dt_dia >= dt_ini,
+                Horario.dt_dia <= dt_fim,
+                Horario.livre == False,
+                Horario.profissional_id.in_(( p.id for p in profissionais ))
+            ).all()
+            consultas = Consulta.query.filter(
+                Consulta.horario_id.in_(( h.id for h in horarios ))
+            ).all()
+    elif selecao == 't_profissional':
+        horarios = Horario.query.filter(
+            Horario.dt_dia >= dt_ini,
+            Horario.dt_dia <= dt_fim,
+            Horario.livre == False,
+        ).all()
+        consultas = Consulta.query.filter(
+            Consulta.horario_id.in_(( h.id for h in horarios ))
+        ).all()
+    elif selecao == 'profissional':
+        profissional_id = request.args['profissional_id']
+        horarios = Horario.query.filter(
+            Horario.dt_dia >= dt_ini,
+            Horario.dt_dia <= dt_fim,
+            Horario.livre == False,
+            Horario.profissional_id == profissional_id
+        ).all()
+        consultas = Consulta.query.filter(
+            Consulta.horario_id.in_(( h.id for h in horarios ))
+        ).all()
+
+    if not consultas:
+        return jsonify({'message': 'Consulta(s) not found'}), 404
+    
+    return ConsultaSchema(many=True).jsonify(consultas), 200

@@ -148,7 +148,6 @@ export default {
     salvarConsulta () {
       console.log('Salvar NOVA consulta')
 
-      // TODO: SALVAR CONSULTA NO BANCO
       // TODO: Enviar SMS para o paciente, se o celular estiver preenchido
 
       this.$validate()

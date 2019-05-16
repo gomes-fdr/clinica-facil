@@ -81,7 +81,11 @@
           </div>
           <p v-show="validation.hasError('formData.nomePaciente')" class="help is-danger">{{ validation.firstError('formData.nomePaciente') }}</p>
         </div>
-        <div class="field" v-if="formControl.radio == 'Especialidade'">
+        <b-field 
+         v-if="formControl.radio == 'Especialidade'"
+         :type="{'is-danger': validation.hasError('formData.especialidade') }"
+         :message= "validation.firstError('formData.especialidade')"
+         >
           <b-select 
           placeholder="Especialidade"
           expanded
@@ -95,7 +99,7 @@
               {{e.descricao}}
             </option>
           </b-select>
-        </div>
+        </b-field>
         <div class="field" v-if="formControl.radio == 'Profissional'">
           <div class="field has-addons">
             <p class="control is-expanded">
@@ -121,10 +125,10 @@
     <hr>
     <div class="field is-grouped is-grouped-right">
       <p class="control">
-        <a class="button is-info" :disabled="false" @click.prevent="consultasMarcadas">Consultas Marcadas</a>
+        <a class="button is-info" :disabled="false" @click.prevent="showCalendarioConsultas">Consultas Marcadas</a>
       </p>
       <p class="control">
-        <a class="button is-info" @click.prevent="showCalendar">Horários Vagos</a>
+        <a class="button is-info" @click.prevent="showCalendarioHorarios">Horários Vagos</a>
       </p>
     </div>
 
@@ -245,8 +249,8 @@ export default {
         return Validator.value(value).required()
       }
     },
-    'formData.nomePaciente': function (value) {
-      if (this.formControl.radio === 'Paciente') {
+    'formData.especialidade': function (value) {
+      if (this.formControl.radio === 'Especialidade') {
         return Validator.value(value).required()
       }
     }
@@ -286,7 +290,7 @@ export default {
       .then(response => {
         this.formData.profissional_id = response.data.id
         this.formData.nomeProfissional = response.data.nome
-        this.showCalendar()
+        // this.showCalendarioHorarios()
       })
       .catch(error => {
         // console.log(error)
@@ -302,7 +306,7 @@ export default {
       })
       this.modal.profissional.isActive = false
     },
-    showCalendar () {
+    showCalendarioHorarios () {
       let selecao = ''
       let profissionalID = ''
       let especialidadeID = ''
@@ -374,8 +378,80 @@ export default {
         console.log(error)
       })
     },
-    consultasMarcadas () {
-      console.log('Consultas Marcadas')
+    showCalendarioConsultas () {
+      let url = ''
+      let profissionalID = ''
+
+      if ((this.$session.get('perfil') === 'Administracao') || (this.$session.get('perfil') === 'Recepcao')) {
+        profissionalID = this.formData.profissional_id
+      } else {
+        profissionalID = this.$session.get('profissional_id')
+      }
+
+      switch (this.formControl.radio) {
+        case 'Especialidade':
+          console.log('Consultas Marcadas por Especialidade')
+          url = `agenda/consulta?selecao=especialidade&especialidade_id=${this.formData.especialidade}&dt_ini=${this.formData.dt_inicio}&dt_fim=${this.formData.dt_fim}`
+          break
+        case 'TodosProfissionais':
+          console.log('Consultas Marcadas Todos os profissionais')
+          url = `agenda/consulta?selecao=t_profissional&dt_ini=${this.formData.dt_inicio}&dt_fim=${this.formData.dt_fim}`
+          break
+        case 'Profissional':
+          console.log('Consultas Marcadas por Profissional')
+          url = `agenda/consulta?selecao=profissional&profissional_id=${profissionalID}&dt_ini=${this.formData.dt_inicio}&dt_fim=${this.formData.dt_fim}`
+          break
+        default:
+          return
+      }
+      this.$validate()
+      .then(response => {
+        if (response) {
+          console.log('Calendario de Consultas')
+          this.$http
+          .get(`${process.env.API_URL}${url}`)
+          .then(response => {
+            let data = response.data
+            console.log(data)
+            data.forEach(e => {
+              // let event = {
+              //   date: null,
+              //   startTime: '',
+              //   endTime: '',
+              //   name: null,
+              //   horario_id: null,
+              //   profissional_id: null
+              // }
+              // console.log('data do evento: ' + e.dt_dia.split('T')[0])
+              // console.log(typeof e.dt_dia)
+              // event.date = moment(e.dt_dia.split('T')[0], 'YYYY-MM-DD').toDate()
+              // event.startTime = e.hora_ini
+              // event.endTime = e.hora_fim
+              // event.name = e.profissional.nome
+              // event.profissional_id = e.profissional.id
+              // event.horario_id = e.id
+              // this.events.push(event)
+              console.log(e)
+              // TODO: ALTERAR O cONSULTAsCHEMA PARA ACESSAR OS DADOS DE HORARIO, PARA ADICIONAR EM EVENTO
+            })
+            this.modal.calendario.isActive = true
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        if (error) {
+          this.$toast.open({
+            message:
+              'NENHUM CONSULTA encontrada',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        }
+      })
     },
     eventClicked (event) {
       // console.log(event)
