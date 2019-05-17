@@ -70,10 +70,10 @@
         </form>
       </section>
       <footer class="modal-card-foot">
-          <button class="button is-danger" :disabled="isConsulta" @click.prevent="">Paciente Faltou</button>
-          <button class="button is-danger" :disabled="isConsulta" @click.prevent="">Apagar Consulta</button>
-          <button class="button is-info" :disabled="isConsulta" @click.prevent="">Paciente Chegou</button>
-          <button class="button is-info" :disabled="isConsulta" @click.prevent="">Confirmar Presença</button>
+          <button class="button is-danger" :disabled="isConsulta" @click.prevent="pacienteFaltou">Paciente Faltou</button>
+          <button class="button is-danger" :disabled="isConsulta" @click.prevent="pacienteCancelou">Paciente Cancelou</button>
+          <button class="button is-info" :disabled="isConsulta" @click.prevent="pacienteChegou">Paciente Chegou</button>
+          <button class="button is-info" :disabled="isConsulta" @click.prevent="emConsulta">Paciente em Consulta</button>
           <button class="button is-info" :disabled="!isConsulta" @click.prevent="salvarConsulta">Salvar Consulta</button>
       </footer>
     </div>
@@ -271,6 +271,39 @@ export default {
       })
       .catch(error => {
         console.log(error)
+      })
+    },
+    emConsulta () {
+      console.log('Paciente em consulta')
+
+      // TODO: Atualizar no compareceu
+      this.$dialog.confirm({
+        message: 'Deseja abrir o prontuário para evolução do paciente?',
+        confirmText: 'Sim',
+        cancelText: 'Não',
+        onConfirm: () => this.$toast.open('User confirmed')
+      })
+    },
+    pacienteChegou () {
+      console.log('Adiciona um paciente a task de aviso de chegada')
+    },
+    pacienteCancelou () {
+      console.log('Paciente cancelou')
+      // TODO: Definir um fluxo para psciquiatra e outro para os demais
+      this.$dialog.confirm({
+        message: `${this.$session.get('nome')}, Confirma que o paciente cancelou a consulta?`,
+        confirmText: 'Sim',
+        cancelText: 'Não',
+        onConfirm: () => this.$toast.open('User confirmed')
+      })
+    },
+    pacienteFaltou () {
+      console.log('Paciente NÃO compareceu')
+      this.$dialog.confirm({
+        message: `${this.$session.get('nome')}, Confirma que o paciente Faltou?`,
+        confirmText: 'Sim',
+        cancelText: 'Não',
+        onConfirm: () => this.$toast.open('User confirmed')
       })
     }
   }

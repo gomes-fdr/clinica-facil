@@ -34,6 +34,10 @@ class Consulta(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dt_marcacao = db.Column(db.Date)
     compareceu = db.Column(db.Boolean, default=False)
+    cancelou = db.Column(db.Boolean, default=False)
+    chegou = db.Column(db.Boolean, default=False)
+    em_consulta = db.Column(db.Boolean, default=False)
+    encaixe = db.Column(db.Boolean, default=False)
     confirmacao_consulta_sms = db.Column(db.Boolean, default=False)
 
     paciente_id = db.Column(db.Integer, db.ForeignKey('paciente.id'))
