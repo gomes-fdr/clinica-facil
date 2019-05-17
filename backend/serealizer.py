@@ -117,6 +117,9 @@ class HorarioSchema(ma.ModelSchema):
 
 
 class ConsultaSchema(ma.ModelSchema):
+    horario = fields.Nested(HorarioSchema)
+    paciente = fields.Nested(PacienteSchema)
+    plano_saude_paciente = fields.Nested(PlanoSaudePacienteSchema)
     class Meta:
         model = Consulta
 

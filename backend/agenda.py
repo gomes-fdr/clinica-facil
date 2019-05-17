@@ -242,6 +242,7 @@ def get_especialidades():
 
 
 @bp_agenda.route('/api/v1/agenda/consulta', methods=['GET'])
+@jwt_required
 def get_consulta_profissional():
     """
     Busca Consultas de um profissional, por intervalo de datas para atendimento

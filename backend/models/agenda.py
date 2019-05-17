@@ -41,7 +41,7 @@ class Consulta(db.Model):
     horario_id = db.Column(db.Integer, db.ForeignKey('horario.id'))
     convenio_id = db.Column(db.Integer, db.ForeignKey('plano_saude_paciente.id'))
 
-    pacientes = db.relationship('Paciente', backref='pacientes')
+    paciente = db.relationship('Paciente', backref='pacientes')
     profissionais = db.relationship('Profissional', backref='profissionais')
     horario = db.relationship('Horario', backref='horario')
     plano_saude_paciente = db.relationship('PlanoSaudePaciente', backref='plano_saude_paciente')

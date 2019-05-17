@@ -148,6 +148,8 @@
   <b-modal :active.sync="modal.agenda.isActive">
     <controle-consulta
       :event="event"
+      :paciente="paciente"
+      :modo="modo"
     >
     </controle-consulta>
   </b-modal>
@@ -234,7 +236,16 @@ export default {
         name: null,
         horario_id: null,
         profissional_id: null
-      }
+      },
+      paciente: {
+        id: null,
+        nome: null,
+        ps: {
+          id: 1,
+          descricao: null
+        }
+      },
+      modo: ''
     }
   },
   validators: {
@@ -350,6 +361,10 @@ export default {
               }
               // console.log('data do evento: ' + e.dt_dia.split('T')[0])
               // console.log(typeof e.dt_dia)
+              this.modo = null
+              this.paciente.nome = ''
+              this.paciente.id = ''
+
               event.date = moment(e.dt_dia.split('T')[0], 'YYYY-MM-DD').toDate()
               event.startTime = e.hora_ini
               event.endTime = e.hora_fim
@@ -381,6 +396,7 @@ export default {
     showCalendarioConsultas () {
       let url = ''
       let profissionalID = ''
+      this.events = []
 
       if ((this.$session.get('perfil') === 'Administracao') || (this.$session.get('perfil') === 'Recepcao')) {
         profissionalID = this.formData.profissional_id
@@ -414,43 +430,45 @@ export default {
             let data = response.data
             console.log(data)
             data.forEach(e => {
-              // let event = {
-              //   date: null,
-              //   startTime: '',
-              //   endTime: '',
-              //   name: null,
-              //   horario_id: null,
-              //   profissional_id: null
-              // }
+              let event = {
+                date: null,
+                startTime: '',
+                endTime: '',
+                name: null,
+                horario_id: null,
+                profissional_id: null
+              }
               // console.log('data do evento: ' + e.dt_dia.split('T')[0])
               // console.log(typeof e.dt_dia)
-              // event.date = moment(e.dt_dia.split('T')[0], 'YYYY-MM-DD').toDate()
-              // event.startTime = e.hora_ini
-              // event.endTime = e.hora_fim
-              // event.name = e.profissional.nome
-              // event.profissional_id = e.profissional.id
+              event.date = moment(e.horario.dt_dia.split('T')[0], 'YYYY-MM-DD').toDate()
+              event.startTime = e.horario.hora_ini
+              event.endTime = e.horario.hora_fim
+              event.name = e.horario.profissional.nome
+              event.profissional_id = e.horario.profissional.id
               // event.horario_id = e.id
-              // this.events.push(event)
+              this.modo = 'consulta'
+              this.paciente.nome = e.paciente.nome
+              this.paciente.ps.descricao = e.plano_saude_paciente.ps.descricao
+              this.events.push(event)
               console.log(e)
               // TODO: ALTERAR O cONSULTAsCHEMA PARA ACESSAR OS DADOS DE HORARIO, PARA ADICIONAR EM EVENTO
             })
             this.modal.calendario.isActive = true
           })
           .catch(error => {
-            console.log(error)
+            if (error) {
+              this.$toast.open({
+                message:
+                  'NENHUM CONSULTA encontrada',
+                type: 'is-danger',
+                position: 'is-bottom'
+              })
+            }
           })
         }
       })
       .catch(error => {
         console.log(error)
-        if (error) {
-          this.$toast.open({
-            message:
-              'NENHUM CONSULTA encontrada',
-            type: 'is-danger',
-            position: 'is-bottom'
-          })
-        }
       })
     },
     eventClicked (event) {

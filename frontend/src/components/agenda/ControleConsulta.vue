@@ -23,12 +23,16 @@
                   class="input"
                   :class="{'is-danger': validation.hasError('form.paciente.nome') }"
                   type="text"
+                  :readonly="!isConsulta"
                   placeholder="Nome"
                   v-model="form.paciente.nome"
                   >
                 </p>
-                  <div class="control">
-                    <a class="button is-right" @click.prevent="pesquisaPaciente">
+                  <div class="control" >
+                    <a class="button is-right"
+                     :disabled="!isConsulta"                     
+                      @click.prevent="pesquisaPaciente"
+                      >
                       <i class="fas fa-search"></i>
                     </a>
                   </div>
@@ -36,7 +40,7 @@
               <p v-show="validation.hasError('form.paciente.nome')" class="help is-danger">{{ validation.firstError('form.paciente.nome') }}</p>
             </div>
             
-            <div class="field">
+            <div class="field" v-if="isConsulta">
               <b-select 
               placeholder="Convênio"
               expanded
@@ -52,17 +56,25 @@
               </b-select>
               <p v-show="validation.hasError('form.convenio')" class="help is-danger">{{ validation.firstError('form.convenio') }}</p>
             </div>
+            <div v-else>
+              <input
+                class="input"
+                type="text"
+                :readonly="!isConsulta"
+                placeholder="Nome"
+                v-model="convenio"
+                >
+            </div>
           </div>
         </div>
         </form>
       </section>
       <footer class="modal-card-foot">
-        <div class="field is-grouped is-grouped-right">
-          <button class="button is-danger" :disabled="true">Confirmar Ausência</button>
-          <button class="button is-danger" :disabled="true">Apagar Consulta</button>
-          <button class="button is-info" :disabled="true">Confirmar Presença</button>
-          <button class="button is-info" @click.prevent="salvarConsulta">Salvar Consulta</button>
-        </div>
+          <button class="button is-danger" :disabled="isConsulta" @click.prevent="">Paciente Faltou</button>
+          <button class="button is-danger" :disabled="isConsulta" @click.prevent="">Apagar Consulta</button>
+          <button class="button is-info" :disabled="isConsulta" @click.prevent="">Paciente Chegou</button>
+          <button class="button is-info" :disabled="isConsulta" @click.prevent="">Confirmar Presença</button>
+          <button class="button is-info" :disabled="!isConsulta" @click.prevent="salvarConsulta">Salvar Consulta</button>
       </footer>
     </div>
   </form>
@@ -93,11 +105,13 @@ const Validator = SimpleVueValidation.Validator.create({
 
 export default {
   name: 'ControleConsulta',
-  props: ['event'],
+  props: ['event', 'paciente', 'modo'],
   data () {
     return {
       date: '',
       apiConvenios: [],
+      isConsulta: true,
+      convenio: '',
       form: {
         dataMarcacao: null,
         confirmacao_consulta_sms: false,
@@ -141,6 +155,14 @@ export default {
   },
   methods: {
     initApp () {
+      if (this.modo === 'consulta') {
+        console.log('É uma consulta')
+        console.log('ps: ' + this.paciente.ps)
+        this.isConsulta = false
+        this.form.paciente.nome = this.paciente.nome
+        this.convenio = this.paciente.ps.descricao
+      }
+
       this.date = `${moment.utc(this.event.date).format('dddd, DD MMMM YYYY')} das ${this.event.startTime} as ${this.event.endTime}`
       this.form.horario_id = this.event.horario_id
       this.form.quem_marcou_id = this.$session.get('profissional_id')
