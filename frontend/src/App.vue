@@ -29,7 +29,7 @@ export default {
         // Log out the user
         this.$session.destroy()
         location.reload()
-      }, 30 * 60 * 1000)
+      }, 120 * 60 * 1000)
     }
   }
 }
