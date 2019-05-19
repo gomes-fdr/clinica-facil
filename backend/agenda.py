@@ -305,3 +305,35 @@ def get_consulta_profissional():
         return jsonify({'message': 'Consulta(s) not found'}), 404
     
     return ConsultaSchema(many=True).jsonify(consultas), 200
+
+
+@bp_agenda.route('/api/v1/agenda/consulta/update', methods=['POST'])
+@jwt_required
+def update_consulta_profissional():
+    """
+    Atualiza uma consulta
+    """
+    data = request.json
+    if not data:
+        return jsonify({'message': 'Fail to update Consulta'}), 404
+
+    print(data)
+
+    if data['acao'] == 'faltou':
+        print('Atualiza campos de falta e grava quem disse que faltou')
+    
+    elif data['acao'] == 'cancelou':
+        # TODO: Qual especialidade, se psquiatra configura encaixe
+        print('Atualiza campos de cancelamento e grava quem disse que cancelou')
+
+    elif data['acao'] == 'chegou':
+        # TODO: Atualiza campo informando que paciente e chegou e quem disse que chegou
+        print('Atualiza campos de acolimento')
+
+    elif data['acao'] == 'atendimento':
+        # TODO: Atualiza campo informando que paciente está em atendimento
+        print('Atualiza campos de atendimento')
+    else:
+        return jsonify({'message': 'Fail to update Consulta, no action'}), 404
+
+    return jsonify({'message': 'OK'})

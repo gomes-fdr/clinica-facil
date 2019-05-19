@@ -95,7 +95,9 @@
 <script>
 import SimpleVueValidation from 'simple-vue-validator'
 
-var moment = require('moment')
+// var moment = require('moment')
+var moment = require('moment-timezone')
+moment.tz.setDefault('America/Sao_Paulo')
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -139,6 +141,9 @@ export default {
           }
         ],
         selected: null
+      },
+      formAction: {
+        acao: null
       }
     }
   },
@@ -158,6 +163,7 @@ export default {
       if (this.modo === 'consulta') {
         console.log('É uma consulta')
         console.log('ps: ' + this.paciente.ps)
+        console.log('agenda ID:' + this.event.id)
         this.isConsulta = false
         this.form.paciente.nome = this.paciente.nome
         this.convenio = this.paciente.ps.descricao
@@ -289,21 +295,36 @@ export default {
     },
     pacienteCancelou () {
       console.log('Paciente cancelou')
-      // TODO: Definir um fluxo para psciquiatra e outro para os demais
+      // TODO: Definir um fluxo para psiquiatra e outro para os demais
       this.$dialog.confirm({
         message: `${this.$session.get('nome')}, Confirma que o paciente cancelou a consulta?`,
         confirmText: 'Sim',
         cancelText: 'Não',
-        onConfirm: () => this.$toast.open('User confirmed')
+        onConfirm: () => {
+          this.$toast.open('User confirmed')
+        }
       })
     },
     pacienteFaltou () {
       console.log('Paciente NÃO compareceu')
+      this.formAction.acao = 'faltou'
+      this.formAction.consulta_id = this.event.id
+      this.formAction.responsavel_id = this.$session.get('profissional_id')
+      this.formAction.dt_cancelamento = moment.utc()
+      // this.formAction.dt_cancelamento.subtract(3, 'hours')
+
       this.$dialog.confirm({
         message: `${this.$session.get('nome')}, Confirma que o paciente Faltou?`,
         confirmText: 'Sim',
         cancelText: 'Não',
-        onConfirm: () => this.$toast.open('User confirmed')
+        onConfirm: () => {
+          this.$http
+          .post(`${process.env.API_URL}agenda/consulta/update`, this.formAction)
+          .then(response => {
+            console.log(response.data)
+          })
+          this.$toast.open('User confirmed')
+        }
       })
     }
   }

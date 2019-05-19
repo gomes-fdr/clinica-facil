@@ -439,7 +439,7 @@ export default {
                 profissional_id: null
               }
               // console.log('data do evento: ' + e.dt_dia.split('T')[0])
-              // console.log(typeof e.dt_dia)
+              event.id = e.id
               event.date = moment(e.horario.dt_dia.split('T')[0], 'YYYY-MM-DD').toDate()
               event.startTime = e.horario.hora_ini
               event.endTime = e.horario.hora_fim
@@ -450,7 +450,6 @@ export default {
               this.paciente.nome = e.paciente.nome
               this.paciente.ps.descricao = e.plano_saude_paciente.ps.descricao
               this.events.push(event)
-              console.log(e)
               // TODO: ALTERAR O cONSULTAsCHEMA PARA ACESSAR OS DADOS DE HORARIO, PARA ADICIONAR EM EVENTO
             })
             this.modal.calendario.isActive = true

@@ -33,19 +33,40 @@ class Consulta(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     dt_marcacao = db.Column(db.Date)
-    compareceu = db.Column(db.Boolean, default=False)
-    cancelou = db.Column(db.Boolean, default=False)
-    chegou = db.Column(db.Boolean, default=False)
-    em_consulta = db.Column(db.Boolean, default=False)
-    encaixe = db.Column(db.Boolean, default=False)
+
+    # Avisa que paciente chegou
+    b_chegou = db.Column(db.Boolean, default=False)
+    p_id_chegou = db.Column(db.Integer, db.ForeignKey('profissional.id'))
+    p_chegou = db.relationship('Profissional', foreign_keys=p_id_chegou)
+
+    # Atesta que paciente compareceu a consulta
+    b_compareceu = db.Column(db.Boolean, default=False)
+    p_id_compareceu = db.Column(db.Integer, db.ForeignKey('profissional.id'))
+    p_compareceu = db.relationship('Profissional', foreign_keys=p_id_compareceu)
+
+    # Avisa que paciente não compareceu a consulta
+    b_cancelou = db.Column(db.Boolean, default=False)
+    p_id_cancelou = db.Column(db.Integer, db.ForeignKey('profissional.id'))
+    p_cancelou = db.relationship('Profissional', foreign_keys=p_id_cancelou)
+    dt_cancelamento = db.Column(db.Date, nullable=True)
+
+    # Sinaliza que o horário está disponível para uso
+    b_encaixe = db.Column(db.Boolean, default=False)
+    p_id_encaixe = db.Column(db.Integer, db.ForeignKey('profissional.id'))
+    p_encaixe = db.relationship('Profissional', foreign_keys=p_id_encaixe)
+
+    # guarda a confirmação do paciente recebido via SMS
     confirmacao_consulta_sms = db.Column(db.Boolean, default=False)
 
     paciente_id = db.Column(db.Integer, db.ForeignKey('paciente.id'))
-    profissional_id = db.Column(db.Integer, db.ForeignKey('profissional.id'))
+
+    # quem marcou a consulta
+    p_id_quem_marcou = db.Column(db.Integer, db.ForeignKey('profissional.id'))
+    p_quem_marcou = db.relationship('Profissional', foreign_keys=p_id_quem_marcou)
+
     horario_id = db.Column(db.Integer, db.ForeignKey('horario.id'))
     convenio_id = db.Column(db.Integer, db.ForeignKey('plano_saude_paciente.id'))
 
     paciente = db.relationship('Paciente', backref='pacientes')
-    profissionais = db.relationship('Profissional', backref='profissionais')
     horario = db.relationship('Horario', backref='horario')
     plano_saude_paciente = db.relationship('PlanoSaudePaciente', backref='plano_saude_paciente')
