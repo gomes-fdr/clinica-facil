@@ -458,7 +458,7 @@ export default {
             if (error) {
               this.$toast.open({
                 message:
-                  'NENHUM CONSULTA encontrada',
+                  'NENHUMA CONSULTA encontrada',
                 type: 'is-danger',
                 position: 'is-bottom'
               })
