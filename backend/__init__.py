@@ -28,12 +28,6 @@ def create_app():
     app.config['JWT_SECRET_KEY'] = 'Batatinhas voadoras são melhores que eu, dulossauro!'
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    # Configurando o APP para testes (live de pytohn #81)
-    app.config.testing = True                   # Coloca o APP em teste
-    app_context = app.test_request_context()    # Pede um contexto para testes
-    app_context.push()                          # Coloca o App no contexto de testes
-    app.client = app.test_client()              # Dá Acesso aos requests usando with
-
     config_db(app)
     config_ma(app)
     Migrate(app, app.db)

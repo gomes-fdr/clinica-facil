@@ -23,3 +23,20 @@ Ambiente de testes (local):
 Hospedado na digitalocean, usando:
 * Droplet(VM) linux
 * Dokku
+
+## Para testar a API do sistema
+Usamos o coverage, baseado na live de python #81
+
+```
+$ coverage run --source=backend -m unittest discover tests/
+```
+
+Para ver o relatório do coverage
+```
+$ coverage report
+```
+
+Para ver no detalhe, qual parte do código não está coberta
+```
+$ coverage html
+```
