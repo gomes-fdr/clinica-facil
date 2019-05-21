@@ -5,12 +5,12 @@ class TestPaciente(TestFlaskBase):
     """
     Rotas para manipulação de Pacientes
     """
+    def test_cria_um_paciente_para_testes(self):
+        response = self.client.post(url_for('paciente.paciente_novo'), json=self.paciente_json, headers=self.token)
+        # import ipdb; ipdb.set_trace()
+        self.assertEqual(response.status_code, 201)
 
-    def test_pega_os_pacientes_cadastrados(self):
-        # TODO: TESTE
-        ...
+    def test_criacao_paciente_apartir_de_json_vazio(self):
+        response = self.client.post(url_for('paciente.paciente_novo'), json={}, headers=self.token)
 
-    def test_atualiza_um_paciente(self):
-        # TODO: TESTE
-        ...
-
+        self.assertEqual(response.status_code, 404)

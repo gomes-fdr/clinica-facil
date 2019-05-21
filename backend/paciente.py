@@ -18,7 +18,7 @@ def paciente_novo():
     p, error = pa.load(request.json)
 
     if error:
-        return jsonify(error), 401
+        return jsonify(error), 404
 
     try:
         current_app.db.session.add(p)
