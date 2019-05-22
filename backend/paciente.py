@@ -18,7 +18,7 @@ def paciente_novo():
     p, error = pa.load(request.json)
 
     if error:
-        return jsonify(error), 404
+        return jsonify(error), 400
 
     try:
         current_app.db.session.add(p)
@@ -36,7 +36,13 @@ def paciente_atualizar(cpf):
     Atualiza um paciente no sistema.
     """
     data = request.json
+    if not cpf or not data:
+        return jsonify({'message': 'Params are empty'}), 400
+
     paciente = Paciente.query.filter_by(cpf = cpf).first()
+
+    if not paciente:
+        return jsonify({'message': 'There are not the PACIENTE'}), 400
 
     paciente.nome = data['nome']
     paciente.email = data['email']
@@ -87,7 +93,6 @@ def paciente_nome(nome):
     """
     Busca um paciente pelo nome ou parte dele.
     """
-    print('NOmeeee: ' + nome)
     # pacientes = Paiente.query.filter(Paciente.nome.ilike('%' +nome+ '%')).all()
     pacientes = current_app.db.session.query(Paciente.nome, Paciente.cpf).filter(Paciente.nome.ilike('%' +nome+ '%')).all()
 

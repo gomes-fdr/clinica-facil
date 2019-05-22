@@ -50,6 +50,29 @@ class TestFlaskBase(TestCase):
             'adultoInapto': True,
             'situacao_id': self.situacao.id
         }
+        self.paciente_alterado = {
+            'nome': 'paciente de testes alterado',
+            'email': 'teste@teste.com.br',
+            'dt_nascimento': str(datetime.strptime('24/05/1984', '%d/%m/%Y')),
+            'cpf': '01234567890',
+            'rg': '0000000000',
+            'filiacao': 'meu pai',
+            'profissao': 'minha profissão',
+            'responsavel': 'minha mãe',
+            't_celular': '51999999999',
+            't_fixo': '5133366903',
+            't_responsavel': '51999999999',
+            'cep': '99999000',
+            'rua': 'Das Couves',
+            'numero': '111',
+            'complemento': 'casa',
+            'cidade': 'Porto Alegre',
+            'estado': 'RS',
+            'observacoes': 'não tenho observações',
+            'envioSMS': False,
+            'adultoInapto': False,
+            'situacao_id': self.situacao.id
+        }
         self.paciente = Paciente.query.filter_by(cpf='01234567890').first()
 
     def tearDown(self):
