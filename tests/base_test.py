@@ -5,8 +5,8 @@ from json import loads
 from backend import create_app
 
 from backend.models.ps import PlanoSaude
-from backend.models.profissional import Situacao
 from backend.models.paciente import Paciente
+from backend.models.profissional import Profissional, Situacao, Perfil
 
 class TestFlaskBase(TestCase):
     def setUp(self):
@@ -27,6 +27,7 @@ class TestFlaskBase(TestCase):
         self.token = self.create_token()
         self.ps = 'teste'
         self.situacao = Situacao.query.filter_by(descricao = 'Ativo').first()
+        self.perfil = Perfil.query.filter_by(descricao = 'Psicologo').first()
         self.paciente_json = {
             'nome': 'paciente de testes',
             'email': 'teste@teste.com.br',
@@ -74,6 +75,44 @@ class TestFlaskBase(TestCase):
             'situacao_id': self.situacao.id
         }
         self.paciente = Paciente.query.filter_by(cpf='01234567890').first()
+        self.profissional_json = {
+            'nome': 'Profissional de testes',
+            'email': 'teste@teste.com.br',
+            'dt_nascimento': str(datetime.strptime('24/05/1984', '%d/%m/%Y')),
+            'cpf': '01234567890',
+            'rg': '0000000000',
+            'faculdade': 'NA',
+            'no_conselho': '000',
+            't_celular': '51999999999',
+            't_fixo': '5133366903',
+            'cep': '99999000',
+            'rua': 'Das Couves',
+            'numero': '111',
+            'complemento': 'casa',
+            'cidade': 'Porto Alegre',
+            'estado': 'RS',
+            'perfis': self.perfil.id,
+            'situacoes': self.situacao.id
+        }
+        self.profissional_alterado = {
+            'nome': 'Profissional de testes alterado',
+            'email': 'teste@teste.com.br',
+            'dt_nascimento': str(datetime.strptime('24/05/1994', '%d/%m/%Y')),
+            'cpf': '01234567890',
+            'rg': '0000000000',
+            'faculdade': 'da vida',
+            'no_conselho': '000',
+            't_celular': '51999999999',
+            't_fixo': '5133366903',
+            'cep': '99999000',
+            'rua': 'Das Couves',
+            'numero': '111',
+            'complemento': 'casa',
+            'cidade': 'Porto Alegre',
+            'estado': 'RS',
+            'perfis': self.perfil.id,
+            'situacoes': self.situacao.id
+        }
 
     def tearDown(self):
         """
@@ -84,6 +123,9 @@ class TestFlaskBase(TestCase):
 
         # Apaga paciente de testes
         Paciente.query.filter_by(cpf='01234567890').delete()
+
+        # Apaga profissional de testes
+        Profissional.query.filter_by(cpf='01234567890').delete()
 
         current_app.db.session.commit()
 

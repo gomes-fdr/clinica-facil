@@ -18,6 +18,9 @@ def profissional():
     Insere um novo profissional no sistema.
     """
     data = request.json
+    if not data:
+        return jsonify({'message': 'There are not params'}), 400
+
     perfil = Perfil.query.filter_by(id=data['perfis']).first()
     if not perfil:
         return jsonify({'message': 'Not possible find Perfil'}), 404
@@ -76,6 +79,8 @@ def profissional_cpf(cpf):
     """
     Busca um profissional pelo CPF.
     """
+    if not cpf:
+        return jsonify({'message': 'Bad params'}), 404
     
     profissional = Profissional.query.filter_by(cpf = cpf).first()
 
@@ -103,7 +108,7 @@ def perfil():
 @jwt_required
 def situacao():
     """
-    Retorna a lista de perfis do sistema
+    Retorna a lista de situacoes do sistema
     """
     situacao = Situacao.query.all()
 
@@ -119,6 +124,8 @@ def profissional_nome(nome):
     """
     Busca um profissional pelo nome ou parte dele.
     """
+    if not nome:
+        return jsonify({'message': 'Bad param'}), 400
 
     # pacientes = Paiente.query.filter(Paciente.nome.ilike('%' +nome+ '%')).all()
     profissionais = current_app.db.session.query(Profissional.id, Profissional.nome, Profissional.cpf).filter(Profissional.nome.ilike('%' +nome+ '%')).all()
@@ -163,7 +170,7 @@ def profissional_atualizar(nome):
     except SQLAlchemyError as e:
         return jsonify({'message': 'Fail to update PROFISSIONAL'}), 400
      
-    return ProfissionalSchema().jsonify(profissional), 204
+    return ProfissionalSchema().jsonify(profissional), 200
 
 
 @bp_profissional.route('/api/v1/profissional/nome-completo/<nome>', methods=['GET'])
