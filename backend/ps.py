@@ -50,6 +50,9 @@ def post_ps_paciente():
     Insere um plano de saúde para um paciente
     """
     data = request.json
+    
+    if not data:
+        return jsonify({'message': 'Paciente already has this PS'}), 400
 
     ps = PlanoSaude.query.filter_by(id=data['ps']['id']).first()
     paciente = Paciente.query.filter_by(id=data['paciente_id']).first()
