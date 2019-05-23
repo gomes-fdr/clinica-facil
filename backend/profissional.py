@@ -197,6 +197,8 @@ def profissional_reset_senha():
     Inicializa Profissional com senha
     """
     data = request.json
+    if not data:
+        return jsonify({'status': 'Password update fail, no fields'}), 400
 
     if not data['id_profissional'] or not data['password']:
         return jsonify({'status': 'Password update fail, fields empty'}), 400
@@ -205,9 +207,6 @@ def profissional_reset_senha():
 
     if not profissional:
         return jsonify({'message': 'Profissional Not Found'}), 404
-
-    if not data['password']:
-        return jsonify({'status': 'Password update fail'}), 400
 
     usuario = User.query.filter_by(email=profissional.email).first()
     if usuario:

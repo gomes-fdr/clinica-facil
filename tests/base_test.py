@@ -6,7 +6,7 @@ from backend import create_app
 
 from backend.models.ps import PlanoSaude
 from backend.models.paciente import Paciente
-from backend.models.profissional import Profissional, Situacao, Perfil
+from backend.models.profissional import (Profissional, Situacao, Perfil, User)
 
 class TestFlaskBase(TestCase):
     def setUp(self):
@@ -114,6 +114,7 @@ class TestFlaskBase(TestCase):
             'situacoes': self.situacao.id
         }
 
+
     def tearDown(self):
         """
         Roda depois de todos os testes
@@ -122,10 +123,13 @@ class TestFlaskBase(TestCase):
         PlanoSaude.query.filter_by(descricao=self.ps).delete()
 
         # Apaga paciente de testes
-        Paciente.query.filter_by(cpf='01234567890').delete()
+        Paciente.query.filter_by(cpf=self.profissional_json['cpf']).delete()
 
         # Apaga profissional de testes
-        Profissional.query.filter_by(cpf='01234567890').delete()
+        Profissional.query.filter_by(cpf=self.profissional_json['cpf']).delete()
+
+        # Apaga user de testes do banco de dados
+        User.query.filter_by(email='teste@teste.com.br').delete()
 
         current_app.db.session.commit()
 
