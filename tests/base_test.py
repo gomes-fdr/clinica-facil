@@ -4,7 +4,7 @@ from flask import url_for, current_app
 from json import loads
 from backend import create_app
 
-from backend.models.ps import PlanoSaude
+from backend.models.ps import PlanoSaude, PlanoSaudePaciente
 from backend.models.paciente import Paciente
 from backend.models.profissional import (Profissional, Situacao, Perfil, User)
 
@@ -25,7 +25,7 @@ class TestFlaskBase(TestCase):
             'password': '1234'
         }
         self.token = self.create_token()
-        self.ps = 'teste'
+        self.ps = PlanoSaude.query.filter_by(descricao='Teste').first()
         self.situacao = Situacao.query.filter_by(descricao = 'Ativo').first()
         self.perfil = Perfil.query.filter_by(descricao = 'Psicologo').first()
         self.paciente_json = {
@@ -119,8 +119,11 @@ class TestFlaskBase(TestCase):
         """
         Roda depois de todos os testes
         """
+        # Apaga plano de saude de paciente
+        PlanoSaudePaciente.query.filter_by(no_carteira='teste-carteira').delete()
+
         # Apaga plano de saude testes
-        PlanoSaude.query.filter_by(descricao=self.ps).delete()
+        PlanoSaude.query.filter_by(descricao='Teste').delete()
 
         # Apaga paciente de testes
         Paciente.query.filter_by(cpf=self.profissional_json['cpf']).delete()

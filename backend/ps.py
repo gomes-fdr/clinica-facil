@@ -98,7 +98,6 @@ def delete_ps_paciente(id):
     """
     Apaga um plano de saude de um paciente
     """
-    print('ID: ' + str(id))
     try:
         ps = PlanoSaudePaciente.query.filter_by(id = id).delete()
     except SQLAlchemyError as e:
