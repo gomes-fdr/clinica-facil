@@ -132,7 +132,7 @@ class TestFlaskBase(TestCase):
         Profissional.query.filter_by(cpf=self.profissional_json['cpf']).delete()
 
         # Apaga user de testes do banco de dados
-        User.query.filter_by(email='teste@teste.com.br').delete()
+        User.query.filter_by(email=self.paciente_json['email']).delete()
 
         current_app.db.session.commit()
 
