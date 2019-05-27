@@ -7,6 +7,7 @@ from backend import create_app
 from backend.models.ps import PlanoSaude, PlanoSaudePaciente
 from backend.models.paciente import Paciente
 from backend.models.profissional import (Profissional, Situacao, Perfil, User)
+from backend.models.agenda import Local, Horario
 
 class TestFlaskBase(TestCase):
     def setUp(self):
@@ -119,6 +120,9 @@ class TestFlaskBase(TestCase):
         """
         Roda depois de todos os testes
         """
+        # Apaga horario de testes
+        Horario.query.filter_by(dt_dia = datetime.strptime('24/05/2050', '%d/%m/%Y')).delete()
+
         # Apaga plano de saude de paciente
         PlanoSaudePaciente.query.filter_by(no_carteira='teste-carteira').delete()
 
@@ -133,6 +137,9 @@ class TestFlaskBase(TestCase):
 
         # Apaga user de testes do banco de dados
         User.query.filter_by(email=self.paciente_json['email']).delete()
+
+        # Apaga Local de atendimento de testes
+        Local.query.filter_by(descricao = 'sala teste').delete()
 
         current_app.db.session.commit()
 

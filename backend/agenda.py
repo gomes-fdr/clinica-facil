@@ -123,11 +123,12 @@ def get_horario_profissional():
     "profissional_id": 264
     }
     """
-    print(request.args)
     selecao = request.args['selecao']
     dt_inicio = datetime.strptime(request.args['dt_inicio'], '%d/%m/%Y')
     dt_fim = datetime.strptime(request.args['dt_fim'], '%d/%m/%Y')
     livre = request.args['livre'] == 'true'
+
+    profissional_id = None
 
     if selecao == 'profissional':
         profissional_id = request.args['profissional_id']
