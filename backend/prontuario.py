@@ -7,8 +7,6 @@ from backend.models.prontuario import ProntuarioLegado
 
 bp_prontuario = Blueprint('prontuario', __name__)
 
-# TODO: Revisar sistema de tokens
-
 @bp_prontuario.route('/api/v1/paciente/prontuario-legado/<paciente_id>', methods=['GET'])
 @jwt_required
 def prontuario_leg_paciente(paciente_id):
@@ -17,7 +15,7 @@ def prontuario_leg_paciente(paciente_id):
     """
     prontuario = ProntuarioLegado.query.filter_by(paciente_id = paciente_id).first()
 
-    if not prontuario.conteudo:
+    if not prontuario:
         return jsonify({'message': 'Prontuario Not Found'}), 404
 
     return ProntuarioLegadoSchema().jsonify(prontuario), 200
