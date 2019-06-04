@@ -192,10 +192,10 @@ def post_consulta():
 
     consulta = Consulta.query.filter_by(
         dt_marcacao = data['dataMarcacao'],
-        compareceu = data['compareceu'],
+        b_compareceu = data['compareceu'],
         confirmacao_consulta_sms = data['confirmacao_consulta_sms'],
         paciente_id = data['paciente']['id'],
-        profissional_id = data['quem_marcou_id'],
+        p_id_quem_marcou = data['quem_marcou_id'],
         horario_id = data['horario_id'],
         convenio_id = data['convenio']['id']
     ).first()
@@ -203,10 +203,10 @@ def post_consulta():
     if not consulta:
         consulta = Consulta(
             dt_marcacao = data['dataMarcacao'],
-            compareceu = data['compareceu'],
+            b_compareceu = data['compareceu'],
             confirmacao_consulta_sms = data['confirmacao_consulta_sms'],
             paciente_id = data['paciente']['id'],
-            profissional_id = data['quem_marcou_id'],
+            p_id_quem_marcou = data['quem_marcou_id'],
             horario_id = data['horario_id'],
             convenio_id = data['convenio']['id']
         )

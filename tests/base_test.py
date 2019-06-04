@@ -10,6 +10,7 @@ from backend.models.profissional import (Profissional, Situacao, Perfil, User)
 from backend.models.agenda import Local, Horario
 
 class TestFlaskBase(TestCase):
+
     def setUp(self):
         """
         Roda antes de todos os testes.
@@ -27,6 +28,7 @@ class TestFlaskBase(TestCase):
         }
         self.token = self.create_token()
         self.ps = PlanoSaude.query.filter_by(descricao='Teste').first()
+        self.ps_paciente = PlanoSaudePaciente.query.first()
         self.situacao = Situacao.query.filter_by(descricao = 'Ativo').first()
         self.perfil = Perfil.query.filter_by(descricao = 'Psicologo').first()
         self.paciente_json = {
@@ -92,8 +94,8 @@ class TestFlaskBase(TestCase):
             'complemento': 'casa',
             'cidade': 'Porto Alegre',
             'estado': 'RS',
-            'perfis': self.perfil.id,
-            'situacoes': self.situacao.id
+            'perfil': self.perfil.id,
+            'situacao': self.situacao.id
         }
         self.profissional_alterado = {
             'nome': 'Profissional de testes alterado',
@@ -114,6 +116,7 @@ class TestFlaskBase(TestCase):
             'perfis': self.perfil.id,
             'situacoes': self.situacao.id
         }
+        
 
 
     def tearDown(self):
@@ -134,6 +137,7 @@ class TestFlaskBase(TestCase):
 
         # Apaga profissional de testes
         Profissional.query.filter_by(cpf=self.profissional_json['cpf']).delete()
+        Profissional.query.filter_by(cpf='01234567891').delete()
 
         # Apaga user de testes do banco de dados
         User.query.filter_by(email=self.paciente_json['email']).delete()
@@ -148,4 +152,46 @@ class TestFlaskBase(TestCase):
         return {
             'Authorization':
                 'Bearer ' + loads(login.data.decode())['token']
-}
+        }
+
+    def create_profissional(self):
+        data = self.profissional_json
+
+        p = Profissional(
+            nome=data['nome'],
+            email=data['email'],
+            dt_nascimento=data['dt_nascimento'],
+            cpf=data['cpf'],
+            rg=data['rg'],
+            faculdade=data['faculdade'],
+            no_conselho=data['no_conselho'],
+            t_celular=data['t_celular'],
+            t_fixo=data['t_fixo'],
+            cep=data['cep'],
+            rua=data['rua'],
+            numero=data['numero'],
+            complemento=data['complemento'],
+            cidade=data['cidade'],
+            estado=data['estado'],
+            perfil_id=data['perfil'],
+            situacao_id=data['situacao'])
+
+        current_app.db.session.add(p)
+        current_app.db.session.commit()
+
+        return p
+    
+    def create_paciente(self):
+        ...
+
+    def create_horario(self):
+        ...
+
+    def create_sala(self):
+        ...
+    
+    def create_ps(self):
+        ...
+
+    def create_ps_paciente(self):
+        ...

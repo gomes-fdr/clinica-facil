@@ -21,11 +21,11 @@ def profissional():
     if not data:
         return jsonify({'message': 'There are not params'}), 400
 
-    perfil = Perfil.query.filter_by(id=data['perfis']).first()
+    perfil = Perfil.query.filter_by(id=data['perfil']).first()
     if not perfil:
         return jsonify({'message': 'Not possible find Perfil'}), 404
 
-    situacao = Situacao.query.filter_by(id=data['situacoes']).first()
+    situacao = Situacao.query.filter_by(id=data['situacao']).first()
     if not situacao:
         return jsonify({'message': 'Not possible find Situacao'}), 404
 
