@@ -182,7 +182,35 @@ class TestFlaskBase(TestCase):
         return p
     
     def create_paciente(self):
-        ...
+        data = self.paciente_json
+        
+        p = Paciente(
+            nome = data['nome'],
+            email = data['email'],
+            dt_nascimento = data['dt_nascimento'],
+            cpf = data['cpf'],
+            rg = data['rg'],
+            filiacao = data['filiacao'],
+            profissao = data['profissao'],
+            responsavel = data['responsavel'],
+            t_celular = data['t_celular'],
+            t_fixo = data['t_fixo'],
+            t_responsavel = data['t_responsavel'],
+            cep = data['cep'],
+            rua = data['rua'],
+            numero = data['numero'],
+            complemento = data['complemento'],
+            cidade = data['cidade'],
+            estado = data['estado'],
+            observacoes = data['observacoes'],
+            envioSMS = data['envioSMS'],
+            adultoInapto = data['adultoInapto'],
+            situacao_id = data['situacao_id']
+        )
+        current_app.db.session.add(p)
+        current_app.db.session.commit()
+
+        return p
 
     def create_horario(self):
         ...
