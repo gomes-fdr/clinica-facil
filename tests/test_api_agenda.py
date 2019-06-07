@@ -24,7 +24,7 @@ class TestAgenda(TestFlaskBase):
         response = self.client.post(url_for('agenda.post_sala', descricao='sala teste'), headers=self.token)
         self.assertEqual(response.status_code, 400)
 
-    def test_adiciona_sala_atendimento(self):
+    def test_adiciona_horario(self):
         self.client.post(url_for('agenda.post_sala', descricao='sala teste'), headers=self.token)
         local = Local.query.filter_by(descricao='sala teste').first()
         profissional = self.create_profissional()
@@ -41,7 +41,7 @@ class TestAgenda(TestFlaskBase):
         response = self.client.post(url_for('agenda.post_horario'), json=horario, headers=self.token)
         self.assertEqual(response.status_code, 201)
 
-    def test_adiciona_sala_atendimento_repetido(self):
+    def test_adiciona_horario_repetido(self):
         self.client.post(url_for('agenda.post_sala', descricao='sala teste'), headers=self.token)
         local = Local.query.filter_by(descricao='sala teste').first()
         profissional = self.create_profissional()

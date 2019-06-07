@@ -212,13 +212,15 @@ class TestFlaskBase(TestCase):
 
         return p
 
-    def create_horario(self):
-        ...
-
     def create_sala(self):
-        ...
-    
+        local = Local(descricao='sala teste')
+        return local
+
     def create_ps(self):
+        ps = PlanoSaude(descricao='Teste')
+        return ps
+
+    def create_horario(self):
         ...
 
     def create_ps_paciente(self):
