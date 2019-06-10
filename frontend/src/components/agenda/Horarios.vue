@@ -83,6 +83,11 @@
         </div>
   </form>
 
+<b-modal :active.sync="modal.repeticao.isActive" >
+  <repeticao-horarios>
+  </repeticao-horarios>
+</b-modal>
+
 <b-modal :active.sync="modal.calendar.isActive">
     <vue-scheduler
       :events="events"
@@ -127,6 +132,7 @@
 <script>
 import { remove } from 'lodash'
 import SimpleVueValidation from 'simple-vue-validator'
+import RepeticaoHorarios from './RepeticaoHorarios'
 
 const Validator = SimpleVueValidation.Validator.create({
   templates: {
@@ -138,6 +144,9 @@ const Validator = SimpleVueValidation.Validator.create({
 
 export default {
   name: 'Horarios',
+  components: {
+    RepeticaoHorarios
+  },
   validators: {
     'formHorario.local.descricao': function (value) {
       return Validator.value(value).required()
@@ -199,6 +208,9 @@ export default {
             }
           ],
           selected: null
+        },
+        repeticao: {
+          isActive: false
         }
       },
       modalNovoEvento: {
@@ -264,7 +276,7 @@ export default {
     },
     eventCreated (event) {
       console.log('Event created')
-      console.log(event)
+      // console.log(event)
     },
     timeClicked (dateWithTime) {
       console.log('Time clicked')
@@ -282,7 +294,7 @@ export default {
       let duracao = Number(this.formHorario.duracao)
       let event = null
 
-      console.log(typeof duracao)
+      // console.log(typeof duracao)
 
       if (duracao < 60) {
         horaFim = `${dateWithTime.time}:${duracao}`
@@ -304,6 +316,16 @@ export default {
           profissional_id: profissional.id,
           duracao: duracao
         }
+        this.modal.calendar.isActive = false
+        this.modal.repeticao.isActive = true
+        // this.$dialog.confirm({
+        //   message: `${this.$session.get('nome')}, Esse Horário repete?`,
+        //   confirmText: 'Sim',
+        //   cancelText: 'Não',
+        //   onConfirm: () => {
+        //     // this.$toast.open('User confirmed')
+        //   }
+        // })
         this.events.push(event)
       }
 
@@ -329,7 +351,7 @@ export default {
       this.$http
       .post('agenda/horario', event)
       .then(response => {
-        console.log(response)
+        // console.log(response)
         // this.modal.local.data = response.data
       })
       .catch(error => {
