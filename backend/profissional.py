@@ -66,7 +66,7 @@ def profissional():
     try:
         current_app.db.session.add(p)
         current_app.db.session.commit()
-    except SQLAlchemyError as e:
+    except:
         return jsonify({'message': 'User already in database'}), 403
 
     # Cria novo profissional com senha padrão '1234'

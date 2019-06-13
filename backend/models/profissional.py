@@ -116,9 +116,6 @@ class Situacao(db.Model):
             db.session.add(situacao)
         db.session.commit()
 
-    def __repr__(self):
-        return '{}'.format(self.descricao)
-
 
 class User(db.Model):
     """
