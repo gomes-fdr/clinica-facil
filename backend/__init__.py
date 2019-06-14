@@ -4,17 +4,19 @@ from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 from flask_migrate import Migrate
 
-from backend.models import configure as config_db
-from backend.paciente import bp_paciente
-from backend.profissional import bp_profissional
-from backend.serealizer import configure as config_ma
-from backend.token import bp_token
-from backend.user import bp_user
-from backend.prontuario import bp_prontuario
-from backend.ps import bp_ps
-from backend.agenda import bp_agenda
+from .models import configure as config_db
+from .paciente import bp_paciente
+from .profissional import bp_profissional
+from .serealizer import configure as config_ma
+from .token import bp_token
+from .user import bp_user
+from .prontuario import bp_prontuario
+from .ps import bp_ps
+from .agenda import bp_agenda
+from .tasks.task_sms import bp_task_sms
 
 from flask_jwt_extended import JWTManager
+from flask_executor import Executor
 
 def create_app():
     app = Flask(__name__)
@@ -30,6 +32,7 @@ def create_app():
 
     config_db(app)
     config_ma(app)
+    app.executor = Executor(app)
     Migrate(app, app.db)
     JWTManager(app)
 
@@ -40,5 +43,7 @@ def create_app():
     app.register_blueprint(bp_prontuario)
     app.register_blueprint(bp_ps)
     app.register_blueprint(bp_agenda)
+
+    app.register_blueprint(bp_task_sms)
 
     return app
