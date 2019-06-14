@@ -12,6 +12,7 @@ class TestAgenda(TestFlaskBase):
     """
 
     def test_busca_sala_atendimento(self):
+        self.client.post(url_for('agenda.post_sala', descricao='sala teste'), headers=self.token)
         response = self.client.get(url_for('agenda.get_sala'), headers=self.token)
         self.assertEqual(response.status_code, 200)
 
