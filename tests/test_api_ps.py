@@ -10,6 +10,7 @@ class TestPS(TestFlaskBase):
     """
 
     def test_pega_os_ps_cadastrados(self):
+        self.client.post(url_for('plano_saude.post_ps', descricao='Teste'), headers=self.token)
         response = self.client.get(url_for('plano_saude.get_ps'), headers=self.token)
         self.assertEqual(response.status_code, 200)
 
