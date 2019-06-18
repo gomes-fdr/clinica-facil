@@ -18,7 +18,7 @@
         </div>
         <div class="has-text-left">
           <b-field label="Cada um(a)" v-if="formControl.radio == 'Repete'">
-            <b-select placeholder="Selecione uma opção" expanded="true">
+            <b-select placeholder="Selecione uma opção" expanded>
                 <option
                     v-for="opcao in formControl.opcoes"
                     :value="opcao"
@@ -50,7 +50,7 @@
         </div>
       </div>
         <b-field label="Até o(a)">
-          <b-select placeholder="Selecione uma opção" expanded="true">
+          <b-select placeholder="Selecione uma opção" expanded>
               <option
                   v-for="opcao in formControl.opcoesTempo"
                   :value="opcao"
@@ -67,6 +67,20 @@
 </div>
 </template>
 <script>
+let weekday = new Array(7)
+weekday[0] = 'Domingo'
+weekday[1] = 'Segunda-feira'
+weekday[2] = 'Terça-feira'
+weekday[3] = 'Quarta-feira'
+weekday[4] = 'Quinta-feira'
+weekday[5] = 'Sexta-feira'
+weekday[6] = 'Sábado'
+
+let day = new Date()
+let today = weekday[day.getDay()]
+
+console.log(today)
+
 export default {
   name: 'RepeticaoHorarios',
   props: ['event', 'paciente', 'modo'],
