@@ -44,6 +44,10 @@ def create_app():
     app.register_blueprint(bp_ps)
     app.register_blueprint(bp_agenda)
 
+    # TODO: taks Envio diário de SMS
+    # TODO: taks Data final de horarios(emitir aviso de que chegou ao fim)
+    # TODO: taks Agendas canceladas
+    # TODO: task Encaminhar paciente para o profissional
     app.register_blueprint(bp_task_sms)
 
     return app

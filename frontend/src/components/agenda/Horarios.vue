@@ -84,7 +84,9 @@
   </form>
 
 <b-modal :active.sync="modal.repeticao.isActive" >
-  <repeticao-horarios>
+  <repeticao-horarios
+    :event="event"
+  >
   </repeticao-horarios>
 </b-modal>
 
@@ -263,6 +265,7 @@ export default {
         ]
       },
       events: [],
+      event: null,
       bEnviarAgenda: true
     }
   },
@@ -326,6 +329,7 @@ export default {
         //     // this.$toast.open('User confirmed')
         //   }
         // })
+        this.event = event
         this.events.push(event)
       }
 

@@ -17,10 +17,19 @@
             </b-radio>
         </div>
         <div class="has-text-left">
-          <b-field label="Cada um(a)" v-if="formControl.radio == 'Repete'">
-            <b-select placeholder="Selecione uma opção" expanded>
+          <b-field
+            label="A cada"
+            v-if="formControl.radio == 'Repete'"
+            :type="{'is-danger': validation.hasError('formData.unidade') }"
+            :message= "validation.firstError('formData.unidade')"
+          >
+            <b-select
+              placeholder="Selecione uma opção"
+              v-model="formData.unidade"
+              expanded
+            >
                 <option
-                    v-for="opcao in formControl.opcoes"
+                    v-for="opcao in formControl.opcoesUnidade"
                     :value="opcao"
                     :key="opcao">
                     {{ opcao }}
@@ -49,37 +58,53 @@
           </label>
         </div>
       </div>
-        <b-field label="Até o(a)">
-          <b-select placeholder="Selecione uma opção" expanded>
+        <b-field label="Repete até o(a)"
+          :type="{'is-danger': validation.hasError('formData.ate') }"
+          :message= "validation.firstError('formData.ate')"
+        >
+          <b-select 
+            placeholder="Selecione uma opção"
+            v-model="formData.ate"
+            expanded
+          >
               <option
-                  v-for="opcao in formControl.opcoesTempo"
-                  :value="opcao"
-                  :key="opcao">
-                  {{ opcao }}
+                  v-for="opcao in formControl.opcoesRepeticao"
+                  :value="opcao.ate"
+                  :key="opcao.id">
+                  {{ opcao.descricao }}
               </option>
           </b-select>
         </b-field>
   </section>
   <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Fechar</button>
-      <button class="button is-primary">Salvar</button>
+      <button class="button is-primary" @click.prevent="createHorario">Salvar</button>
   </footer>
 </div>
 </template>
 <script>
-let weekday = new Array(7)
-weekday[0] = 'Domingo'
-weekday[1] = 'Segunda-feira'
-weekday[2] = 'Terça-feira'
-weekday[3] = 'Quarta-feira'
-weekday[4] = 'Quinta-feira'
-weekday[5] = 'Sexta-feira'
-weekday[6] = 'Sábado'
+import SimpleVueValidation from 'simple-vue-validator'
 
-let day = new Date()
-let today = weekday[day.getDay()]
+const Validator = SimpleVueValidation.Validator.create({
+  templates: {
+    required: 'Campo obrigatório'
+  }
+})
 
-console.log(today)
+// let weekday = new Array(7)
+// weekday[0] = 'Domingo'
+// weekday[1] = 'Segunda-feira'
+// weekday[2] = 'Terça-feira'
+// weekday[3] = 'Quarta-feira'
+// weekday[4] = 'Quinta-feira'
+// weekday[5] = 'Sexta-feira'
+// weekday[6] = 'Sábado'
+// let day = new Date()
+// let today = weekday[day.getDay()]
+
+let moment = require('moment')
+let now = moment()
+console.log(now.format())
 
 export default {
   name: 'RepeticaoHorarios',
@@ -88,19 +113,69 @@ export default {
     return {
       formControl: {
         radio: 'Repete',
-        opcoes: [
+        opcoesUnidade: [
           'Dia',
           'Semana',
           'Quinzena',
           'Mês'
         ],
-        opcoesTempo: [
-          'próxima Semana',
-          'próximo Mês',
-          'próximo Semestre',
-          'próximo Ano'
+        opcoesRepeticao: [
+          {
+            id: 0,
+            descricao: 'Próxima Semana',
+            ate: moment().add(7, 'd')
+          },
+          {
+            id: 1,
+            descricao: 'Próximo Mês',
+            ate: moment().add(1, 'M')
+          },
+          {
+            id: 2,
+            descricao: 'Próximo Semestre',
+            ate: moment().add(6, 'M')
+          },
+          {
+            id: 3,
+            descricao: 'Próximo Ano',
+            ate: moment().add(1, 'y')
+          }
         ]
+      },
+      formData: {
+        unidade: null,
+        ate: null
       }
+    }
+  },
+  validators: {
+    'formData.unidade': function (value) {
+      return Validator.value(value).required()
+    },
+    'formData.ate': function (value) {
+      return Validator.value(value).required()
+    }
+  },
+  methods: {
+    createHorario () {
+      console.log('Criação de horario(s)')
+      this.$validate()
+      .then(response => {
+        console.log(response)
+        if (response) {
+          switch (this.formData.unidade) {
+            case 'Dia':
+              console.log('Dia até...')
+              let d = moment(this.event.date)
+              console.log(d.format())
+              // console.log(this.formData.ate.format())
+
+              break
+            default:
+              break
+          }
+        }
+      })
     }
   }
 }
