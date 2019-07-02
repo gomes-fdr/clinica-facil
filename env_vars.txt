@@ -1,0 +1,6 @@
+export FLASK_APP=run.py
+export SECRET_KEY="fd6ba40f-a0a7-4717-88d6-3cd1e6082e88"
+export FLASK_ENV="development"
+export APP_SETTINGS="development"
+export DATABASE_URL="postgresql://postgres:1234@localhost:5432/darmas-db"
+export SALT_TOKEN="0123456789-python-is-very-nice"
